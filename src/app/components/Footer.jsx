@@ -2,16 +2,23 @@ import Link from "next/link";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const footerLink =
+    "inline-flex min-h-11 touch-manipulation items-center text-fluid-sm text-muted transition hover:text-accent-blue sm:min-h-10";
+
   return (
-    <footer className="relative z-10 border-t border-border bg-bg/90 backdrop-blur">
-      <div className="container mx-auto flex flex-col gap-4 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-8">
+    <footer className="relative z-10 border-t border-border bg-bg/95 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10 backdrop-blur">
+      <div className="mx-auto flex w-[min(100%-2*var(--shell-inline),72rem)] flex-col gap-6 px-[var(--shell-inline)] pb-12 pt-0 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-lg font-semibold text-white">Devom Brahmbhatt</p>
-          <p className="text-sm text-muted">Eastvale, CA · © {year}</p>
+          <p className="font-heading text-fluid-lg font-semibold text-white">
+            Devom Brahmbhatt
+          </p>
+          <p className="mt-1 text-fluid-sm text-muted">
+            Eastvale, CA · © {year}
+          </p>
         </div>
-        <div className="flex flex-wrap gap-4 text-sm">
+        <div className="flex flex-wrap gap-x-6 gap-y-2">
           <Link
-            className="text-muted transition hover:text-accent-blue"
+            className={footerLink}
             href="https://github.com/DevomB"
             target="_blank"
             rel="noopener noreferrer"
@@ -19,14 +26,14 @@ export default function Footer() {
             GitHub
           </Link>
           <Link
-            className="text-muted transition hover:text-accent-purple"
+            className={`${footerLink} hover:text-accent-purple`}
             href="https://www.linkedin.com/in/devomb/"
             target="_blank"
             rel="noopener noreferrer"
           >
             LinkedIn
           </Link>
-          <Link className="text-muted transition hover:text-accent-blue" href="#demo">
+          <Link className={footerLink} href="#demo">
             PokerLab
           </Link>
         </div>

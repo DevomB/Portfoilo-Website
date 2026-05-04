@@ -27,56 +27,64 @@ const skills = [
 
 export default function VolunteerSkillsSection() {
   return (
-    <section className="py-16 md:py-20">
-      <div className="grid gap-12 lg:grid-cols-2">
+    <section className="section-y">
+      <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent-purple">
+          <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
             Volunteering
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
+          <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
             Community work
           </h2>
           <ul className="mt-8 space-y-8">
             {volunteering.map((v) => (
               <li key={v.title}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-accent-purple/90">
+                <p className="text-fluid-xs font-semibold uppercase tracking-wide text-muted">
                   {v.span}
                 </p>
-                <h3 className="mt-2 text-xl font-semibold text-white">{v.title}</h3>
-                <p className="mt-2 text-muted">{v.detail}</p>
+                <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-white">
+                  {v.title}
+                </h3>
+                <p className="mt-2 text-fluid-sm leading-relaxed text-muted">
+                  {v.detail}
+                </p>
               </li>
             ))}
           </ul>
         </div>
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent-blue">
+          <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
             Skills · Languages
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
+          <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
             Skills
           </h2>
           <div className="mt-8 flex flex-wrap gap-2">
             {skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-full border border-border bg-surface-elevated px-4 py-1 text-sm text-muted"
+                className="rounded-lg border border-border bg-surface-elevated px-3 py-2 text-fluid-sm text-muted"
               >
                 {skill}
               </span>
             ))}
           </div>
-          <dl className="mt-10 space-y-4 rounded-xl border border-border bg-surface/70 p-6">
+          <dl className="mt-10 space-y-4 rounded-xl border border-border bg-surface p-6 shadow-card">
             <div>
-              <dt className="text-xs uppercase tracking-wide text-accent-purple">
+              <dt className="text-fluid-xs uppercase tracking-wide text-muted">
                 English
               </dt>
-              <dd className="text-white">Full professional proficiency</dd>
+              <dd className="text-fluid-sm text-white">
+                Full professional proficiency
+              </dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-wide text-accent-purple">
+              <dt className="text-fluid-xs uppercase tracking-wide text-muted">
                 Gujarati
               </dt>
-              <dd className="text-white">Limited working proficiency</dd>
+              <dd className="text-fluid-sm text-white">
+                Limited working proficiency
+              </dd>
             </div>
           </dl>
         </div>

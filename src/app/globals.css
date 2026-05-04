@@ -3,16 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --color-bg: #000000;
-  --color-surface: #0a0a0f;
-  --color-surface-elevated: #12121a;
-  --color-border: #252532;
-  --color-accent-blue: #5b9dff;
-  --color-accent-blue-dim: #3b82f6;
-  --color-accent-purple: #a78bfa;
-  --color-accent-purple-dim: #8b5cf6;
-  --color-muted: #8e8e9a;
-  --color-text: #f5f5f7;
+  --color-bg: #0b0d10;
+  --color-surface: #111418;
+  --color-surface-elevated: #181c22;
+  --color-border: #272b34;
+  --color-accent-blue: #4285f4;
+  --color-accent-blue-dim: #3367d6;
+  --color-accent-purple: #7c6fd6;
+  --color-accent-purple-dim: #6358b8;
+  --color-muted: #9198a8;
+  --color-text: #e8eaed;
+
+  --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
+  --text-base: clamp(0.9375rem, 0.88rem + 0.25vw, 1rem);
+  --text-lg: clamp(1.0625rem, 0.95rem + 0.45vw, 1.125rem);
+  --text-xl: clamp(1.1875rem, 1rem + 0.75vw, 1.25rem);
+  --text-2xl: clamp(1.375rem, 1.1rem + 1.1vw, 1.5rem);
+  --text-3xl: clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem);
+  --text-4xl: clamp(1.875rem, 1.35rem + 2.2vw, 2.25rem);
+  --text-hero: clamp(2.25rem, 1.5rem + 3.5vw, 3.5rem);
+
+  --section-y: clamp(3rem, 5vw + 2rem, 6rem);
+  --shell-inline: clamp(1rem, 3vw + 0.5rem, 2rem);
 }
 
 html {
@@ -29,4 +42,23 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   min-height: 100vh;
+  font-size: var(--text-base);
+}
+
+@layer components {
+  .page-shell {
+    width: min(100% - 2 * var(--shell-inline), 72rem);
+    margin-inline: auto;
+    padding-inline: var(--shell-inline);
+    padding-bottom: max(6rem, env(safe-area-inset-bottom, 0px) + 4rem);
+    padding-top: max(7rem, env(safe-area-inset-top, 0px) + 4.5rem);
+  }
+
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  .prose-readable {
+    max-width: 62ch;
+  }
 }

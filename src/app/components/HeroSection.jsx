@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
-    <section className="relative scroll-mt-28 py-12 lg:py-20">
+    <section className="relative scroll-mt-28 section-y">
       <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -14,26 +14,24 @@ export default function HeroSection() {
           transition={{ duration: 0.45 }}
           className="place-self-start text-center sm:text-left lg:col-span-8"
         >
-          <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-accent-blue">
+          <p className="mb-3 text-fluid-xs font-medium uppercase tracking-[0.18em] text-muted">
             Eastvale, California
           </p>
-          <h1 className="mb-4 text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="font-heading text-fluid-hero font-semibold leading-[1.1] tracking-tight text-white">
             Hi, I&apos;m{" "}
-            <span className="bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-transparent">
-              Devom
-            </span>
+            <span className="text-accent-blue">Devom</span>
             <br />
             <span className="text-muted">Full-stack developer</span>
           </h1>
-          <p className="mb-8 max-w-xl text-lg text-muted">
+          <p className="prose-readable mx-auto mt-6 text-fluid-lg leading-relaxed text-muted sm:mx-0">
             I work on Roosevelt Connect (Flutter and APIs), Virtual Medical
             Missions (telemedicine), and WebWork Innovations (Next.js sites with
             PostgreSQL). C++ coursework and Poker-Bot on the side.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 sm:justify-start">
+          <div className="mt-8 flex w-full max-w-xl flex-col gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-start">
             <Link
               href="#demo"
-              className="rounded-full bg-accent-blue px-6 py-3 text-sm font-semibold text-bg shadow-glow transition hover:bg-accent-blue-dim"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg bg-accent-blue px-5 text-fluid-sm font-semibold text-bg shadow-card transition hover:bg-accent-blue-dim sm:min-h-0 sm:w-auto"
             >
               Open PokerLab
             </Link>
@@ -41,7 +39,7 @@ export default function HeroSection() {
               href="https://github.com/DevomB"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-white transition hover:border-accent-blue hover:text-accent-blue"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface px-5 text-fluid-sm font-semibold text-white transition hover:border-border hover:bg-surface-elevated sm:min-h-0 sm:w-auto"
             >
               GitHub
             </Link>
@@ -49,13 +47,13 @@ export default function HeroSection() {
               href="https://www.linkedin.com/in/devomb/"
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-white transition hover:border-accent-purple hover:text-accent-purple"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface px-5 text-fluid-sm font-semibold text-white transition hover:border-border hover:bg-surface-elevated sm:min-h-0 sm:w-auto"
             >
               LinkedIn
             </Link>
             <Link
               href="#contact"
-              className="rounded-full border border-accent-purple/45 px-6 py-3 text-sm font-semibold text-accent-purple transition hover:bg-accent-purple/10"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-accent-blue/30 bg-accent-blue/5 px-5 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/10 sm:min-h-0 sm:w-auto"
             >
               Contact
             </Link>
@@ -69,11 +67,11 @@ export default function HeroSection() {
           className="flex justify-center lg:col-span-4 lg:justify-end"
         >
           <div
-            className="relative flex h-52 w-52 items-center justify-center rounded-full border border-border bg-surface-elevated shadow-glow lg:h-64 lg:w-64"
+            className="relative flex aspect-square w-[min(100%,clamp(10rem,28vw,16rem))] max-w-[16rem] items-center justify-center rounded-2xl border border-border bg-surface-elevated shadow-card"
             aria-hidden
           >
-            <div className="absolute inset-3 rounded-full bg-gradient-to-br from-accent-blue/22 to-accent-purple/18 blur-xl" />
-            <span className="relative text-5xl font-black tracking-tight text-white lg:text-6xl">
+            <div className="absolute inset-2 rounded-xl bg-gradient-to-br from-accent-blue/10 to-accent-purple/8" />
+            <span className="relative font-heading text-fluid-4xl font-bold tracking-tight text-white">
               DB
             </span>
           </div>

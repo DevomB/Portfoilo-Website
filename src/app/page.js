@@ -17,7 +17,7 @@ export default function Home() {
       <CanvasBackground />
       <Navbar />
       <main className="relative z-10 min-h-screen">
-        <div className="container mx-auto px-4 pb-24 pt-28 md:px-8">
+        <div className="page-shell">
           <HeroSection />
           <CredibilityStrip />
           <PokerLab />

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavLink from "./NavLink";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import MenuOverlay from "./MenuOverlay";
 
 const navLinks = [
@@ -18,53 +18,88 @@ const navLinks = [
 export default function Navbar() {
   const [navbarOpen, setNavbarOpen] = useState(false);
 
+  useEffect(() => {
+    if (!navbarOpen) return undefined;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [navbarOpen]);
+
+  const barPadTop = "env(safe-area-inset-top, 0px)";
+
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-border bg-surface/90 backdrop-blur-md">
-      <div className="container mx-auto flex flex-wrap items-center justify-between px-4 py-3 lg:py-4">
+    <header
+      className="fixed left-0 right-0 top-0 z-[100] border-b border-border bg-surface/95 backdrop-blur-md supports-[backdrop-filter]:bg-surface/80"
+      style={{ paddingTop: barPadTop }}
+    >
+      <div className="mx-auto flex min-h-[3.25rem] w-[min(100%-2*var(--shell-inline),72rem)] items-center justify-between gap-4 px-[var(--shell-inline)] py-2.5 sm:min-h-14 sm:py-3">
         <Link
           href="/"
-          className="text-xl font-bold tracking-tight text-white md:text-2xl"
+          className="font-heading text-fluid-lg font-semibold tracking-tight text-white sm:text-fluid-xl"
         >
-          <span className="bg-gradient-to-r from-accent-blue to-accent-purple bg-clip-text text-transparent">
-            Devom Brahmbhatt
-          </span>
+          Devom Brahmbhatt
         </Link>
-        <div className="block md:hidden">
-          {!navbarOpen ? (
-            <button
-              type="button"
-              onClick={() => setNavbarOpen(true)}
-              aria-label="Open menu"
-              className="rounded-md border border-border px-3 py-2 text-muted hover:border-accent-blue hover:text-white"
-            >
-              <Bars3Icon className="h-5 w-5" />
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setNavbarOpen(false)}
-              aria-label="Close menu"
-              className="rounded-md border border-border px-3 py-2 text-muted hover:border-accent-blue hover:text-white"
-            >
-              <XMarkIcon className="h-5 w-5" />
-            </button>
-          )}
-        </div>
-        <div className="menu hidden w-auto md:block" id="navbar">
-          <ul className="mt-0 flex flex-col space-y-2 p-4 md:flex-row md:space-x-6 md:space-y-0 md:p-0">
+
+        <nav
+          className="menu hidden items-center md:flex"
+          id="navbar"
+          aria-label="Main navigation"
+        >
+          <ul className="flex flex-row flex-wrap items-center gap-0.5 lg:gap-1">
             {navLinks.map((link) => (
               <li key={link.path}>
                 <NavLink href={link.path} title={link.title} />
               </li>
             ))}
           </ul>
+        </nav>
+
+        <div className="flex md:hidden">
+          <button
+            type="button"
+            onClick={() => setNavbarOpen((o) => !o)}
+            aria-expanded={navbarOpen}
+            aria-controls="mobile-nav-panel"
+            aria-label={navbarOpen ? "Close menu" : "Open menu"}
+            className="inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg border border-border text-muted transition hover:bg-surface-elevated hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+          >
+            {navbarOpen ? (
+              <XMarkIcon className="h-6 w-6" />
+            ) : (
+              <Bars3Icon className="h-6 w-6" />
+            )}
+          </button>
         </div>
       </div>
+
       {navbarOpen ? (
-        <div className="border-t border-border bg-surface md:hidden">
-          <MenuOverlay links={navLinks} onNavigate={() => setNavbarOpen(false)} />
-        </div>
+        <>
+          <button
+            type="button"
+            className="fixed bottom-0 left-0 right-0 z-[90] touch-manipulation bg-bg/70 backdrop-blur-[2px] md:hidden"
+            style={{
+              top: "calc(3.25rem + env(safe-area-inset-top, 0px))",
+            }}
+            aria-label="Close menu"
+            onClick={() => setNavbarOpen(false)}
+          />
+          <div
+            id="mobile-nav-panel"
+            className="fixed bottom-0 left-0 right-0 z-[95] max-h-[min(70vh,calc(100dvh-3.5rem))] overflow-y-auto border-t border-border bg-surface shadow-card md:hidden"
+            style={{
+              top: "calc(3.25rem + env(safe-area-inset-top, 0px))",
+              paddingBottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
+            }}
+          >
+            <MenuOverlay
+              links={navLinks}
+              onNavigate={() => setNavbarOpen(false)}
+            />
+          </div>
+        </>
       ) : null}
-    </nav>
+    </header>
   );
 }

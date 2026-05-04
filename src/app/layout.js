@@ -1,9 +1,14 @@
 import "./globals.css";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
 
 const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
+});
+
+const heading = Outfit({
+  subsets: ["latin"],
+  variable: "--font-heading",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -28,7 +33,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${sans.variable} font-sans antialiased`}>
+      <body
+        className={`${sans.variable} ${heading.variable} font-sans antialiased`}
+      >
         {children}
       </body>
     </html>
