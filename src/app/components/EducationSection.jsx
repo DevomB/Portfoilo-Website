@@ -36,16 +36,16 @@ const certs = [
   },
 ];
 
-const card = "rounded-xl border border-border bg-surface p-6 shadow-card";
+const card = "card-soft p-6";
 
 export default function EducationSection() {
   return (
     <section id="education" className="scroll-mt-28 section-y">
       <div className="mb-8 sm:mb-10">
-        <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+        <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
           Education & certifications
         </p>
-        <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+        <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
           Coursework & certificates
         </h2>
       </div>
@@ -54,7 +54,7 @@ export default function EducationSection() {
         <div className="space-y-6">
           {items.map((item) => (
             <article key={item.school} className={card}>
-              <h3 className="font-heading text-fluid-lg font-semibold text-white">
+              <h3 className="font-heading text-fluid-lg font-semibold text-ink">
                 {item.school}
               </h3>
               <p className="mt-2 text-fluid-sm text-muted">{item.detail}</p>
@@ -77,7 +77,7 @@ export default function EducationSection() {
         </div>
 
         <div className={card}>
-          <h3 className="font-heading text-fluid-lg font-semibold text-white">
+          <h3 className="font-heading text-fluid-lg font-semibold text-ink">
             Certificates
           </h3>
           <ul className="mt-4 space-y-4">

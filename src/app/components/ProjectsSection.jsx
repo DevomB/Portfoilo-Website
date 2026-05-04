@@ -30,11 +30,11 @@ export default function ProjectsSection() {
     <section id="projects" className="scroll-mt-28 section-y">
       <div className="mb-8 flex flex-col gap-4 sm:mb-10 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+          <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
             Projects
           </p>
-          <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
-            Projects
+          <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
+            Selected work
           </h2>
         </div>
         <Link
@@ -51,13 +51,10 @@ export default function ProjectsSection() {
         {projects.map((project) => (
           <article
             key={project.title}
-            className="flex flex-col rounded-xl border border-border bg-surface p-6 shadow-card"
+            className="flex flex-col card-soft p-6"
           >
-            <div
-              className="mb-5 h-1.5 w-12 rounded-full bg-accent-blue/80"
-              aria-hidden
-            />
-            <h3 className="font-heading text-fluid-xl font-semibold text-white">
+            <div className="mb-5 h-1.5 w-12 rounded-full bg-accent-blue/80" aria-hidden />
+            <h3 className="font-heading text-fluid-xl font-semibold text-ink">
               {project.title}
             </h3>
             <p className="mt-3 flex-1 text-fluid-sm leading-relaxed text-muted">
@@ -69,7 +66,7 @@ export default function ProjectsSection() {
                   href={project.repo}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg bg-accent-blue px-4 text-fluid-xs font-semibold text-bg transition hover:bg-accent-blue-dim sm:min-h-0"
+                  className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full bg-accent-blue px-5 text-fluid-xs font-semibold text-white transition hover:bg-accent-blue-dim sm:min-h-0"
                 >
                   Source & tests
                 </Link>
@@ -79,7 +76,7 @@ export default function ProjectsSection() {
                   href={project.preview}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-border px-4 text-fluid-xs font-semibold text-white transition hover:bg-surface-elevated sm:min-h-0"
+                  className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-5 text-fluid-xs font-semibold text-ink transition hover:bg-white sm:min-h-0"
                 >
                   Live preview
                 </Link>

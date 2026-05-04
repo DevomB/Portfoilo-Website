@@ -30,10 +30,10 @@ export default function VolunteerSkillsSection() {
     <section className="section-y">
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
         <div>
-          <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+          <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
             Volunteering
           </p>
-          <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+          <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
             Community work
           </h2>
           <ul className="mt-8 space-y-8">
@@ -42,7 +42,7 @@ export default function VolunteerSkillsSection() {
                 <p className="text-fluid-xs font-semibold uppercase tracking-wide text-muted">
                   {v.span}
                 </p>
-                <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-white">
+                <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-ink">
                   {v.title}
                 </h3>
                 <p className="mt-2 text-fluid-sm leading-relaxed text-muted">
@@ -53,28 +53,28 @@ export default function VolunteerSkillsSection() {
           </ul>
         </div>
         <div>
-          <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+          <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
             Skills · Languages
           </p>
-          <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+          <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
             Skills
           </h2>
           <div className="mt-8 flex flex-wrap gap-2">
             {skills.map((skill) => (
               <span
                 key={skill}
-                className="rounded-lg border border-border bg-surface-elevated px-3 py-2 text-fluid-sm text-muted"
+                className="chip-soft px-3 py-2 text-fluid-sm"
               >
                 {skill}
               </span>
             ))}
           </div>
-          <dl className="mt-10 space-y-4 rounded-xl border border-border bg-surface p-6 shadow-card">
+          <dl className="mt-10 space-y-4 card-soft p-6">
             <div>
               <dt className="text-fluid-xs uppercase tracking-wide text-muted">
                 English
               </dt>
-              <dd className="text-fluid-sm text-white">
+              <dd className="text-fluid-sm text-ink">
                 Full professional proficiency
               </dd>
             </div>
@@ -82,7 +82,7 @@ export default function VolunteerSkillsSection() {
               <dt className="text-fluid-xs uppercase tracking-wide text-muted">
                 Gujarati
               </dt>
-              <dd className="text-fluid-sm text-white">
+              <dd className="text-fluid-sm text-ink">
                 Limited working proficiency
               </dd>
             </div>

@@ -40,16 +40,16 @@ const roles = [
 ];
 
 const cardClass =
-  "rounded-xl border border-border bg-surface p-5 shadow-card sm:p-6 border-l-4 border-l-accent-blue pl-4 sm:pl-5";
+  "card-soft p-5 sm:p-6 border-l-4 border-l-accent-blue pl-4 sm:pl-5";
 
 export default function ExperienceSection() {
   return (
     <section id="experience" className="scroll-mt-28 section-y">
       <div className="mb-8 sm:mb-10">
-        <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+        <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
           Experience
         </p>
-        <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+        <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
           Work
         </h2>
       </div>
@@ -60,7 +60,7 @@ export default function ExperienceSection() {
               <p className="text-fluid-xs font-semibold uppercase tracking-wide text-muted">
                 {job.span}
               </p>
-              <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-white">
+              <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-ink">
                 {job.title}
               </h3>
               <p className="text-fluid-sm text-muted">{job.org}</p>

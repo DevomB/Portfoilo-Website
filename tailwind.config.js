@@ -21,6 +21,7 @@ module.exports = {
         surface: "var(--color-surface)",
         "surface-elevated": "var(--color-surface-elevated)",
         border: "var(--color-border)",
+        ink: "var(--color-ink)",
         accent: {
           blue: "var(--color-accent-blue)",
           "blue-dim": "var(--color-accent-blue-dim)",
@@ -50,8 +51,8 @@ module.exports = {
       },
       boxShadow: {
         glow:
-          "0 0 32px rgba(66, 133, 244, 0.08), 0 1px 0 rgba(255, 255, 255, 0.04) inset",
-        card: "0 1px 0 rgba(255, 255, 255, 0.06) inset, 0 12px 40px rgba(0, 0, 0, 0.35)",
+          "0 0 36px rgba(210, 106, 58, 0.18), 0 1px 0 rgba(255, 255, 255, 0.6) inset",
+        card: "0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 50px rgba(29, 21, 15, 0.14)",
       },
       ringOffsetColor: {
         bg: "var(--color-bg)",

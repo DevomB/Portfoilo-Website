@@ -21,9 +21,9 @@ export default function CredibilityStrip() {
         {items.map((item) => (
           <article
             key={item.title}
-            className="rounded-xl border border-border bg-surface p-5 shadow-card"
+            className="card-soft p-5"
           >
-            <h3 className="text-fluid-sm font-semibold text-white">
+            <h3 className="text-fluid-sm font-semibold text-ink">
               {item.title}
             </h3>
             <p className="mt-2 text-fluid-sm leading-relaxed text-muted">

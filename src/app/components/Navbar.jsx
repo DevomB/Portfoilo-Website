@@ -31,15 +31,15 @@ export default function Navbar() {
 
   return (
     <header
-      className="fixed left-0 right-0 top-0 z-[100] border-b border-border bg-surface/95 backdrop-blur-md supports-[backdrop-filter]:bg-surface/80"
+      className="fixed left-0 right-0 top-0 z-[100] border-b border-border/70 bg-surface/90 backdrop-blur-xl supports-[backdrop-filter]:bg-surface/70"
       style={{ paddingTop: barPadTop }}
     >
-      <div className="mx-auto flex min-h-[3.25rem] w-[min(100%-2*var(--shell-inline),72rem)] items-center justify-between gap-4 px-[var(--shell-inline)] py-2.5 sm:min-h-14 sm:py-3">
+      <div className="mx-auto flex min-h-[3.25rem] w-[min(100%-2*var(--shell-inline),76rem)] items-center justify-between gap-4 px-[var(--shell-inline)] py-2.5 sm:min-h-14 sm:py-3">
         <Link
           href="/"
-          className="font-heading text-fluid-lg font-semibold tracking-tight text-white sm:text-fluid-xl"
+          className="font-heading text-fluid-lg font-semibold tracking-tight text-ink sm:text-fluid-xl"
         >
-          Devom Brahmbhatt
+          Devom <span className="text-accent-blue">Brahmbhatt</span>
         </Link>
 
         <nav
@@ -63,7 +63,7 @@ export default function Navbar() {
             aria-expanded={navbarOpen}
             aria-controls="mobile-nav-panel"
             aria-label={navbarOpen ? "Close menu" : "Open menu"}
-            className="inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg border border-border text-muted transition hover:bg-surface-elevated hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
+            className="inline-flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-lg border border-border text-ink/70 transition hover:bg-surface-elevated hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue"
           >
             {navbarOpen ? (
               <XMarkIcon className="h-6 w-6" />

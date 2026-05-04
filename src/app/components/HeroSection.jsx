@@ -14,46 +14,44 @@ export default function HeroSection() {
           transition={{ duration: 0.45 }}
           className="place-self-start text-center sm:text-left lg:col-span-8"
         >
-          <p className="mb-3 text-fluid-xs font-medium uppercase tracking-[0.18em] text-muted">
-            Eastvale, California
+          <p className="mb-3 text-fluid-xs font-semibold uppercase tracking-[0.28em] text-muted">
+            Eastvale, California · Full-stack
           </p>
-          <h1 className="font-heading text-fluid-hero font-semibold leading-[1.1] tracking-tight text-white">
-            Hi, I&apos;m{" "}
-            <span className="text-accent-blue">Devom</span>
-            <br />
-            <span className="text-muted">Full-stack developer</span>
+          <h1 className="font-heading text-fluid-hero font-semibold leading-[1.05] tracking-tight text-ink">
+            Product-minded engineering for
+            <span className="text-accent-blue"> ambitious teams</span>.
           </h1>
           <p className="prose-readable mx-auto mt-6 text-fluid-lg leading-relaxed text-muted sm:mx-0">
-            I work on Roosevelt Connect (Flutter and APIs), Virtual Medical
-            Missions (telemedicine), and WebWork Innovations (Next.js sites with
-            PostgreSQL). C++ coursework and Poker-Bot on the side.
+            I build platforms for Roosevelt Connect, Virtual Medical Missions,
+            and WebWork Innovations. My focus: resilient APIs, expressive UIs,
+            and applied simulation for decision-heavy products.
           </p>
           <div className="mt-8 flex w-full max-w-xl flex-col gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-start">
             <Link
               href="#demo"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg bg-accent-blue px-5 text-fluid-sm font-semibold text-bg shadow-card transition hover:bg-accent-blue-dim sm:min-h-0 sm:w-auto"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full bg-accent-blue px-6 text-fluid-sm font-semibold text-white shadow-card transition hover:bg-accent-blue-dim sm:min-h-0 sm:w-auto"
             >
-              Open PokerLab
-            </Link>
-            <Link
-              href="https://github.com/DevomB"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface px-5 text-fluid-sm font-semibold text-white transition hover:border-border hover:bg-surface-elevated sm:min-h-0 sm:w-auto"
-            >
-              GitHub
+              Explore PokerLab
             </Link>
             <Link
               href="https://www.linkedin.com/in/devomb/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface px-5 text-fluid-sm font-semibold text-white transition hover:border-border hover:bg-surface-elevated sm:min-h-0 sm:w-auto"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0 sm:w-auto"
             >
               LinkedIn
             </Link>
             <Link
+              href="https://github.com/DevomB"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0 sm:w-auto"
+            >
+              GitHub
+            </Link>
+            <Link
               href="#contact"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-lg border border-accent-blue/30 bg-accent-blue/5 px-5 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/10 sm:min-h-0 sm:w-auto"
+              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-accent-blue/40 bg-accent-blue/10 px-6 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/15 sm:min-h-0 sm:w-auto"
             >
               Contact
             </Link>
@@ -66,14 +64,36 @@ export default function HeroSection() {
           transition={{ duration: 0.45, delay: 0.08 }}
           className="flex justify-center lg:col-span-4 lg:justify-end"
         >
-          <div
-            className="relative flex aspect-square w-[min(100%,clamp(10rem,28vw,16rem))] max-w-[16rem] items-center justify-center rounded-2xl border border-border bg-surface-elevated shadow-card"
-            aria-hidden
-          >
-            <div className="absolute inset-2 rounded-xl bg-gradient-to-br from-accent-blue/10 to-accent-purple/8" />
-            <span className="relative font-heading text-fluid-4xl font-bold tracking-tight text-white">
-              DB
-            </span>
+          <div className="w-full max-w-sm space-y-4">
+            <div className="card-soft relative flex aspect-[4/5] w-full items-end overflow-hidden p-6">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(210,106,58,0.18),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(42,111,107,0.2),transparent_50%)]" />
+              <div className="relative">
+                <p className="text-fluid-xs font-semibold uppercase tracking-[0.2em] text-muted">
+                  Devom Brahmbhatt
+                </p>
+                <p className="mt-2 font-heading text-fluid-3xl font-semibold text-ink">
+                  Building for resilience.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="card-soft p-4">
+                <p className="text-fluid-xs uppercase tracking-[0.2em] text-muted">
+                  Focus
+                </p>
+                <p className="mt-2 text-fluid-sm font-semibold text-ink">
+                  APIs · Data · Product UI
+                </p>
+              </div>
+              <div className="card-soft p-4">
+                <p className="text-fluid-xs uppercase tracking-[0.2em] text-muted">
+                  Stack
+                </p>
+                <p className="mt-2 text-fluid-sm font-semibold text-ink">
+                  Next.js · Flutter · PostgreSQL
+                </p>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>

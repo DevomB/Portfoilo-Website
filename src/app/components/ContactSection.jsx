@@ -15,17 +15,17 @@ export default function ContactSection() {
       : "";
 
   const linkBtn =
-    "inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-lg border border-border bg-surface px-5 text-fluid-sm font-semibold text-white transition hover:bg-surface-elevated sm:min-h-0";
+    "inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0";
 
   return (
     <section id="contact" className="scroll-mt-28 section-y">
-      <div className="rounded-xl border border-border bg-surface p-6 shadow-card sm:p-10 md:p-12">
+      <div className="card-soft p-6 sm:p-10 md:p-12">
         <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12">
           <div>
-            <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+            <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
               Contact
             </p>
-            <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+            <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
               Ways to reach me
             </h2>
             <p className="prose-readable mt-4 text-fluid-sm leading-relaxed text-muted">
@@ -57,15 +57,15 @@ export default function ContactSection() {
               {email ? (
                 <Link
                   href={`mailto:${encodeURIComponent(email)}`}
-                  className="inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-lg border border-accent-blue/30 bg-accent-blue/10 px-5 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/[0.14] sm:min-h-0"
+                  className="inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full border border-accent-blue/40 bg-accent-blue/10 px-6 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/[0.16] sm:min-h-0"
                 >
                   Email · {email}
                 </Link>
               ) : null}
             </div>
           </div>
-          <div className="rounded-lg border border-dashed border-border bg-bg/80 p-6 text-fluid-sm text-muted">
-            <p className="font-heading font-semibold text-white">Hosting</p>
+          <div className="rounded-2xl border border-dashed border-border bg-bg/80 p-6 text-fluid-sm text-muted">
+            <p className="font-heading font-semibold text-ink">Hosting</p>
             <p className="mt-3 leading-relaxed">
               Next.js on Vercel. PokerLab runs only in the browser (deterministic
               RNG, Monte Carlo in chunks with{" "}

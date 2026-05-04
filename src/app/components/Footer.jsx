@@ -7,9 +7,9 @@ export default function Footer() {
 
   return (
     <footer className="relative z-10 border-t border-border bg-bg/95 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-10 backdrop-blur">
-      <div className="mx-auto flex w-[min(100%-2*var(--shell-inline),72rem)] flex-col gap-6 px-[var(--shell-inline)] pb-12 pt-0 md:flex-row md:items-center md:justify-between">
+      <div className="mx-auto flex w-[min(100%-2*var(--shell-inline),76rem)] flex-col gap-6 px-[var(--shell-inline)] pb-12 pt-0 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-heading text-fluid-lg font-semibold text-white">
+          <p className="font-heading text-fluid-lg font-semibold text-ink">
             Devom Brahmbhatt
           </p>
           <p className="mt-1 text-fluid-sm text-muted">

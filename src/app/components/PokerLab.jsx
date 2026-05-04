@@ -14,7 +14,7 @@ const SUITS = [
 ];
 
 const inputCls =
-  "mt-1.5 min-h-11 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2.5 text-[16px] text-white outline-none ring-accent-blue/40 transition placeholder:text-muted/60 focus:border-accent-blue/50 focus:ring-2 sm:text-fluid-base";
+  "mt-1.5 min-h-11 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2.5 text-[16px] text-ink outline-none ring-accent-blue/40 transition placeholder:text-muted/60 focus:border-accent-blue/50 focus:ring-2 sm:text-fluid-base";
 
 function parseCodes(line) {
   return line
@@ -106,17 +106,17 @@ export default function PokerLab() {
   const display = finalResult ?? live;
 
   const chipBtn =
-    "inline-flex min-h-10 min-w-10 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface-elevated text-fluid-sm font-medium text-white transition hover:border-accent-blue/40 hover:bg-surface active:scale-[0.98]";
+    "inline-flex min-h-10 min-w-10 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface-elevated text-fluid-sm font-medium text-ink transition hover:border-accent-blue/40 hover:bg-white active:scale-[0.98]";
 
   return (
     <section id="demo" className="relative z-10 scroll-mt-28 section-y">
-      <div className="rounded-xl border border-border bg-surface p-5 shadow-card sm:p-8 md:p-10">
+      <div className="card-soft p-5 sm:p-8 md:p-10">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
           <div>
-            <p className="text-fluid-xs font-semibold uppercase tracking-wider text-muted">
+            <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
               Monte Carlo lab
             </p>
-            <h2 className="font-heading mt-2 text-fluid-3xl font-semibold tracking-tight text-white">
+            <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
               PokerLab · NL Hold&apos;em equity
             </h2>
             <p className="prose-readable mt-3 max-w-2xl text-fluid-sm leading-relaxed text-muted">
@@ -132,7 +132,7 @@ export default function PokerLab() {
             href="https://github.com/DevomB/Poker-Bot"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-11 w-full shrink-0 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface-elevated px-4 text-fluid-sm font-semibold text-accent-blue transition hover:border-accent-blue/40 hover:bg-accent-blue/5 md:min-h-0 md:w-auto"
+            className="inline-flex min-h-11 w-full shrink-0 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-5 text-fluid-sm font-semibold text-accent-blue transition hover:border-accent-blue/40 hover:bg-accent-blue/10 md:min-h-0 md:w-auto"
           >
             Poker-Bot on GitHub
           </Link>
@@ -148,8 +148,8 @@ export default function PokerLab() {
                   onClick={() => setCardTarget("hero")}
                   className={`min-h-10 touch-manipulation rounded-lg border px-3 text-fluid-xs font-semibold transition ${
                     cardTarget === "hero"
-                      ? "border-accent-blue bg-accent-blue/15 text-white"
-                      : "border-border text-muted hover:text-white"
+                      ? "border-accent-blue bg-accent-blue/15 text-ink"
+                      : "border-border text-muted hover:text-ink"
                   }`}
                 >
                   Add to hero
@@ -159,8 +159,8 @@ export default function PokerLab() {
                   onClick={() => setCardTarget("board")}
                   className={`min-h-10 touch-manipulation rounded-lg border px-3 text-fluid-xs font-semibold transition ${
                     cardTarget === "board"
-                      ? "border-accent-blue bg-accent-blue/15 text-white"
-                      : "border-border text-muted hover:text-white"
+                      ? "border-accent-blue bg-accent-blue/15 text-ink"
+                      : "border-border text-muted hover:text-ink"
                   }`}
                 >
                   Add to board
@@ -184,7 +184,7 @@ export default function PokerLab() {
                     aria-pressed={pendingRank === r}
                     className={`${chipBtn} ${
                       pendingRank === r
-                        ? "border-accent-blue bg-accent-blue/15 text-white"
+                        ? "border-accent-blue bg-accent-blue/15 text-ink"
                         : ""
                     }`}
                   >
@@ -222,7 +222,7 @@ export default function PokerLab() {
                   onClick={() => setCardTarget("hero")}
                   className={`rounded-md border px-2.5 py-1.5 text-fluid-xs font-medium ${
                     cardTarget === "hero"
-                      ? "border-accent-blue/50 bg-accent-blue/10 text-white"
+                      ? "border-accent-blue/50 bg-accent-blue/10 text-ink"
                       : "border-border text-muted"
                   }`}
                 >
@@ -233,7 +233,7 @@ export default function PokerLab() {
                   onClick={() => setCardTarget("board")}
                   className={`rounded-md border px-2.5 py-1.5 text-fluid-xs font-medium ${
                     cardTarget === "board"
-                      ? "border-accent-blue/50 bg-accent-blue/10 text-white"
+                      ? "border-accent-blue/50 bg-accent-blue/10 text-ink"
                       : "border-border text-muted"
                   }`}
                 >
@@ -246,7 +246,7 @@ export default function PokerLab() {
                     <button
                       key={`${r}${s.code}`}
                       type="button"
-                      className="rounded border border-border bg-surface-elevated px-1.5 py-1 text-[11px] font-medium text-muted transition hover:border-accent-blue/35 hover:text-white"
+                      className="rounded border border-border bg-surface-elevated px-1.5 py-1 text-[11px] font-medium text-muted transition hover:border-accent-blue/35 hover:text-ink"
                       onClick={() => appendCard(r, s.code)}
                     >
                       {r}
@@ -261,35 +261,35 @@ export default function PokerLab() {
               <button
                 type="button"
                 onClick={() => setHeroLine("Ah Ad")}
-                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-white"
+                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-ink"
               >
                 Preset AA
               </button>
               <button
                 type="button"
                 onClick={() => setHeroLine("Ah Kh")}
-                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-white"
+                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-ink"
               >
                 Preset AKs
               </button>
               <button
                 type="button"
                 onClick={() => setHeroLine("Ah Kd")}
-                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-white"
+                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-ink"
               >
                 Preset AKo
               </button>
               <button
                 type="button"
                 onClick={() => setBoardLine("")}
-                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-white"
+                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-ink"
               >
                 Clear board
               </button>
               <button
                 type="button"
                 onClick={() => setHeroLine("")}
-                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-white"
+                className="min-h-10 touch-manipulation rounded-lg border border-border px-3 text-fluid-xs font-medium text-muted transition hover:text-ink"
               >
                 Clear hero
               </button>
@@ -357,7 +357,7 @@ export default function PokerLab() {
                 type="button"
                 onClick={randomizeHero}
                 disabled={running}
-                className="min-h-11 w-full touch-manipulation rounded-lg border border-border px-4 text-fluid-sm font-semibold text-white transition hover:bg-surface-elevated disabled:opacity-50 sm:min-h-10 sm:w-auto"
+                className="min-h-11 w-full touch-manipulation rounded-full border border-border px-4 text-fluid-sm font-semibold text-ink transition hover:bg-surface-elevated disabled:opacity-50 sm:min-h-10 sm:w-auto"
               >
                 Random hero (updates seed)
               </button>
@@ -365,7 +365,7 @@ export default function PokerLab() {
                 type="button"
                 onClick={run}
                 disabled={running}
-                className="min-h-11 w-full touch-manipulation rounded-lg bg-accent-blue px-5 text-fluid-sm font-semibold text-bg shadow-card transition hover:bg-accent-blue-dim disabled:opacity-50 sm:min-h-10 sm:w-auto"
+                className="min-h-11 w-full touch-manipulation rounded-full bg-accent-blue px-5 text-fluid-sm font-semibold text-white shadow-card transition hover:bg-accent-blue-dim disabled:opacity-50 sm:min-h-10 sm:w-auto"
               >
                 {running ? "Running…" : "Run Monte Carlo"}
               </button>
@@ -380,8 +380,8 @@ export default function PokerLab() {
             ) : null}
           </div>
 
-          <div className="rounded-xl border border-border bg-bg/80 p-5 shadow-card sm:p-6">
-            <h3 className="font-heading text-fluid-lg font-semibold text-white">
+          <div className="card-soft p-5 sm:p-6">
+            <h3 className="font-heading text-fluid-lg font-semibold text-ink">
               Live results
             </h3>
             <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-fluid-sm">
@@ -390,7 +390,7 @@ export default function PokerLab() {
                 {display ? `${display.equity.toFixed(2)}%` : "—"}
               </dd>
               <dt className="text-muted">Wins / ties / losses</dt>
-              <dd className="text-right font-mono text-white">
+              <dd className="text-right font-mono text-ink">
                 {display
                   ? `${display.wins} / ${display.ties} / ${display.losses}`
                   : "—"}

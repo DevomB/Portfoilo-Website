@@ -1,12 +1,12 @@
 import "./globals.css";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { Fraunces, Space_Grotesk } from "next/font/google";
 
-const sans = Plus_Jakarta_Sans({
+const sans = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
-const heading = Outfit({
+const heading = Fraunces({
   subsets: ["latin"],
   variable: "--font-heading",
 });
