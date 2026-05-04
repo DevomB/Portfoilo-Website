@@ -5,7 +5,7 @@ const projects = [
   {
     title: "Poker-Bot · NL Hold’em engine",
     description:
-      "Modern C++20 library — dealing engine, betting phases, deterministic Monte Carlo equity, parallel runners, GoogleTest suite.",
+      "C++20 library: dealing, betting phases, Monte Carlo equity, parallel runners, GoogleTest.",
     accent: "from-accent-blue/35 via-accent-purple/12 to-accent-purple/28",
     repo: "https://github.com/DevomB/Poker-Bot",
     preview: null,
@@ -13,7 +13,7 @@ const projects = [
   {
     title: "Roosevelt Connect",
     description:
-      "Hybrid Flutter + API stack targeting thousands of concurrent student workflows — streamlined communications & academics.",
+      "Flutter app and APIs for school resources, communication, and academics.",
     accent: "from-accent-purple/28 via-accent-blue/12 to-accent-blue/22",
     repo: null,
     preview: null,
@@ -21,7 +21,7 @@ const projects = [
   {
     title: "Virtual Medical Missions",
     description:
-      "501(c) telemedicine platform coordinating rural deployments — Tailwind UX backed by resilient API & database throughput.",
+      "501(c)(3) telemedicine: scheduling and records with a Tailwind front end and PostgreSQL-backed APIs.",
     accent: "from-accent-blue/22 via-accent-purple/18 to-accent-purple/26",
     repo: null,
     preview: "https://www.vmmhealthcare.org/",
@@ -37,7 +37,7 @@ export default function ProjectsSection() {
             Projects
           </p>
           <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-            Builds worth inspecting
+            Projects
           </h2>
         </div>
         <Link

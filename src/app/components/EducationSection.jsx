@@ -44,7 +44,7 @@ export default function EducationSection() {
           Education & certifications
         </p>
         <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-          Proof-heavy coursework · outbound credentials only
+          Coursework & certificates
         </h2>
       </div>
 
@@ -93,7 +93,7 @@ export default function EducationSection() {
             ))}
           </ul>
           <p className="mt-6 text-xs text-muted">
-            Grade PDFs / transcripts stay off-repo — DM via LinkedIn or email if you need originals for recruiting.
+            Transcripts and grade PDFs are not in this repo; ask on LinkedIn or email if you need them.
           </p>
         </div>
       </div>

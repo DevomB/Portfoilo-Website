@@ -4,8 +4,8 @@ const roles = [
     title: "Full-Stack Developer",
     span: "Jul 2024 – Present · Hybrid · Eastvale",
     bullets: [
-      "School-wide platform nearing launch for 5,000+ students — resources, comms, and academic tooling.",
-      "Flutter client work paired with resilient backend integrations.",
+      "Platform for resources, messaging, and academic tools (thousands of students).",
+      "Flutter client with API integrations.",
     ],
   },
   {
@@ -13,30 +13,29 @@ const roles = [
     title: "President · Head of Computer Science",
     span: "Apr 2024 – Present · Hybrid · Eastvale",
     bullets: [
-      "Telemedicine iteration supporting 400+ tribal Kenyans with mission-critical reliability.",
-      "10k+ database reads / 2k+ writes per operational slice — Tailwind & modern web stack.",
+      "Telemedicine deployments (400+ patients in rural Kenya on recent missions).",
+      "High read/write PostgreSQL usage during live sessions; Tailwind UI.",
     ],
   },
   {
     org: "Drip",
     title: "Founding Engineer Intern",
     span: "Jan 2026 – Apr 2026 · Hybrid · San Francisco",
-    bullets: ["Early-stage product engineering inside a compressed internship cadence."],
+    bullets: ["Internship: feature work on an early-stage product."],
   },
   {
     org: "WebWork Innovations",
     title: "Founder · Lead Developer",
     span: "Jun 2024 – Jan 2026 · Hybrid · Eastvale",
     bullets: [
-      "Delivered 10+ production websites at 100% client satisfaction.",
-      "Next.js · Tailwind · Vercel · PostgreSQL · Node · TypeScript.",
+      "10+ client sites: Next.js, Tailwind, Vercel, PostgreSQL, Node, TypeScript.",
     ],
   },
   {
     org: "Ascend Labs",
     title: "CEO · Founder · Developer",
     span: "Sep 2024 – Nov 2025 · Remote · Eastvale",
-    bullets: ["Built product velocity experiments across modern JS ecosystems."],
+    bullets: ["Small experiments and prototypes in JS ecosystems."],
   },
 ];
 
@@ -48,7 +47,7 @@ export default function ExperienceSection() {
           Experience
         </p>
         <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-          Roles where ownership mattered
+          Work
         </h2>
       </div>
       <div className="relative space-y-12 border-l border-border pl-8">

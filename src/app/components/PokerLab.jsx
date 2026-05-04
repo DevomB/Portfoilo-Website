@@ -76,12 +76,10 @@ export default function PokerLab() {
               PokerLab · NL Hold&apos;em equity
             </h2>
             <p className="mt-3 max-w-2xl text-muted">
-              Uniform random villain hole cards with collision checks, unknown
-              board runouts, deterministic{" "}
-              <span className="text-accent-purple">mulberry32</span> RNG, and{" "}
-              <span className="text-accent-blue">C(7,5)</span> seven-card
-              evaluation — all on the main thread in yielding chunks so the UI
-              stays responsive.
+              Random villain hole cards, optional board runouts, deterministic{" "}
+              <span className="text-accent-purple">mulberry32</span> seeding, and{" "}
+              <span className="text-accent-blue">C(7,5)</span> seven-card evaluation.
+              Work runs in small batches so the UI does not freeze.
             </p>
           </div>
           <Link
@@ -90,7 +88,7 @@ export default function PokerLab() {
             rel="noopener noreferrer"
             className="inline-flex shrink-0 items-center justify-center rounded-xl border border-accent-blue/40 bg-accent-blue/10 px-4 py-3 text-sm font-medium text-accent-blue transition hover:bg-accent-blue/20"
           >
-            Production engine (C++ + CMake + tests)
+            Poker-Bot on GitHub
           </Link>
         </div>
 
@@ -212,9 +210,8 @@ export default function PokerLab() {
               ) : null}
             </dl>
             <p className="mt-6 text-xs leading-relaxed text-muted">
-              Simplified simulator for portfolio demos — skips burns and live
-              betting edges. Compare with the tested C++ library for rigorous
-              rules coverage and parallel simulation workers.
+              Demo-only simulator (no burns, simplified rules). For full coverage
+              and parallel sims, use the C++ repo.
             </p>
           </div>
         </div>

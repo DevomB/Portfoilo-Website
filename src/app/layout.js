@@ -11,15 +11,15 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
-    default: "Devom Brahmbhatt · Builder & engineer",
+    default: "Devom Brahmbhatt",
     template: "%s · Devom Brahmbhatt",
   },
   description:
-    "Full-stack developer building Roosevelt Connect, WebWork Innovations, and Virtual Medical Missions — Next.js, Flutter, PostgreSQL, C++.",
+    "Devom Brahmbhatt — full-stack work on Roosevelt Connect, WebWork Innovations, Virtual Medical Missions. Next.js, Flutter, PostgreSQL, C++.",
   openGraph: {
     title: "Devom Brahmbhatt",
     description:
-      "Portfolio with Monte Carlo PokerLab, experience timeline, and outbound credential links.",
+      "Personal site: resume sections, PokerLab (Monte Carlo NLHE equity), and links.",
     type: "website",
     locale: "en_US",
   },

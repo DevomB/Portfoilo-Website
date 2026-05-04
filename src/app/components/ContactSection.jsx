@@ -23,15 +23,14 @@ export default function ContactSection() {
               Contact
             </p>
             <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-              Let&apos;s build something measurable.
+              Ways to reach me
             </h2>
             <p className="mt-4 text-muted">
-              No inbox middleware — reach me directly on LinkedIn or GitHub.
-              Optional mailto unlocks when{" "}
+              LinkedIn and GitHub below. Email appears here if{" "}
               <code className="rounded bg-surface-elevated px-1 text-accent-purple">
                 NEXT_PUBLIC_CONTACT_EMAIL
               </code>{" "}
-              is set in Vercel.
+              is set (e.g. in Vercel env).
             </p>
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
@@ -63,11 +62,12 @@ export default function ContactSection() {
             </div>
           </div>
           <div className="rounded-xl border border-dashed border-accent-purple/35 bg-bg/60 p-6 text-sm text-muted">
-            <p className="font-semibold text-white">Deploy narrative</p>
+            <p className="font-semibold text-white">Hosting</p>
             <p className="mt-3 leading-relaxed">
-              Static-first Next.js + edge CDN on Vercel. PokerLab ships entirely client-side — deterministic RNG,
-              chunked Monte Carlo batches with{" "}
-              <span className="text-accent-purple">requestAnimationFrame</span> yields, no secrets on-server.
+              Next.js on Vercel. PokerLab runs only in the browser (deterministic RNG,
+              Monte Carlo in chunks with{" "}
+              <span className="text-accent-purple">requestAnimationFrame</span> so the
+              tab stays responsive).
             </p>
           </div>
         </div>

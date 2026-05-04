@@ -23,8 +23,6 @@ const skills = [
   "Flutter",
   "C++",
   "Algorithms",
-  "Systems thinking",
-  "Monte Carlo simulation",
 ];
 
 export default function VolunteerSkillsSection() {
@@ -36,7 +34,7 @@ export default function VolunteerSkillsSection() {
             Volunteering
           </p>
           <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-            Mission-first collaboration
+            Community work
           </h2>
           <ul className="mt-8 space-y-8">
             {volunteering.map((v) => (
@@ -55,7 +53,7 @@ export default function VolunteerSkillsSection() {
             Skills · Languages
           </p>
           <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-            Toolkit & fluency
+            Skills
           </h2>
           <div className="mt-8 flex flex-wrap gap-2">
             {skills.map((skill) => (

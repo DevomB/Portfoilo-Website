@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React from "react";
-import { TypeAnimation } from "react-type-animation";
 import { motion } from "framer-motion";
 
 export default function HeroSection() {
@@ -16,7 +15,7 @@ export default function HeroSection() {
           className="place-self-start text-center sm:text-left lg:col-span-8"
         >
           <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-accent-blue">
-            Eastvale · Hybrid builder
+            Eastvale, California
           </p>
           <h1 className="mb-4 text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl">
             Hi, I&apos;m{" "}
@@ -24,28 +23,12 @@ export default function HeroSection() {
               Devom
             </span>
             <br />
-            <span className="text-muted">
-              <TypeAnimation
-                sequence={[
-                  "Full-stack developer",
-                  1400,
-                  "Founding engineer",
-                  1400,
-                  "Flutter + Next.js shipper",
-                  1400,
-                  "Systems-minded competitor",
-                  1400,
-                ]}
-                wrapper="span"
-                speed={45}
-                repeat={Infinity}
-              />
-            </span>
+            <span className="text-muted">Full-stack developer</span>
           </h1>
           <p className="mb-8 max-w-xl text-lg text-muted">
-            I ship production web apps with Next.js, TypeScript, PostgreSQL, and
-            Flutter — from Roosevelt Connect&apos;s campus platform to telemedicine
-            workloads measured in thousands of DB ops per session.
+            I work on Roosevelt Connect (Flutter and APIs), Virtual Medical
+            Missions (telemedicine), and WebWork Innovations (Next.js sites with
+            PostgreSQL). C++ coursework and Poker-Bot on the side.
           </p>
           <div className="flex flex-wrap justify-center gap-3 sm:justify-start">
             <Link

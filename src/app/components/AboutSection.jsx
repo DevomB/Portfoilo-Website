@@ -6,21 +6,21 @@ export default function AboutSection() {
           About
         </p>
         <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
-          I optimize for clarity, throughput, and shipped outcomes.
+          Background
         </h2>
         <div className="mt-6 space-y-4 text-lg leading-relaxed text-muted">
           <p>
-            I&apos;m a full-stack engineer based in Eastvale, California: Roosevelt
-            Connect (Flutter + scalable APIs), Virtual Medical Missions (telemedicine
-            data paths at 10k+ reads / 2k+ writes), WebWork Innovations (commissioned
-            Next.js sites with PostgreSQL + Vercel), and a stint leading Ascend Labs.
+            I&apos;m based in Eastvale, California. Recent focus: Roosevelt
+            Connect (Flutter and APIs for the high school), Virtual Medical
+            Missions (telemedicine and data-heavy sessions), WebWork Innovations
+            (commissioned Next.js sites with PostgreSQL on Vercel), and Ascend
+            Labs before that wrapped up.
           </p>
           <p>
-            Under the hood I reach for Next.js, Tailwind CSS, Node.js, TypeScript,
-            PostgreSQL, Flutter, and modern deployment on Vercel — plus serious C++
-            coursework (Norco pathway +{" "}
-            <span className="text-accent-purple">Poker-Bot</span>{" "}
-            testing discipline).
+            Stack-wise: Next.js, Tailwind, Node, TypeScript, PostgreSQL, Flutter,
+            plus C++ from the Norco College pathway and{" "}
+            <span className="text-accent-purple">Poker-Bot</span> for testing and
+            algorithms practice.
           </p>
         </div>
       </div>
