@@ -67,12 +67,12 @@ export default function ContactSection() {
           <div className="rounded-2xl border border-dashed border-border bg-bg/80 p-6 text-fluid-sm text-muted">
             <p className="font-heading font-semibold text-ink">Hosting</p>
             <p className="mt-3 leading-relaxed">
-              Next.js on Vercel. PokerLab runs only in the browser (deterministic
-              RNG, Monte Carlo in chunks with{" "}
+              Next.js on Vercel. PokerLab equity runs on the server via the{" "}
               <span className="font-medium text-accent-purple">
-                requestAnimationFrame
+                poker-calculations
               </span>{" "}
-              so the tab stays responsive).
+              native engine (Monte Carlo vs one random villain); the browser only
+              sends inputs and renders the response.
             </p>
           </div>
         </div>

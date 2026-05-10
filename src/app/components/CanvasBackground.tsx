@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-function readCssVar(name, fallback) {
+function readCssVar(name: string, fallback: string): string {
   if (typeof document === "undefined") return fallback;
   const raw = getComputedStyle(document.documentElement)
     .getPropertyValue(name)
@@ -10,7 +10,7 @@ function readCssVar(name, fallback) {
   return raw || fallback;
 }
 
-function coarsePointerPreferred() {
+function coarsePointerPreferred(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
   return (
     window.matchMedia("(pointer: coarse)").matches ||
@@ -19,14 +19,14 @@ function coarsePointerPreferred() {
 }
 
 /** Lite mode: narrower viewports or touch-first pointers get a static-ish gradient instead of diagonal line animation every frame */
-function shouldUseLiteBackground(width) {
+function shouldUseLiteBackground(width: number): boolean {
   if (width <= 0) return true;
   if (width < 768) return true;
   return coarsePointerPreferred();
 }
 
 export default function CanvasBackground() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef(0);
 
   useEffect(() => {

@@ -19,7 +19,7 @@ const items = [
     detail:
       "CIS-5 · CIS-17A · CIS-17B · CIS-17C — all A grades · Certificate pathway completed.",
     sub: "Heavy emphasis on data structures and disciplined C++ debugging.",
-    links: [],
+    links: [] as { label: string; href: string }[],
   },
 ];
 

@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+const POKER_CALC_NPM = "https://www.npmjs.com/package/poker-calculations";
+
 export default function Footer() {
   const year = new Date().getFullYear();
   const footerLink =
@@ -35,6 +37,15 @@ export default function Footer() {
           </Link>
           <Link className={footerLink} href="#demo">
             PokerLab
+          </Link>
+          <Link
+            className={`${footerLink} hover:text-accent-purple`}
+            href={POKER_CALC_NPM}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Monte Carlo engine for PokerLab"
+          >
+            poker-calculations
           </Link>
         </div>
       </div>

@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
-import { dealRandomHoleCards } from "../../lib/poker/cards.js";
-import { simulateEquityAsync } from "../../lib/poker/simulate.js";
+import { dealRandomHoleCards } from "@/lib/pokerCards";
 
 const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
 const SUITS = [
@@ -13,19 +12,32 @@ const SUITS = [
   { code: "s", label: "♠" },
 ];
 
+const POKER_CALC_NPM = "https://www.npmjs.com/package/poker-calculations";
+const POKER_CALC_REPO = "https://github.com/DevomB/Poker-Calculations";
+
 const inputCls =
   "mt-1.5 min-h-11 w-full rounded-lg border border-border bg-surface-elevated px-3 py-2.5 text-[16px] text-ink outline-none ring-accent-blue/40 transition placeholder:text-muted/60 focus:border-accent-blue/50 focus:ring-2 sm:text-fluid-base";
 
-function parseCodes(line) {
+function parseCodes(line: string): string[] {
   return line
     .split(/[\s,]+/)
     .map((s) => s.trim())
     .filter(Boolean);
 }
 
-function formatCard(rankChar, suitCode) {
+function formatCard(rankChar: string, suitCode: string): string {
   return `${rankChar}${suitCode}`;
 }
+
+type EquityResult = {
+  equity: number;
+  iterations: number;
+  seed: number;
+  durationMs: number;
+  iterationsPerSec: number;
+  heroDisplay: string[];
+  boardDisplay: string[];
+};
 
 export default function PokerLab() {
   const [heroLine, setHeroLine] = useState("Ah Kd");
@@ -34,23 +46,22 @@ export default function PokerLab() {
   const [seed, setSeed] = useState(2463534242);
   const [running, setRunning] = useState(false);
   const [error, setError] = useState("");
-  const [live, setLive] = useState(null);
-  const [finalResult, setFinalResult] = useState(null);
-  const [cardTarget, setCardTarget] = useState("hero");
-  const [pendingRank, setPendingRank] = useState(null);
+  const [finalResult, setFinalResult] = useState<EquityResult | null>(null);
+  const [cardTarget, setCardTarget] = useState<"hero" | "board">("hero");
+  const [pendingRank, setPendingRank] = useState<string | null>(null);
 
   const heroCodes = useMemo(() => parseCodes(heroLine), [heroLine]);
   const boardCodes = useMemo(() => parseCodes(boardLine), [boardLine]);
 
   const appendCard = useCallback(
-    (rankChar, suitCode) => {
+    (rankChar: string, suitCode: string) => {
       const code = formatCard(rankChar, suitCode);
       if (cardTarget === "hero") {
         const next = [...heroCodes];
         if (next.length >= 2) {
-          setHeroLine(`${next[0]} ${code}`);
+          setHeroLine(`${next[0]!} ${code}`);
         } else if (next.length === 1) {
-          setHeroLine(`${next[0]} ${code}`);
+          setHeroLine(`${next[0]!} ${code}`);
         } else {
           setHeroLine(code);
         }
@@ -77,25 +88,30 @@ export default function PokerLab() {
     setError("");
     setFinalResult(null);
     setRunning(true);
-    setLive(null);
-    const t0 =
-      typeof performance !== "undefined" ? performance.now() : Date.now();
 
     try {
-      const result = await simulateEquityAsync({
-        heroCodes,
-        boardCodes,
-        iterations,
-        seed: seed >>> 0,
-        chunkSize: 800,
-        onChunk: (s) => setLive({ ...s }),
+      const res = await fetch("/api/poker/equity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          heroLine,
+          boardLine,
+          iterations,
+          seed: seed >>> 0,
+        }),
       });
-      const t1 =
-        typeof performance !== "undefined" ? performance.now() : Date.now();
-      result.durationMs = t1 - t0;
-      const sec = Math.max((t1 - t0) / 1000, 1e-6);
-      result.iterationsPerSec = iterations / sec;
-      setFinalResult(result);
+      const data: unknown = await res.json();
+      if (!res.ok) {
+        const msg =
+          data &&
+          typeof data === "object" &&
+          "error" in data &&
+          typeof (data as { error: unknown }).error === "string"
+            ? (data as { error: string }).error
+            : "Simulation failed.";
+        throw new Error(msg);
+      }
+      setFinalResult(data as EquityResult);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Simulation failed.");
     } finally {
@@ -103,7 +119,7 @@ export default function PokerLab() {
     }
   };
 
-  const display = finalResult ?? live;
+  const display = finalResult;
 
   const chipBtn =
     "inline-flex min-h-10 min-w-10 touch-manipulation items-center justify-center rounded-lg border border-border bg-surface-elevated text-fluid-sm font-medium text-ink transition hover:border-accent-blue/40 hover:bg-white active:scale-[0.98]";
@@ -120,22 +136,40 @@ export default function PokerLab() {
               PokerLab · NL Hold&apos;em equity
             </h2>
             <p className="prose-readable mt-3 max-w-2xl text-fluid-sm leading-relaxed text-muted">
-              Random villain hole cards, optional board runouts, deterministic{" "}
-              <span className="font-medium text-accent-purple">mulberry32</span>{" "}
-              seeding, and{" "}
-              <span className="font-medium text-accent-blue">C(7,5)</span>{" "}
-              seven-card evaluation. Work runs in small batches so the UI stays
-              responsive.
+              Monte Carlo equity vs one random villain, optional board runouts,
+              and deterministic{" "}
+              <span className="font-medium text-accent-purple">uint32</span>{" "}
+              seeding. Evaluation runs in{" "}
+              <Link
+                href={POKER_CALC_NPM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-accent-blue underline decoration-accent-blue/35 underline-offset-2 hover:decoration-accent-blue"
+              >
+                poker-calculations
+              </Link>
+              — the same package I publish for hold&apos;em sims — on the
+              server; this page is just the control surface.
             </p>
           </div>
-          <Link
-            href="https://github.com/DevomB/Poker-Bot"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 w-full shrink-0 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-5 text-fluid-sm font-semibold text-accent-blue transition hover:border-accent-blue/40 hover:bg-accent-blue/10 md:min-h-0 md:w-auto"
-          >
-            Poker-Bot on GitHub
-          </Link>
+          <div className="flex w-full shrink-0 flex-col gap-2 md:w-auto md:items-end">
+            <Link
+              href="https://github.com/DevomB/Poker-Bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 w-full touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-5 text-fluid-sm font-semibold text-accent-blue transition hover:border-accent-blue/40 hover:bg-accent-blue/10 md:min-h-0 md:w-auto"
+            >
+              Poker-Bot on GitHub
+            </Link>
+            <Link
+              href={POKER_CALC_REPO}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-10 w-full touch-manipulation items-center justify-center rounded-full border border-border/80 px-4 text-fluid-xs font-medium text-muted transition hover:border-accent-purple/30 hover:text-ink md:w-auto"
+            >
+              Engine source
+            </Link>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-2 lg:gap-10">
@@ -382,44 +416,45 @@ export default function PokerLab() {
 
           <div className="card-soft p-5 sm:p-6">
             <h3 className="font-heading text-fluid-lg font-semibold text-ink">
-              Live results
+              Results
             </h3>
             <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-fluid-sm">
               <dt className="text-muted">Hero equity</dt>
               <dd className="text-right font-mono text-fluid-xl font-bold text-accent-purple">
                 {display ? `${display.equity.toFixed(2)}%` : "—"}
               </dd>
-              <dt className="text-muted">Wins / ties / losses</dt>
-              <dd className="text-right font-mono text-ink">
-                {display
-                  ? `${display.wins} / ${display.ties} / ${display.losses}`
-                  : "—"}
-              </dd>
-              <dt className="text-muted">Processed</dt>
+              <dt className="text-muted">Simulations</dt>
               <dd className="text-right font-mono text-muted">
-                {display
-                  ? `${display.processed ?? display.iterations ?? iterations}`
-                  : "—"}
+                {display ? display.iterations : "—"}
               </dd>
-              {finalResult ? (
+              {display ? (
                 <>
                   <dt className="text-muted">Throughput</dt>
                   <dd className="text-right font-mono text-accent-blue">
-                    {finalResult.iterationsPerSec?.toLocaleString(undefined, {
+                    {display.iterationsPerSec.toLocaleString(undefined, {
                       maximumFractionDigits: 0,
                     })}{" "}
                     iter/s
                   </dd>
                   <dt className="text-muted">Wall time</dt>
                   <dd className="text-right font-mono text-muted">
-                    {finalResult.durationMs?.toFixed(1)} ms
+                    {display.durationMs.toFixed(1)} ms
                   </dd>
                 </>
               ) : null}
             </dl>
             <p className="mt-6 text-fluid-xs leading-relaxed text-muted">
-              Demo-only simulator (no burns, simplified rules). For full coverage
-              and parallel sims, use the C++ repo.
+              Demo-only (no burns). For full game coverage and parallel sims, see
+              the C++ Poker-Bot repo; this lab uses the published{" "}
+              <Link
+                href={POKER_CALC_NPM}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent-blue underline decoration-accent-blue/30 underline-offset-2"
+              >
+                npm
+              </Link>{" "}
+              build.
             </p>
           </div>
         </div>

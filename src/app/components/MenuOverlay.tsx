@@ -1,6 +1,13 @@
 import NavLink from "./NavLink";
 
-export default function MenuOverlay({ links, onNavigate }) {
+export type NavLinkItem = { title: string; path: string };
+
+type MenuOverlayProps = {
+  links: NavLinkItem[];
+  onNavigate?: () => void;
+};
+
+export default function MenuOverlay({ links, onNavigate }: MenuOverlayProps) {
   return (
     <nav aria-label="Mobile navigation" className="px-[var(--shell-inline)] pb-6 pt-4">
       <ul className="flex flex-col gap-1">

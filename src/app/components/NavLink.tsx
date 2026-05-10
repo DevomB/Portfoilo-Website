@@ -1,6 +1,18 @@
 import Link from "next/link";
 
-export default function NavLink({ href, title, onClick, mobile = false }) {
+type NavLinkProps = {
+  href: string;
+  title: string;
+  onClick?: () => void;
+  mobile?: boolean;
+};
+
+export default function NavLink({
+  href,
+  title,
+  onClick,
+  mobile = false,
+}: NavLinkProps) {
   const desktopCls =
     "inline-flex touch-manipulation items-center rounded-full px-4 py-2 text-fluid-sm font-medium text-ink/70 transition hover:bg-surface-elevated hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-blue/40 focus-visible:ring-offset-2 focus-visible:ring-offset-bg";
   const mobileCls =

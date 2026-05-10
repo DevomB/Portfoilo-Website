@@ -1,4 +1,6 @@
 import "./globals.css";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Fraunces, Space_Grotesk } from "next/font/google";
 
 const sans = Space_Grotesk({
@@ -13,7 +15,7 @@ const heading = Fraunces({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-export const metadata = {
+export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
     default: "Devom Brahmbhatt",
@@ -30,7 +32,11 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
   return (
     <html lang="en">
       <body

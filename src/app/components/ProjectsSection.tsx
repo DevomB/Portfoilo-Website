@@ -7,20 +7,20 @@ const projects = [
     description:
       "C++20 library: dealing, betting phases, Monte Carlo equity, parallel runners, GoogleTest.",
     repo: "https://github.com/DevomB/Poker-Bot",
-    preview: null,
+    preview: null as string | null,
   },
   {
     title: "Roosevelt Connect",
     description:
       "Flutter app and APIs for school resources, communication, and academics.",
-    repo: null,
-    preview: null,
+    repo: null as string | null,
+    preview: null as string | null,
   },
   {
     title: "Virtual Medical Missions",
     description:
       "501(c)(3) telemedicine: scheduling and records with a Tailwind front end and PostgreSQL-backed APIs.",
-    repo: null,
+    repo: null as string | null,
     preview: "https://www.vmmhealthcare.org/",
   },
 ];

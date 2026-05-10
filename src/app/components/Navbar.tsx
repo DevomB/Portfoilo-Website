@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NavLink from "./NavLink";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import MenuOverlay from "./MenuOverlay";
+import MenuOverlay, { type NavLinkItem } from "./MenuOverlay";
 
-const navLinks = [
+const navLinks: NavLinkItem[] = [
   { title: "Demo", path: "#demo" },
   { title: "About", path: "#about" },
   { title: "Experience", path: "#experience" },
