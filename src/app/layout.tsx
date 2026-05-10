@@ -1,14 +1,21 @@
 import "./globals.css";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import type { Metadata } from "next";
+import type { ReactNode } from "react";
+import { Fraunces, Space_Grotesk } from "next/font/google";
 
-const sans = Plus_Jakarta_Sans({
+const sans = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+const heading = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-heading",
+});
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
-export const metadata = {
+export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
     default: "Devom Brahmbhatt",
@@ -25,10 +32,16 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className={`${sans.variable} font-sans antialiased`}>
+      <body
+        className={`${sans.variable} ${heading.variable} font-sans antialiased`}
+      >
         {children}
       </body>
     </html>

@@ -39,36 +39,40 @@ const roles = [
   },
 ];
 
+const cardClass =
+  "card-soft p-5 sm:p-6 border-l-4 border-l-accent-blue pl-4 sm:pl-5";
+
 export default function ExperienceSection() {
   return (
-    <section id="experience" className="scroll-mt-28 py-16 md:py-20">
-      <div className="mb-10">
-        <p className="text-sm font-semibold uppercase tracking-wider text-accent-purple">
+    <section id="experience" className="scroll-mt-28 section-y">
+      <div className="mb-8 sm:mb-10">
+        <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
           Experience
         </p>
-        <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
+        <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
           Work
         </h2>
       </div>
-      <div className="relative space-y-12 border-l border-border pl-8">
-        <ul className="space-y-12">
-          {roles.map((job) => (
-            <li key={job.org + job.title} className="relative">
-              <span className="absolute -left-[39px] mt-1 h-3 w-3 rounded-full border-2 border-accent-blue bg-bg shadow-[0_0_14px_rgba(91,157,255,0.45)]" />
-              <p className="text-xs font-semibold uppercase tracking-wide text-accent-blue">
+      <ul className="space-y-5 sm:space-y-6">
+        {roles.map((job) => (
+          <li key={job.org + job.title}>
+            <article className={cardClass}>
+              <p className="text-fluid-xs font-semibold uppercase tracking-wide text-muted">
                 {job.span}
               </p>
-              <h3 className="mt-2 text-xl font-bold text-white">{job.title}</h3>
-              <p className="text-muted">{job.org}</p>
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-muted marker:text-accent-purple">
+              <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-ink">
+                {job.title}
+              </h3>
+              <p className="text-fluid-sm text-muted">{job.org}</p>
+              <ul className="mt-4 list-disc space-y-2 pl-5 text-fluid-sm leading-relaxed text-muted marker:text-accent-blue">
                 {job.bullets.map((b) => (
                   <li key={b}>{b}</li>
                 ))}
               </ul>
-            </li>
-          ))}
-        </ul>
-      </div>
+            </article>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

@@ -19,7 +19,7 @@ const items = [
     detail:
       "CIS-5 · CIS-17A · CIS-17B · CIS-17C — all A grades · Certificate pathway completed.",
     sub: "Heavy emphasis on data structures and disciplined C++ debugging.",
-    links: [],
+    links: [] as { label: string; href: string }[],
   },
 ];
 
@@ -36,36 +36,37 @@ const certs = [
   },
 ];
 
+const card = "card-soft p-6";
+
 export default function EducationSection() {
   return (
-    <section id="education" className="scroll-mt-28 py-16 md:py-20">
-      <div className="mb-10">
-        <p className="text-sm font-semibold uppercase tracking-wider text-accent-purple">
+    <section id="education" className="scroll-mt-28 section-y">
+      <div className="mb-8 sm:mb-10">
+        <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
           Education & certifications
         </p>
-        <h2 className="mt-3 text-3xl font-bold text-white md:text-4xl">
+        <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
           Coursework & certificates
         </h2>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
         <div className="space-y-6">
           {items.map((item) => (
-            <article
-              key={item.school}
-              className="rounded-xl border border-border bg-surface/70 p-6 backdrop-blur-sm"
-            >
-              <h3 className="text-lg font-semibold text-white">{item.school}</h3>
-              <p className="mt-2 text-muted">{item.detail}</p>
-              <p className="mt-3 text-sm text-accent-purple/90">{item.sub}</p>
-              <div className="mt-4 flex flex-wrap gap-3">
+            <article key={item.school} className={card}>
+              <h3 className="font-heading text-fluid-lg font-semibold text-ink">
+                {item.school}
+              </h3>
+              <p className="mt-2 text-fluid-sm text-muted">{item.detail}</p>
+              <p className="mt-3 text-fluid-sm text-muted">{item.sub}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
                 {item.links.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-accent-blue hover:text-accent-blue-dim"
+                    className="inline-flex min-h-11 touch-manipulation items-center text-fluid-sm font-medium text-accent-blue hover:text-accent-blue-dim sm:min-h-0"
                   >
                     {l.label} →
                   </Link>
@@ -75,25 +76,30 @@ export default function EducationSection() {
           ))}
         </div>
 
-        <div className="rounded-xl border border-border bg-surface/70 p-6 backdrop-blur-sm">
-          <h3 className="text-lg font-semibold text-white">Certificates</h3>
-          <ul className="mt-4 space-y-5">
+        <div className={card}>
+          <h3 className="font-heading text-fluid-lg font-semibold text-ink">
+            Certificates
+          </h3>
+          <ul className="mt-4 space-y-4">
             {certs.map((c) => (
               <li key={c.href}>
                 <Link
                   href={c.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-accent-blue hover:text-accent-blue-dim"
+                  className="inline-flex min-h-11 touch-manipulation flex-col justify-center font-medium text-accent-blue hover:text-accent-blue-dim sm:min-h-0"
                 >
-                  {c.name}
+                  <span>{c.name}</span>
+                  <span className="text-fluid-sm font-normal text-muted">
+                    {c.meta}
+                  </span>
                 </Link>
-                <p className="text-sm text-muted">{c.meta}</p>
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-xs text-muted">
-            Transcripts and grade PDFs are not in this repo; ask on LinkedIn or email if you need them.
+          <p className="mt-6 text-fluid-xs text-muted">
+            Transcripts and grade PDFs are not in this repo; ask on LinkedIn or
+            email if you need them.
           </p>
         </div>
       </div>
