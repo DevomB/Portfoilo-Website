@@ -1,8 +1,24 @@
 import { NextResponse } from "next/server";
-import poker from "poker-calculations";
+import type { PokerCalculationsNative } from "poker-calculations";
 import { canonicalizeHand } from "@/lib/pokerCards";
+import { simulateEquityMonteCarloJs } from "@/lib/pokerEquityJs";
 
 export const runtime = "nodejs";
+
+let nativePoker: PokerCalculationsNative | "unavailable" | undefined;
+
+async function loadNativePoker(): Promise<PokerCalculationsNative | null> {
+  if (nativePoker === "unavailable") return null;
+  if (nativePoker !== undefined) return nativePoker;
+  try {
+    const mod = await import("poker-calculations");
+    nativePoker = mod.default as PokerCalculationsNative;
+    return nativePoker;
+  } catch {
+    nativePoker = "unavailable";
+    return null;
+  }
+}
 
 function parseCodes(line: string): string[] {
   return line
@@ -83,10 +99,20 @@ export async function POST(req: Request) {
   const t0 = performance.now();
   let equityFraction: number;
   try {
-    equityFraction = poker.simulateHandOutcome(hero, board, it, sd, 1);
+    const native = await loadNativePoker();
+    if (native) {
+      equityFraction = native.simulateHandOutcome(hero, board, it, sd, 1);
+    } else {
+      equityFraction = simulateEquityMonteCarloJs(hero, board, it, sd);
+    }
   } catch (e) {
-    const msg = e instanceof Error ? e.message : "Simulation failed.";
-    return NextResponse.json({ error: msg }, { status: 400 });
+    nativePoker = "unavailable";
+    try {
+      equityFraction = simulateEquityMonteCarloJs(hero, board, it, sd);
+    } catch (inner) {
+      const msg = inner instanceof Error ? inner.message : "Simulation failed.";
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
   }
   const t1 = performance.now();
   const durationMs = t1 - t0;
