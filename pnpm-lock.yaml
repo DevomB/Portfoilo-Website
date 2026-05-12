@@ -21,8 +21,8 @@ importers:
         specifier: ^16.2.4
         version: 16.2.4(@babel/core@7.29.0)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       poker-calculations:
-        specifier: 1.0.11
-        version: 1.0.11
+        specifier: 1.1.2
+        version: 1.1.2
       postcss:
         specifier: ^8.4.38
         version: 8.5.13
@@ -1594,8 +1594,8 @@ packages:
     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
     engines: {node: '>= 6'}
 
-  poker-calculations@1.0.11:
-    resolution: {integrity: sha512-NTV99Krd9ZX7lzUykSjzs/35mvCjymuXh+MgLmFBgexvF5PEqwcAp4Uptk+Pn6iAsXKnH4uKS+y0YLPuHjNx5A==}
+  poker-calculations@1.1.2:
+    resolution: {integrity: sha512-25QoMvIOBjNg0Zi94A5Y3iIgvr+GrIhq+Q0D2xM8WISYr/VapN8U000nXW2ggXHnlj6JYmk+bVaFbegcDLjgyg==}
     engines: {node: '>=18'}
 
   possible-typed-array-names@1.1.0:
@@ -3627,7 +3627,7 @@ snapshots:
 
   pirates@4.0.7: {}
 
-  poker-calculations@1.0.11:
+  poker-calculations@1.1.2:
     dependencies:
       node-gyp-build: 4.8.4
 
