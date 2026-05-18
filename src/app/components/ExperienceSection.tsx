@@ -1,78 +1,103 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+const fade = (delay = 0) => ({
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  viewport: { once: true, margin: "-80px" as const },
+  transition: { duration: 0.5, delay, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] },
+});
+
 const roles = [
+  {
+    org: "Drip",
+    title: "Founding Engineer Intern",
+    span: "Jan 2026 – Apr 2026",
+    location: "San Francisco · Hybrid",
+    bullets: ["Feature work on an early-stage product."],
+  },
   {
     org: "Roosevelt Connect · Eleanor Roosevelt HS",
     title: "Full-Stack Developer",
-    span: "Jul 2024 – Present · Hybrid · Eastvale",
+    span: "Jul 2024 – Present",
+    location: "Eastvale · Hybrid",
     bullets: [
-      "Platform for resources, messaging, and academic tools (thousands of students).",
-      "Flutter client with API integrations.",
+      "Platform serving thousands of students: resources, messaging, and academic tools.",
+      "Flutter client backed by REST APIs and a PostgreSQL data layer.",
     ],
   },
   {
     org: "Virtual Medical Missions",
     title: "President · Head of Computer Science",
-    span: "Apr 2024 – Present · Hybrid · Eastvale",
+    span: "Apr 2024 – Present",
+    location: "Eastvale · Hybrid",
     bullets: [
-      "Telemedicine deployments (400+ patients in rural Kenya on recent missions).",
-      "High read/write PostgreSQL usage during live sessions; Tailwind UI.",
+      "501(c)(3) telemedicine: 400+ patients served during recent rural Kenya mission.",
+      "PostgreSQL under live session load; optimistic concurrency for concurrent record writes.",
+      "Next.js front end built for volunteer non-engineers to use under pressure.",
     ],
-  },
-  {
-    org: "Drip",
-    title: "Founding Engineer Intern",
-    span: "Jan 2026 – Apr 2026 · Hybrid · San Francisco",
-    bullets: ["Internship: feature work on an early-stage product."],
   },
   {
     org: "WebWork Innovations",
     title: "Founder · Lead Developer",
-    span: "Jun 2024 – Jan 2026 · Hybrid · Eastvale",
-    bullets: [
-      "10+ client sites: Next.js, Tailwind, Vercel, PostgreSQL, Node, TypeScript.",
-    ],
+    span: "Jun 2024 – Jan 2026",
+    location: "Eastvale · Hybrid",
+    bullets: ["10+ client sites delivered: Next.js, PostgreSQL, Node, TypeScript, Vercel."],
   },
   {
     org: "Ascend Labs",
     title: "CEO · Founder · Developer",
-    span: "Sep 2024 – Nov 2025 · Remote · Eastvale",
-    bullets: ["Small experiments and prototypes in JS ecosystems."],
+    span: "Sep 2024 – Nov 2025",
+    location: "Remote",
+    bullets: ["Small-scope experiments and prototypes in the JS ecosystem."],
   },
 ];
-
-const cardClass =
-  "card-soft p-5 sm:p-6 border-l-4 border-l-accent-blue pl-4 sm:pl-5";
 
 export default function ExperienceSection() {
   return (
     <section id="experience" className="scroll-mt-28 section-y">
-      <div className="mb-8 sm:mb-10">
-        <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
-          Experience
-        </p>
-        <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
-          Work
-        </h2>
-      </div>
-      <ul className="space-y-5 sm:space-y-6">
-        {roles.map((job) => (
-          <li key={job.org + job.title}>
-            <article className={cardClass}>
-              <p className="text-fluid-xs font-semibold uppercase tracking-wide text-muted">
-                {job.span}
-              </p>
-              <h3 className="font-heading mt-2 text-fluid-xl font-semibold text-ink">
-                {job.title}
-              </h3>
-              <p className="text-fluid-sm text-muted">{job.org}</p>
-              <ul className="mt-4 list-disc space-y-2 pl-5 text-fluid-sm leading-relaxed text-muted marker:text-accent-blue">
-                {job.bullets.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-            </article>
-          </li>
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+        // experience
+      </motion.p>
+
+      <div>
+        {roles.map((job, i) => (
+          <motion.article key={job.org + job.title} {...fade(i * 0.06)}>
+            {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
+            <div className="flex gap-5 py-7">
+              <span
+                className="shrink-0 font-mono tabular-nums select-none pt-px"
+                style={{ fontSize: "0.65rem", color: "var(--color-muted)", opacity: 0.5, minWidth: "2ch" }}
+                aria-hidden
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
+                  <div>
+                    <p className="font-semibold text-fluid-sm text-ink">{job.title}</p>
+                    <p className="text-fluid-sm text-muted">{job.org}</p>
+                  </div>
+                  <div className="shrink-0 sm:text-right">
+                    <p className="font-mono text-fluid-xs text-muted">{job.span}</p>
+                    <p className="font-mono text-fluid-xs" style={{ color: "var(--color-muted)", opacity: 0.5 }}>{job.location}</p>
+                  </div>
+                </div>
+                <ul className="mt-3 space-y-1">
+                  {job.bullets.map((b) => (
+                    <li key={b} className="flex gap-2.5 items-baseline text-fluid-sm leading-relaxed text-muted">
+                      <span className="shrink-0 h-[4px] w-[4px] rounded-full mt-[0.45em]" style={{ background: "var(--color-accent)", opacity: 0.4 }} aria-hidden />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </motion.article>
         ))}
-      </ul>
+        <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
+      </div>
     </section>
   );
 }

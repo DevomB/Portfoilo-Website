@@ -8,12 +8,8 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: {
-        DEFAULT: "var(--shell-inline)",
-      },
-      screens: {
-        "2xl": "72rem",
-      },
+      padding: { DEFAULT: "var(--shell-inline)" },
+      screens: { "2xl": "72rem" },
     },
     extend: {
       colors: {
@@ -22,17 +18,15 @@ module.exports = {
         "surface-elevated": "var(--color-surface-elevated)",
         border: "var(--color-border)",
         ink: "var(--color-ink)",
-        accent: {
-          blue: "var(--color-accent-blue)",
-          "blue-dim": "var(--color-accent-blue-dim)",
-          purple: "var(--color-accent-purple)",
-          "purple-dim": "var(--color-accent-purple-dim)",
-        },
+        accent: "var(--color-accent)",
+        "accent-dim": "var(--color-accent-dim)",
+        "accent-bg": "var(--color-accent-bg)",
+        "code-bg": "var(--color-code-bg)",
         muted: "var(--color-muted)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        heading: ["var(--font-heading)", "var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       fontSize: {
         "fluid-xs": "var(--text-xs)",
@@ -50,13 +44,9 @@ module.exports = {
         shell: "var(--shell-inline)",
       },
       boxShadow: {
-        glow:
-          "0 0 36px rgba(210, 106, 58, 0.18), 0 1px 0 rgba(255, 255, 255, 0.6) inset",
-        card: "0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 50px rgba(29, 21, 15, 0.14)",
-      },
-      ringOffsetColor: {
-        bg: "var(--color-bg)",
-        surface: "var(--color-surface)",
+        card: "0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)",
+        "card-hover": "0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.05)",
+        glow: "0 0 0 3px rgba(22,163,74,0.15)",
       },
     },
   },

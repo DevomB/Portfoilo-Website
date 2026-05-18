@@ -1,9 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { CodeBracketIcon } from "@heroicons/react/24/outline";
-import LinkedinIcon from "../../../public/linkedin-icon.svg";
+import { motion } from "framer-motion";
+
+const fade = (delay = 0) => ({
+  initial: { opacity: 0 },
+  whileInView: { opacity: 1 },
+  viewport: { once: true, margin: "-80px" as const },
+  transition: { duration: 0.5, delay, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] },
+});
 
 const githubHref = "https://github.com/DevomB";
 const linkedinHref = "https://www.linkedin.com/in/devomb/";
@@ -14,68 +19,33 @@ export default function ContactSection() {
       ? process.env.NEXT_PUBLIC_CONTACT_EMAIL.trim()
       : "";
 
-  const linkBtn =
-    "inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0";
+  const links = [
+    { label: "GitHub", sub: "@DevomB", href: githubHref, external: true },
+    { label: "LinkedIn", sub: "devomb", href: linkedinHref, external: true },
+    ...(email ? [{ label: "Email", sub: email, href: `mailto:${encodeURIComponent(email)}`, external: false }] : []),
+  ];
 
   return (
     <section id="contact" className="scroll-mt-28 section-y">
-      <div className="card-soft p-6 sm:p-10 md:p-12">
-        <div className="grid gap-10 md:grid-cols-2 md:items-center md:gap-12">
-          <div>
-            <p className="text-fluid-xs font-semibold uppercase tracking-[0.24em] text-muted">
-              Contact
-            </p>
-            <h2 className="font-heading mt-3 text-fluid-3xl font-semibold tracking-tight text-ink">
-              Ways to reach me
-            </h2>
-            <p className="prose-readable mt-4 text-fluid-sm leading-relaxed text-muted">
-              LinkedIn and GitHub below. Email appears here if{" "}
-              <code className="rounded-md border border-border bg-surface-elevated px-1.5 py-0.5 text-fluid-xs text-accent-purple">
-                NEXT_PUBLIC_CONTACT_EMAIL
-              </code>{" "}
-              is set (e.g. in Vercel env).
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href={githubHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={linkBtn}
-              >
-                <CodeBracketIcon className="h-5 w-5 shrink-0" />
-                GitHub
-              </Link>
-              <Link
-                href={linkedinHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={linkBtn}
-              >
-                <Image src={LinkedinIcon} alt="" width={20} height={20} />
-                LinkedIn
-              </Link>
-              {email ? (
-                <Link
-                  href={`mailto:${encodeURIComponent(email)}`}
-                  className="inline-flex min-h-11 touch-manipulation items-center justify-center gap-2 rounded-full border border-accent-blue/40 bg-accent-blue/10 px-6 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/[0.16] sm:min-h-0"
-                >
-                  Email · {email}
-                </Link>
-              ) : null}
-            </div>
-          </div>
-          <div className="rounded-2xl border border-dashed border-border bg-bg/80 p-6 text-fluid-sm text-muted">
-            <p className="font-heading font-semibold text-ink">Hosting</p>
-            <p className="mt-3 leading-relaxed">
-              Next.js on Vercel. PokerLab equity runs on the server via the{" "}
-              <span className="font-medium text-accent-purple">
-                poker-calculations
-              </span>{" "}
-              native engine (Monte Carlo vs one random villain); the browser only
-              sends inputs and renders the response.
-            </p>
-          </div>
-        </div>
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+        // contact
+      </motion.p>
+
+      <div>
+        {links.map((l, i) => (
+          <motion.div key={l.label} {...fade(i * 0.06)}>
+            {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
+            <Link
+              href={l.href}
+              {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+              className="flex items-baseline justify-between gap-6 py-7 transition-opacity hover:opacity-70"
+            >
+              <span className="font-semibold text-fluid-base text-ink">{l.label}</span>
+              <span className="font-mono text-fluid-xs text-muted/60 shrink-0">{l.sub}</span>
+            </Link>
+          </motion.div>
+        ))}
+        <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
       </div>
     </section>
   );

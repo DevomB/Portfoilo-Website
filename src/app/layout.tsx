@@ -1,16 +1,17 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Fraunces, Space_Grotesk } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
 
-const sans = Space_Grotesk({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
-const heading = Fraunces({
+const mono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--font-mono",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -18,15 +19,15 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
-    default: "Devom Brahmbhatt",
-    template: "%s · Devom Brahmbhatt",
+    default: "Devom Brahmbatt — Backend Engineer",
+    template: "%s · Devom Brahmbatt",
   },
   description:
-    "Devom Brahmbhatt — full-stack work on Roosevelt Connect, WebWork Innovations, Virtual Medical Missions. Next.js, Flutter, PostgreSQL, C++.",
+    "Devom Brahmbatt — Backend Engineer. Building resilient APIs, data-intensive systems, and applied simulations. Roosevelt Connect, Virtual Medical Missions, WebWork Innovations.",
   openGraph: {
-    title: "Devom Brahmbhatt",
+    title: "Devom Brahmbatt — Backend Engineer",
     description:
-      "Personal site: resume sections, PokerLab (Monte Carlo NLHE equity), and links.",
+      "Backend Engineer: PostgreSQL, Node, C++, Next.js. Portfolio, projects, and live demos.",
     type: "website",
     locale: "en_US",
   },
@@ -38,9 +39,9 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
-        className={`${sans.variable} ${heading.variable} font-sans antialiased`}
+        className={`${bricolage.variable} ${mono.variable} font-sans antialiased`}
       >
         {children}
       </body>

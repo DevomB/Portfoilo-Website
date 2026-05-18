@@ -2,98 +2,165 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import ServerLog from "./ServerLog";
+
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&" as const;
+const NAME = "Devom Brahmbatt";
+
+const SQL_GHOSTS = [
+  { text: "SELECT * FROM projects WHERE featured = true ORDER BY created_at DESC;", top: "12%", left: "-1%", rotate: -1.5 },
+  { text: "EXPLAIN ANALYZE SELECT * FROM events WHERE created_at > NOW() - INTERVAL '1 hour' AND user_id = $1;", top: "80%", right: "0%", rotate: 1 },
+];
+
+function useScramble(text: string) {
+  const [display, setDisplay] = useState(text);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+  const frameRef = useRef(0);
+
+  const scramble = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    frameRef.current = 0;
+    intervalRef.current = setInterval(() => {
+      const resolved = Math.floor(frameRef.current / 2);
+      setDisplay(
+        text.split("").map((char, i) => {
+          if (char === " ") return " ";
+          if (i < resolved) return char;
+          return CHARS[Math.floor(Math.random() * CHARS.length)];
+        }).join("")
+      );
+      frameRef.current++;
+      if (resolved >= text.length) {
+        clearInterval(intervalRef.current);
+        setDisplay(text);
+      }
+    }, 28);
+  }, [text]);
+
+  useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
+  return { display, scramble };
+}
+
+const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
+
+const fade = (delay: number) => ({
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease },
+});
 
 export default function HeroSection() {
+  const { display: nameDisplay, scramble } = useScramble(NAME);
+
   return (
-    <section className="relative scroll-mt-28 section-y">
-      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="place-self-start text-center sm:text-left lg:col-span-8"
-        >
-          <p className="mb-3 text-fluid-xs font-semibold uppercase tracking-[0.28em] text-muted">
-            Eastvale, California · Full-stack
-          </p>
-          <h1 className="font-heading text-fluid-hero font-semibold leading-[1.05] tracking-tight text-ink">
-            Product-minded engineering for
-            <span className="text-accent-blue"> ambitious teams</span>.
-          </h1>
-          <p className="prose-readable mx-auto mt-6 text-fluid-lg leading-relaxed text-muted sm:mx-0">
-            I build platforms for Roosevelt Connect, Virtual Medical Missions,
-            and WebWork Innovations. My focus: resilient APIs, expressive UIs,
-            and applied simulation for decision-heavy products.
-          </p>
-          <div className="mt-8 flex w-full max-w-xl flex-col gap-3 sm:mx-0 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-start">
+    <section className="relative min-h-[88vh] overflow-hidden flex items-center section-y">
+      {/* background wash */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: "50vw", height: "50vw",
+            top: "-20%", right: "-8%",
+            background: "radial-gradient(circle, rgba(39,103,135,0.09) 0%, transparent 70%)",
+            filter: "blur(48px)",
+          }}
+        />
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: "40vw", height: "40vw",
+            bottom: "-15%", left: "-6%",
+            background: "radial-gradient(circle, rgba(39,103,135,0.06) 0%, transparent 70%)",
+            filter: "blur(56px)",
+          }}
+        />
+      </div>
+
+      {/* SQL ghost text */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        {SQL_GHOSTS.map((g, i) => (
+          <span
+            key={i}
+            className="sql-ghost absolute text-[0.55rem]"
+            style={{
+              top: g.top,
+              left: "left" in g ? (g as typeof g & { left: string }).left : undefined,
+              right: "right" in g ? (g as typeof g & { right: string }).right : undefined,
+              transform: `rotate(${g.rotate}deg)`,
+            }}
+          >
+            {g.text}
+          </span>
+        ))}
+      </div>
+
+      <div className="relative w-full grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_400px] lg:gap-24">
+        <div>
+          <motion.h2
+            {...fade(0)}
+            className="font-semibold tracking-tight mb-5 cursor-default select-none"
+            style={{ fontSize: "var(--text-2xl)", color: "var(--color-ink)" }}
+            onMouseEnter={scramble}
+          >
+            {nameDisplay}
+          </motion.h2>
+
+          <motion.h1
+            {...fade(0.1)}
+            className="font-black leading-[0.93] tracking-tighter mb-8"
+            style={{ fontSize: "clamp(3rem, 5.5vw + 1rem, 6rem)", color: "var(--color-accent)" }}
+          >
+            Backend<br />Software<br />Engineer
+          </motion.h1>
+
+          <motion.p
+            {...fade(0.2)}
+            className="mb-10 leading-relaxed"
+            style={{ fontSize: "var(--text-base)", color: "var(--color-muted)", maxWidth: "38ch" }}
+          >
+            Building resilient APIs, data-intensive systems, and applied simulations.
+            Based in Eastvale, CA.
+          </motion.p>
+
+          <motion.div {...fade(0.3)} className="flex items-center gap-3">
             <Link
-              href="#demo"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full bg-accent-blue px-6 text-fluid-sm font-semibold text-white shadow-card transition hover:bg-accent-blue-dim sm:min-h-0 sm:w-auto"
+              href="#projects"
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors"
+              style={{ background: "var(--color-accent)", color: "var(--color-surface-elevated)", fontSize: "var(--text-sm)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-accent-dim)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = "var(--color-accent)")}
             >
-              Explore PokerLab
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/devomb/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0 sm:w-auto"
-            >
-              LinkedIn
+              View Projects
             </Link>
             <Link
               href="https://github.com/DevomB"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-border bg-surface-elevated px-6 text-fluid-sm font-semibold text-ink transition hover:bg-white sm:min-h-0 sm:w-auto"
+              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:border-accent/40 hover:text-accent"
+              style={{
+                borderColor: "var(--color-border)",
+                background: "transparent",
+                color: "var(--color-muted)",
+                fontSize: "var(--text-sm)",
+              }}
             >
               GitHub
             </Link>
-            <Link
-              href="#contact"
-              className="inline-flex min-h-11 touch-manipulation items-center justify-center rounded-full border border-accent-blue/40 bg-accent-blue/10 px-6 text-fluid-sm font-semibold text-accent-blue transition hover:bg-accent-blue/15 sm:min-h-0 sm:w-auto"
-            >
-              Contact
-            </Link>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, delay: 0.08 }}
-          className="flex justify-center lg:col-span-4 lg:justify-end"
+          {...fade(0.35)}
+          className="hidden lg:block"
         >
-          <div className="w-full max-w-sm space-y-4">
-            <div className="card-soft relative flex aspect-[4/5] w-full items-end overflow-hidden p-6">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(210,106,58,0.18),transparent_55%),radial-gradient(circle_at_80%_0%,rgba(42,111,107,0.2),transparent_50%)]" />
-              <div className="relative">
-                <p className="text-fluid-xs font-semibold uppercase tracking-[0.2em] text-muted">
-                  Devom Brahmbhatt
-                </p>
-                <p className="mt-2 font-heading text-fluid-3xl font-semibold text-ink">
-                  Building for resilience.
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="card-soft p-4">
-                <p className="text-fluid-xs uppercase tracking-[0.2em] text-muted">
-                  Focus
-                </p>
-                <p className="mt-2 text-fluid-sm font-semibold text-ink">
-                  APIs · Data · Product UI
-                </p>
-              </div>
-              <div className="card-soft p-4">
-                <p className="text-fluid-xs uppercase tracking-[0.2em] text-muted">
-                  Stack
-                </p>
-                <p className="mt-2 text-fluid-sm font-semibold text-ink">
-                  Next.js · Flutter · PostgreSQL
-                </p>
-              </div>
-            </div>
-          </div>
+          <ServerLog />
+          <p
+            className="mt-2.5 font-mono text-right select-none"
+            style={{ fontSize: "0.58rem", color: "rgba(107,114,128,0.4)" }}
+          >
+            devom@brahmbatt:~$
+          </p>
         </motion.div>
       </div>
     </section>
