@@ -10,8 +10,13 @@ const fade = (delay = 0) => ({
 });
 
 const stack = [
-  "PostgreSQL", "Node.js", "TypeScript", "C++20",
-  "Next.js", "Flutter", "REST APIs", "Redis",
+  { slug: "postgresql",  label: "PostgreSQL" },
+  { slug: "nodedotjs",   label: "Node.js" },
+  { slug: "typescript",  label: "TypeScript" },
+  { slug: "cplusplus",   label: "C++20" },
+  { slug: "nextdotjs",   label: "Next.js" },
+  { slug: "flutter",     label: "Flutter" },
+  { slug: "redis",       label: "Redis" },
 ];
 
 export default function AboutSection() {
@@ -38,10 +43,22 @@ export default function AboutSection() {
         </motion.div>
 
         <motion.div {...fade(0.1)}>
-          <p className="mb-3 font-mono text-fluid-xs text-muted/50 uppercase tracking-widest">Stack</p>
-          <p className="font-mono text-fluid-xs text-muted leading-loose">
-            {stack.join(" · ")}
-          </p>
+          <p className="mb-4 font-mono text-fluid-xs text-muted/50 uppercase tracking-widest">Stack</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-4">
+            {stack.map((s) => (
+              <div key={s.slug} className="flex flex-col items-center gap-1.5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`https://cdn.simpleicons.org/${s.slug}/1c1916`}
+                  alt={s.label}
+                  width={22}
+                  height={22}
+                  style={{ opacity: 0.7 }}
+                />
+                <span className="font-mono text-[0.58rem] text-muted/60">{s.label}</span>
+              </div>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>
