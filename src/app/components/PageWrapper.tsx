@@ -5,12 +5,20 @@ import { useState, type ReactNode } from "react";
 import LoadingScreen from "./LoadingScreen";
 
 export default function PageWrapper({ children }: { children: ReactNode }) {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("intro_seen") === "1";
+  });
+
+  const handleComplete = () => {
+    sessionStorage.setItem("intro_seen", "1");
+    setLoaded(true);
+  };
 
   return (
     <>
       <AnimatePresence>
-        {!loaded && <LoadingScreen key="loading" onComplete={() => setLoaded(true)} />}
+        {!loaded && <LoadingScreen key="loading" onComplete={handleComplete} />}
       </AnimatePresence>
       <AnimatePresence>
         {loaded && (

@@ -102,6 +102,19 @@ export default async function ProjectPage({
                 Live site
               </Link>
             )}
+            {project.npmPackage && (
+              <Link
+                href={`https://www.npmjs.com/package/${project.npmPackage}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-fluid-sm font-medium text-ink transition-all hover:border-accent/40 hover:bg-accent-bg hover:text-accent-dim"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 780 250" fill="currentColor" aria-hidden>
+                  <path d="M240 250V0h300v250h-60V50h-60v200H240zM0 0h180v250H60v-50H0V0zm60 50v100h60V50H60zm480 0v200h60V50h60v150h60V0H480v50z"/>
+                </svg>
+                npm
+              </Link>
+            )}
             {project.demoSlug && (
               <DemoModal demoSlug={project.demoSlug} />
             )}

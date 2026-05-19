@@ -1,6 +1,7 @@
 import {
   type Card,
   cardKey,
+  formatCard,
   fullDeck,
   mulberry32,
   parseCard,
@@ -73,6 +74,24 @@ function evaluateFive(cards: Card[]): number[] {
   return [0, ...ranks];
 }
 
+function bestFiveIndices(cards: Card[]): number[] {
+  let bestVal: number[] = [];
+  let bestIdx: number[] = [0, 1, 2, 3, 4];
+  for (let a = 0; a < cards.length - 4; a++)
+  for (let b = a + 1; b < cards.length - 3; b++)
+  for (let c = b + 1; c < cards.length - 2; c++)
+  for (let d = c + 1; d < cards.length - 1; d++)
+  for (let e = d + 1; e < cards.length; e++) {
+    const idx = [a, b, c, d, e];
+    const v = evaluateFive(idx.map((i) => cards[i]!));
+    if (bestVal.length === 0 || compareStrength(v, bestVal) > 0) {
+      bestVal = v;
+      bestIdx = idx;
+    }
+  }
+  return bestIdx;
+}
+
 function bestOfSeven(cards: Card[]): number[] {
   let best = evaluateFive(cards.slice(0, 5));
   const idx = [0, 0, 0, 0, 0];
@@ -139,4 +158,46 @@ export function simulateEquityMonteCarloJs(
   }
 
   return (wins + ties * 0.5) / iterations;
+}
+
+export type SampleWin = {
+  board5: string[];   // 5 community card codes from the winning run
+  villain: string[];  // villain's 2 hole card codes
+  heroInBest: [boolean, boolean]; // which of hero's 2 cards appear in the best 5-card hand
+};
+
+/** Find one Monte Carlo run where the hero wins and return the card layout. */
+export function findSampleWin(
+  heroStr: string[],
+  boardStr: string[],
+  seed: number,
+  maxTries = 800,
+): SampleWin | null {
+  const hero = heroStr.map((s) => parseCard(s)!);
+  const board = boardStr.map((s) => parseCard(s)!);
+  const used = new Set([...hero, ...board].map(cardKey));
+  const needBoard = 5 - board.length;
+  const rng = mulberry32(seed >>> 0);
+  const baseDeck = fullDeck().filter((c) => !used.has(cardKey(c)));
+
+  for (let it = 0; it < maxTries; it++) {
+    const deck = baseDeck.slice();
+    shuffleInPlace(deck, rng);
+    let p = 0;
+    const runBoard: Card[] = [...board];
+    for (let k = 0; k < needBoard; k++) runBoard.push(deck[p++]!);
+    const villain: Card[] = [deck[p++]!, deck[p++]!];
+    const hero7 = [...hero, ...runBoard];
+    const vil7 = [...villain, ...runBoard];
+    const cmp = compareStrength(bestOfSeven(hero7), bestOfSeven(vil7));
+    if (cmp > 0) {
+      const bestIdx = bestFiveIndices(hero7);
+      return {
+        board5: runBoard.map((c) => formatCard(c)),
+        villain: villain.map((c) => formatCard(c)),
+        heroInBest: [bestIdx.includes(0), bestIdx.includes(1)],
+      };
+    }
+  }
+  return null;
 }
