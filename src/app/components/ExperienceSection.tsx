@@ -68,7 +68,7 @@ export default function ExperienceSection() {
             <div className="flex gap-5 py-7">
               <span
                 className="shrink-0 font-mono tabular-nums select-none pt-px"
-                style={{ fontSize: "0.65rem", color: "var(--color-muted)", opacity: 0.5, minWidth: "2ch" }}
+                style={{ fontSize: "0.65rem", color: "var(--color-accent)", opacity: 0.55, minWidth: "2ch" }}
                 aria-hidden
               >
                 {String(i + 1).padStart(2, "0")}
@@ -77,7 +77,7 @@ export default function ExperienceSection() {
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                   <div>
                     <p className="font-semibold text-fluid-sm text-ink">{job.title}</p>
-                    <p className="text-fluid-sm text-muted">{job.org}</p>
+                    <p className="text-fluid-sm font-medium" style={{ color: "var(--color-warm)" }}>{job.org}</p>
                   </div>
                   <div className="shrink-0 sm:text-right">
                     <p className="font-mono text-fluid-xs text-muted">{job.span}</p>
@@ -87,7 +87,7 @@ export default function ExperienceSection() {
                 <ul className="mt-3 space-y-1">
                   {job.bullets.map((b) => (
                     <li key={b} className="flex gap-2.5 items-baseline text-fluid-sm leading-relaxed text-muted">
-                      <span className="shrink-0 h-[4px] w-[4px] rounded-full mt-[0.45em]" style={{ background: "var(--color-accent)", opacity: 0.4 }} aria-hidden />
+                      <span className="shrink-0 h-[4px] w-[4px] rounded-full mt-[0.45em]" style={{ background: "var(--color-accent)" }} aria-hidden />
                       {b}
                     </li>
                   ))}

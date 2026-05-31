@@ -14,6 +14,10 @@
   --color-accent-bg: #c4d8e8;
   --color-muted: #78705f;
   --color-code-bg: #e9f0f5;
+  /* warm amber — secondary palette voice */
+  --color-warm: #8c5a1e;
+  --color-warm-dim: #6b4315;
+  --color-warm-bg: #f0e4ce;
 
   --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);
   --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
@@ -92,7 +96,7 @@ body {
   .sql-ghost {
     font-family: var(--font-mono), ui-monospace, monospace;
     color: var(--color-accent);
-    opacity: 0.045;
+    opacity: 0.09;
     user-select: none;
     pointer-events: none;
     white-space: nowrap;

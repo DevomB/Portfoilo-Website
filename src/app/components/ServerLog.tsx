@@ -3,13 +3,20 @@
 import { useEffect, useState } from "react";
 
 const LOG_LINES = [
-  { delay: 0,    text: "> initializing server..." },
-  { delay: 600,  text: "> loading modules: [pg, express, ws]" },
-  { delay: 1300, text: "> database connection established" },
-  { delay: 1900, text: "> migrations up to date" },
-  { delay: 2500, text: "> running on port 3000" },
-  { delay: 3100, text: "> ready ✓" },
+  { delay: 0,    text: "> initializing server...",             type: "info" },
+  { delay: 600,  text: "> loading modules: [pg, express, ws]", type: "module" },
+  { delay: 1300, text: "> database connection established",     type: "ok" },
+  { delay: 1900, text: "> migrations up to date",              type: "ok" },
+  { delay: 2500, text: "> running on port 3000",               type: "info" },
+  { delay: 3100, text: "> ready ✓",                            type: "ready" },
 ];
+
+const lineColor: Record<string, string> = {
+  info:   "var(--color-muted)",
+  module: "var(--color-warm)",
+  ok:     "var(--color-accent)",
+  ready:  "var(--color-accent)",
+};
 
 export default function ServerLog() {
   const [visible, setVisible] = useState<number[]>([]);
@@ -36,13 +43,18 @@ export default function ServerLog() {
       <div className="p-4 space-y-1 min-h-[9rem]">
         {LOG_LINES.map((line, i) =>
           visible.includes(i) ? (
-            <p key={i} className={`${line.text.includes("✓") ? "text-accent" : "text-muted"}`}>
-              {line.text}
+            <p key={i} style={{ color: lineColor[line.type] ?? "var(--color-muted)" }}>
+              {line.type === "module"
+                ? <>
+                    <span style={{ color: "var(--color-muted)" }}>{"> loading modules: "}</span>
+                    <span style={{ color: "var(--color-warm)", fontWeight: 600 }}>{"[pg, express, ws]"}</span>
+                  </>
+                : line.text}
             </p>
           ) : null
         )}
         {visible.length === LOG_LINES.length && (
-          <p className="text-muted/50 animate-pulse">_</p>
+          <p className="animate-pulse" style={{ color: "var(--color-accent)", opacity: 0.5 }}>_</p>
         )}
       </div>
     </div>

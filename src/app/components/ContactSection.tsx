@@ -40,7 +40,7 @@ export default function ContactSection() {
               {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="flex items-baseline justify-between gap-6 py-7 transition-opacity hover:opacity-70"
             >
-              <span className="font-semibold text-fluid-base text-ink">{l.label}</span>
+              <span className="font-semibold text-fluid-base" style={{ color: "var(--color-warm)" }}>{l.label}</span>
               <span className="font-mono text-fluid-xs text-muted/60 shrink-0">{l.sub}</span>
             </Link>
           </motion.div>

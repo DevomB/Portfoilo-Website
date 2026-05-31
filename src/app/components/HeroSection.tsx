@@ -57,22 +57,34 @@ export default function HeroSection() {
     <section className="relative min-h-[88vh] overflow-hidden flex items-center section-y">
       {/* background wash */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        {/* teal — top right */}
         <div
           className="absolute rounded-full"
           style={{
-            width: "50vw", height: "50vw",
-            top: "-20%", right: "-8%",
-            background: "radial-gradient(circle, rgba(39,103,135,0.09) 0%, transparent 70%)",
-            filter: "blur(48px)",
+            width: "55vw", height: "55vw",
+            top: "-22%", right: "-10%",
+            background: "radial-gradient(circle, rgba(39,103,135,0.22) 0%, transparent 68%)",
+            filter: "blur(52px)",
           }}
         />
+        {/* warm amber — bottom left */}
         <div
           className="absolute rounded-full"
           style={{
-            width: "40vw", height: "40vw",
+            width: "42vw", height: "42vw",
             bottom: "-15%", left: "-6%",
-            background: "radial-gradient(circle, rgba(39,103,135,0.06) 0%, transparent 70%)",
-            filter: "blur(56px)",
+            background: "radial-gradient(circle, rgba(140,90,30,0.16) 0%, transparent 68%)",
+            filter: "blur(60px)",
+          }}
+        />
+        {/* teal — mid accent */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            width: "22vw", height: "22vw",
+            top: "42%", left: "28%",
+            background: "radial-gradient(circle, rgba(39,103,135,0.07) 0%, transparent 70%)",
+            filter: "blur(44px)",
           }}
         />
       </div>

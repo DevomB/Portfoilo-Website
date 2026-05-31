@@ -28,7 +28,7 @@ export default function ProjectsSection() {
             >
               <span
                 className="shrink-0 font-mono tabular-nums select-none pt-px"
-                style={{ fontSize: "0.65rem", color: "var(--color-muted)", opacity: 0.5, minWidth: "2ch" }}
+                style={{ fontSize: "0.65rem", color: "var(--color-accent)", opacity: 0.55, minWidth: "2ch" }}
                 aria-hidden
               >
                 {String(i + 1).padStart(2, "0")}
