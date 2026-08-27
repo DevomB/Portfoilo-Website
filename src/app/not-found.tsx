@@ -21,7 +21,7 @@ export default function NotFound() {
           {/* terminal body */}
           <div className="bg-white px-5 py-6 font-mono text-fluid-sm space-y-2">
             <p className="text-muted">
-              <span className="text-secondary">devom@brahmbatt</span>
+              <span className="text-secondary">devom@brahmbhatt</span>
               <span className="text-muted">:</span>
               <span className="text-ink">~</span>
               <span className="text-muted">$ </span>

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ServerLog from "./ServerLog";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&" as const;
-const NAME = "Devom Brahmbatt";
+const NAME = "Devom Brahmbhatt";
 
 const SQL_GHOSTS = [
   { text: "SELECT * FROM projects WHERE featured = true ORDER BY created_at DESC;", top: "12%", left: "-1%", rotate: -1.5 },
@@ -171,7 +171,7 @@ export default function HeroSection() {
             className="mt-2.5 font-mono text-right select-none"
             style={{ fontSize: "0.58rem", color: "var(--color-muted)" }}
           >
-            devom@brahmbatt:~$
+            devom@brahmbhatt:~$
           </p>
         </motion.div>
       </div>

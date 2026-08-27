@@ -1,5 +1,5 @@
 ---
-name: Devom Brahmbatt Portfolio
+name: Devom Brahmbhatt Portfolio
 description: Backend engineer portfolio. Dual-audience design â€” readable by anyone, appreciated by developers.
 colors:
   astroblack: "#000000"
@@ -68,7 +68,7 @@ components:
     textColor: "{colors.royal-purple}"
 ---
 
-# Design System: Devom Brahmbatt Portfolio
+# Design System: Devom Brahmbhatt Portfolio
 
 ## 1. Overview
 

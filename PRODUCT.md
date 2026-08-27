@@ -6,13 +6,13 @@ brand
 
 ## Users
 
-Potential employers, collaborators, and clients evaluating Devom Brahmbatt as a backend engineer. They arrive from a job application, a GitHub link, or a referral. They are technical enough to read the stack and the SQL ghost text and understand them, but they are judging fit and craft as much as credentials.
+Potential employers, collaborators, and clients evaluating Devom Brahmbhatt as a backend engineer. They arrive from a job application, a GitHub link, or a referral. They are technical enough to read the stack and the SQL ghost text and understand them, but they are judging fit and craft as much as credentials.
 
 Secondary: anyone curious enough to poke around the demos (PokerLab) or dig into a project page.
 
 ## Product Purpose
 
-A portfolio for Devom Brahmbatt — backend engineer, Eastvale CA. The site's job is to make a fast, credible, memorable impression: this person builds systems that don't fail, and they care about the craft of doing it well. It is not a CV rendered as HTML. It is a designed artifact that communicates technical seriousness through its own execution.
+A portfolio for Devom Brahmbhatt — backend engineer, Eastvale CA. The site's job is to make a fast, credible, memorable impression: this person builds systems that don't fail, and they care about the craft of doing it well. It is not a CV rendered as HTML. It is a designed artifact that communicates technical seriousness through its own execution.
 
 Success: a visitor who arrives skeptical leaves convinced, and remembers the site.
 

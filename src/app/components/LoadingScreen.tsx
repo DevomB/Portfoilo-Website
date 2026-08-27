@@ -96,7 +96,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             letterSpacing: "-0.025em",
           }}
         >
-          Devom Brahmbatt
+          Devom Brahmbhatt
         </h1>
         <p
           className="font-sans font-semibold tracking-tight mt-2"
