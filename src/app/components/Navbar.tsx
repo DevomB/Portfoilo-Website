@@ -77,7 +77,7 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="mx-auto flex h-14 w-[min(100%-2*var(--shell-inline),76rem)] items-center justify-between gap-6 px-[var(--shell-inline)]">
+      <div className="relative mx-auto flex h-14 w-[min(100%-2*var(--shell-inline),76rem)] items-center justify-between gap-6 px-[var(--shell-inline)]">
         {/* logo */}
         <Link
           href="/"
@@ -87,7 +87,7 @@ export default function Navbar() {
         </Link>
 
         {/* desktop nav */}
-        <nav className="hidden flex-1 items-center justify-center gap-0.5 md:flex" aria-label="Primary">
+        <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-0.5 md:flex" aria-label="Primary">
           {navLinks.map((l) => (
             <Link
               key={l.href}
