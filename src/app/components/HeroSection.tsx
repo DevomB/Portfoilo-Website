@@ -54,7 +54,7 @@ export default function HeroSection() {
   const { display: nameDisplay, scramble } = useScramble(NAME);
 
   return (
-    <section className="relative min-h-[88vh] overflow-hidden flex items-center section-y">
+    <section className="relative hero-fold overflow-hidden flex items-center">
       {/* background wash */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         {/* teal — top right */}
@@ -107,7 +107,7 @@ export default function HeroSection() {
         ))}
       </div>
 
-      <div className="relative w-full grid grid-cols-1 items-center gap-16 lg:grid-cols-[1fr_400px] lg:gap-24">
+      <div className="relative w-full grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_400px] lg:gap-24">
         <div>
           <motion.h2
             {...fade(0)}
@@ -121,7 +121,7 @@ export default function HeroSection() {
           <motion.h1
             {...fade(0.1)}
             className="font-black leading-[0.93] tracking-tighter mb-8"
-            style={{ fontSize: "clamp(3rem, 5.5vw + 1rem, 6rem)", color: "var(--color-accent)" }}
+            style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
           >
             Backend<br />Software<br />Engineer
           </motion.h1>
