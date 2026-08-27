@@ -83,11 +83,16 @@ body {
     padding-top: var(--header-offset);
   }
 
-  /* hero: fills the first viewport exactly (below the fixed header) and centers its content */
+  /* hero: exactly one viewport tall, centered on the viewport itself.
+     The page-shell pushes content below the fixed header; the hero pulls itself
+     back up by that same offset and pads symmetrically (header height on both
+     sides) so its centerline == viewport centerline on every device. */
   .hero-fold {
-    min-height: calc(100dvh - var(--header-offset));
-    min-height: calc(100svh - var(--header-offset));
-    padding-block: clamp(1.5rem, 3vh, 3rem);
+    --hero-pad: 3.5rem; /* == navbar h-14 */
+    margin-top: calc(-1 * var(--header-offset));
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding-block: var(--hero-pad);
   }
 
   .section-y {
