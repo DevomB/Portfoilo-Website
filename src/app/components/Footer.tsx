@@ -12,7 +12,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="relative overflow-hidden border-t bg-bg" style={{ borderColor: "rgba(39,103,135,0.22)" }}>
+    <footer className="relative overflow-hidden border-t bg-bg" style={{ borderColor: "rgb(var(--brand-purple-rgb) / 0.22)" }}>
       {/* minimal top bar */}
       <div className="mx-auto flex w-[min(100%-2*var(--shell-inline),76rem)] items-center justify-between px-[var(--shell-inline)] py-8">
         <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export default function Footer() {
           className="font-black leading-none tracking-tighter"
           style={{
             fontSize: "inherit",
-            color: "#c2d9e8",
+            color: "var(--color-accent-dim)",
             paddingLeft: "var(--shell-inline)",
           }}
         >

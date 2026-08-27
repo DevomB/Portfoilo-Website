@@ -3,21 +3,40 @@
 @tailwind utilities;
 
 :root {
-  /* cream background + deep teal-blue accent */
-  --color-bg: #faf5e6;
-  --color-surface: #f3ead2;
-  --color-surface-elevated: #fdf9ea;
-  --color-border: #e5d9b8;
-  --color-ink: #1c1916;
-  --color-accent: #276787;
-  --color-accent-dim: #1c4d68;
-  --color-accent-bg: #c4d8e8;
-  --color-muted: #78705f;
-  --color-code-bg: #e9f0f5;
-  /* warm amber — secondary palette voice */
-  --color-warm: #8c5a1e;
-  --color-warm-dim: #6b4315;
-  --color-warm-bg: #f0e4ce;
+  /* ===== BRAND PALETTE — edit here only ===== */
+  --brand-black: #000000;   /* Astroblack */
+  --brand-purple: #7c00ff;  /* Royal Purple */
+  --brand-green: #09ff00;   /* Joker Green */
+  /* raw channels for alpha mixing: rgb(var(--brand-purple-rgb) / 0.2) */
+  --brand-purple-rgb: 124 0 255;
+  --brand-green-rgb: 9 255 0;
+  --brand-black-rgb: 0 0 0;
+
+  /* ===== SEMANTIC TOKENS (derived from brand) ===== */
+  --color-bg: var(--brand-black);
+  --color-surface: #0b0810;
+  --color-surface-elevated: #120c1c;
+  --color-border: rgb(var(--brand-purple-rgb) / 0.28);
+  --color-ink: #f2eefa;
+  --color-muted: #9a8fb0;
+  --color-accent: var(--brand-purple);
+  --color-accent-dim: #a35cff;               /* lighter for text on black */
+  --color-accent-bg: rgb(var(--brand-purple-rgb) / 0.16);
+  --color-code-bg: #0e0916;
+  /* secondary voice — Joker Green */
+  --color-secondary: var(--brand-green);
+  --color-secondary-dim: #5cff55;
+  --color-secondary-bg: rgb(var(--brand-green-rgb) / 0.12);
+  /* status */
+  --color-danger: #ff4d5e;
+  --color-warn: #febc2e;
+  --color-ok: var(--brand-green);
+  /* physical objects (playing cards) */
+  --color-card-face: #ffffff;
+  --color-card-face-2: #f3f0f8;
+  --color-card-edge: #c9c2d6;
+  --color-card-red: #c8283a;
+  --color-card-black: #16101f;
 
   --text-xs: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem);
   --text-sm: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem);
@@ -51,7 +70,7 @@ body {
 }
 
 ::selection {
-  background-color: rgba(39, 103, 135, 0.22);
+  background-color: rgb(var(--brand-purple-rgb) / 0.4);
 }
 
 @layer components {
@@ -74,7 +93,7 @@ body {
   .card-soft {
     border: 1px solid var(--color-border);
     background: var(--color-surface-elevated);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgb(var(--brand-black-rgb) / 0.5), 0 0 0 1px rgb(var(--brand-purple-rgb) / 0.08);
     border-radius: 0.75rem;
   }
 
@@ -96,7 +115,7 @@ body {
   .sql-ghost {
     font-family: var(--font-mono), ui-monospace, monospace;
     color: var(--color-accent);
-    opacity: 0.09;
+    opacity: 0.14;
     user-select: none;
     pointer-events: none;
     white-space: nowrap;

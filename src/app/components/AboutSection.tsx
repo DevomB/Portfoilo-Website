@@ -22,7 +22,7 @@ const stack = [
 export default function AboutSection() {
   return (
     <section id="about" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // about
       </motion.p>
 

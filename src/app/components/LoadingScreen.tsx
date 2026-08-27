@@ -42,9 +42,9 @@ const LINE_STAGGER = 82;
 const COMPLETE_DELAY = 650;
 
 function levelColor(level: string) {
-  if (level === "ok")   return "rgba(60,150,80,0.9)";
-  if (level === "sys")  return "rgba(39,103,135,0.95)";
-  return "rgba(160,130,80,0.8)";
+  if (level === "ok")   return "var(--color-ok)";
+  if (level === "sys")  return "rgb(var(--brand-purple-rgb) / 0.95)";
+  return "var(--color-muted)";
 }
 
 function levelTag(level: string) {
@@ -120,8 +120,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           width: "min(700px, calc(100vw - 2rem))",
           height: "65vh",
           flexShrink: 0,
-          background: "#f3ead2",
-          border: "1px solid rgba(39,103,135,0.2)",
+          background: "var(--color-surface)",
+          border: "1px solid rgb(var(--brand-purple-rgb) / 0.2)",
           borderBottom: "none",
           borderRadius: "10px 10px 0 0",
           display: "flex",
@@ -137,19 +137,19 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             alignItems: "center",
             gap: "6px",
             padding: "9px 14px",
-            borderBottom: "1px solid rgba(39,103,135,0.13)",
-            background: "rgba(39,103,135,0.045)",
+            borderBottom: "1px solid rgb(var(--brand-purple-rgb) / 0.13)",
+            background: "rgb(var(--brand-purple-rgb) / 0.045)",
           }}
         >
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#ff5f57", flexShrink: 0 }} />
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#febc2e", flexShrink: 0 }} />
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#28c840", flexShrink: 0 }} />
+          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-danger)", flexShrink: 0 }} />
+          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-warn)", flexShrink: 0 }} />
+          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-ok)", flexShrink: 0 }} />
           <span
             style={{
               marginLeft: "auto",
               fontFamily: "var(--font-mono, monospace)",
               fontSize: "0.58rem",
-              color: "rgba(39,103,135,0.45)",
+              color: "rgb(var(--brand-purple-rgb) / 0.45)",
               letterSpacing: "0.05em",
             }}
           >
@@ -190,7 +190,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
               >
                 [{levelTag(line.level)}]
               </span>
-              <span style={{ color: "rgba(44,32,18,0.72)" }}>{line.text}</span>
+              <span style={{ color: "var(--color-ink)" }}>{line.text}</span>
             </motion.div>
           ))}
 
@@ -202,7 +202,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                 display: "inline-block",
                 width: "0.45em",
                 height: "0.85em",
-                background: "rgba(39,103,135,0.65)",
+                background: "rgb(var(--brand-purple-rgb) / 0.65)",
                 verticalAlign: "text-bottom",
                 marginLeft: "2px",
                 borderRadius: "1px",

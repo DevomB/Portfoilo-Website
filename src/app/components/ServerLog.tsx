@@ -13,7 +13,7 @@ const LOG_LINES = [
 
 const lineColor: Record<string, string> = {
   info:   "var(--color-muted)",
-  module: "var(--color-warm)",
+  module: "var(--color-secondary)",
   ok:     "var(--color-accent)",
   ready:  "var(--color-accent)",
 };
@@ -35,8 +35,8 @@ export default function ServerLog() {
     >
       {/* window chrome */}
       <div className="flex items-center gap-1.5 border-b border-accent/20 bg-surface px-4 py-2.5">
-        <span className="h-2.5 w-2.5 rounded-full bg-red-400/60" />
-        <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/60" />
+        <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-warn/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-accent/50" />
         <span className="ml-3 text-[0.6rem] text-muted/60">server.log</span>
       </div>
@@ -47,7 +47,7 @@ export default function ServerLog() {
               {line.type === "module"
                 ? <>
                     <span style={{ color: "var(--color-muted)" }}>{"> loading modules: "}</span>
-                    <span style={{ color: "var(--color-warm)", fontWeight: 600 }}>{"[pg, express, ws]"}</span>
+                    <span style={{ color: "var(--color-secondary)", fontWeight: 600 }}>{"[pg, express, ws]"}</span>
                   </>
                 : line.text}
             </p>

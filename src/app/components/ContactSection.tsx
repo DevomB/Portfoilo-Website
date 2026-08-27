@@ -27,7 +27,7 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // contact
       </motion.p>
 
@@ -40,7 +40,7 @@ export default function ContactSection() {
               {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="flex items-baseline justify-between gap-6 py-7 transition-opacity hover:opacity-70"
             >
-              <span className="font-semibold text-fluid-base" style={{ color: "var(--color-warm)" }}>{l.label}</span>
+              <span className="font-semibold text-fluid-base" style={{ color: "var(--color-secondary)" }}>{l.label}</span>
               <span className="font-mono text-fluid-xs text-muted/60 shrink-0">{l.sub}</span>
             </Link>
           </motion.div>

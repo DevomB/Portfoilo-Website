@@ -14,7 +14,7 @@ const fade = (delay = 0) => ({
 export default function ProjectsSection() {
   return (
     <section id="projects" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // projects
       </motion.p>
 

@@ -63,17 +63,17 @@ export default function HeroSection() {
           style={{
             width: "55vw", height: "55vw",
             top: "-22%", right: "-10%",
-            background: "radial-gradient(circle, rgba(39,103,135,0.22) 0%, transparent 68%)",
+            background: "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.22) 0%, transparent 68%)",
             filter: "blur(52px)",
           }}
         />
-        {/* warm amber — bottom left */}
+        {/* joker green — bottom left */}
         <div
           className="absolute rounded-full"
           style={{
             width: "42vw", height: "42vw",
             bottom: "-15%", left: "-6%",
-            background: "radial-gradient(circle, rgba(140,90,30,0.16) 0%, transparent 68%)",
+            background: "radial-gradient(circle, rgb(var(--brand-green-rgb) / 0.16) 0%, transparent 68%)",
             filter: "blur(60px)",
           }}
         />
@@ -83,7 +83,7 @@ export default function HeroSection() {
           style={{
             width: "22vw", height: "22vw",
             top: "42%", left: "28%",
-            background: "radial-gradient(circle, rgba(39,103,135,0.07) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.07) 0%, transparent 70%)",
             filter: "blur(44px)",
           }}
         />
@@ -169,7 +169,7 @@ export default function HeroSection() {
           <ServerLog />
           <p
             className="mt-2.5 font-mono text-right select-none"
-            style={{ fontSize: "0.58rem", color: "rgba(107,114,128,0.4)" }}
+            style={{ fontSize: "0.58rem", color: "var(--color-muted)" }}
           >
             devom@brahmbatt:~$
           </p>

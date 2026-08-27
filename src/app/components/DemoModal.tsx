@@ -46,7 +46,7 @@ export default function DemoModal({ demoSlug }: Props) {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="fixed inset-0 z-50"
-              style={{ background: "rgba(28,25,22,0.6)", backdropFilter: "blur(3px)" }}
+              style={{ background: "rgb(var(--brand-black-rgb) / 0.75)", backdropFilter: "blur(3px)" }}
               onClick={() => setOpen(false)}
               aria-hidden
             />
@@ -78,7 +78,7 @@ export default function DemoModal({ demoSlug }: Props) {
                 style={{ borderColor: "var(--color-border)" }}
               >
                 <div>
-                  <p className="font-mono text-fluid-xs text-accent tracking-wide">// {demoSlug}</p>
+                  <p className="font-mono text-fluid-xs text-secondary tracking-wide">// {demoSlug}</p>
                   <p className="font-semibold text-fluid-base text-ink mt-0.5">
                     PokerLab · NL Hold&apos;em Equity
                   </p>

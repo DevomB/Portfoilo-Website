@@ -41,8 +41,8 @@ function LiveClock() {
   return (
     <span className="hidden items-center gap-1.5 font-mono text-fluid-xs text-muted lg:flex">
       <span
-        className="inline-block h-1.5 w-1.5 rounded-full bg-accent"
-        style={{ boxShadow: "0 0 6px rgba(22,163,74,0.6)" }}
+        className="inline-block h-1.5 w-1.5 rounded-full bg-secondary"
+        style={{ boxShadow: "0 0 6px rgb(var(--brand-green-rgb) / 0.6)" }}
         aria-hidden
       />
       <span className="tabular-nums">{time}</span>
@@ -73,7 +73,7 @@ export default function Navbar() {
     <header
       className={`fixed left-0 right-0 top-0 z-[100] transition-all duration-200 ${
         scrolled
-          ? "border-b border-accent/25 bg-bg/90 backdrop-blur-xl shadow-[0_1px_0_rgba(39,103,135,0.08)]"
+          ? "border-b border-accent/25 bg-bg/90 backdrop-blur-xl shadow-[0_1px_0_rgb(var(--brand-purple-rgb) / 0.08)]"
           : "bg-transparent"
       }`}
     >

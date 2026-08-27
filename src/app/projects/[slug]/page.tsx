@@ -52,7 +52,7 @@ export default async function ProjectPage({
 
           {/* header */}
           <div className="mb-8">
-            <p className="font-mono text-fluid-xs text-accent tracking-wide mb-2">
+            <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-2">
               // {project.slug}
             </p>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

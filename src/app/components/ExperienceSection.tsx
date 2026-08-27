@@ -57,7 +57,7 @@ const roles = [
 export default function ExperienceSection() {
   return (
     <section id="experience" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-accent tracking-wide mb-10">
+      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // experience
       </motion.p>
 
@@ -77,7 +77,7 @@ export default function ExperienceSection() {
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                   <div>
                     <p className="font-semibold text-fluid-sm text-ink">{job.title}</p>
-                    <p className="text-fluid-sm font-medium" style={{ color: "var(--color-warm)" }}>{job.org}</p>
+                    <p className="text-fluid-sm font-medium" style={{ color: "var(--color-secondary)" }}>{job.org}</p>
                   </div>
                   <div className="shrink-0 sm:text-right">
                     <p className="font-mono text-fluid-xs text-muted">{job.span}</p>

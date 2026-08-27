@@ -26,7 +26,7 @@ export default function PokerLabPage() {
           </Link>
 
           <div className="mb-8">
-            <p className="font-mono text-fluid-xs text-accent tracking-wide mb-2">
+            <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-2">
               // demoexperience/poker-lab
             </p>
             <h1 className="text-fluid-4xl font-bold tracking-tight text-ink">

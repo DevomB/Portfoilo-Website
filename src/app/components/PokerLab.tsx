@@ -52,7 +52,7 @@ function Card({
   const rSize = size === "sm" ? 12 : 15;
   const sSize = size === "sm" ? 9 : 11;
   const cSize = size === "sm" ? 24 : 30;
-  const color = card.red ? "#b83232" : "#1c1916";
+  const color = card.red ? "var(--color-card-red)" : "var(--color-card-black)";
 
   return (
     <motion.div
@@ -61,13 +61,13 @@ function Card({
         width: w,
         height: h,
         borderRadius: 8,
-        background: "linear-gradient(160deg,#ffffff 0%,#fdfaf4 100%)",
+        background: "linear-gradient(160deg,var(--color-card-face) 0%,var(--color-card-face-2) 100%)",
         border: highlight
-          ? "2px solid #276787"
-          : "1.5px solid #cfc3a6",
+          ? "2px solid var(--color-accent)"
+          : "1.5px solid var(--color-card-edge)",
         boxShadow: highlight
-          ? "0 4px 16px rgba(0,0,0,0.18), 0 0 0 3px rgba(39,103,135,0.2)"
-          : "0 3px 10px rgba(0,0,0,0.13)",
+          ? "0 4px 16px rgba(0,0,0,0.18), 0 0 0 3px rgb(var(--brand-purple-rgb) / 0.2)"
+          : "0 3px 10px rgb(var(--brand-black-rgb) / 0.6)",
         position: "relative",
         flexShrink: 0,
         userSelect: "none",
@@ -95,8 +95,8 @@ function EmptySlot({ size = "md" }: { size?: "sm" | "md" }) {
   return (
     <div style={{
       width: w, height: h, borderRadius: 8,
-      border: "1.5px dashed rgba(39,103,135,0.18)",
-      background: "rgba(39,103,135,0.03)",
+      border: "1.5px dashed rgb(var(--brand-purple-rgb) / 0.18)",
+      background: "rgb(var(--brand-purple-rgb) / 0.03)",
       flexShrink: 0,
     }} />
   );
@@ -238,7 +238,7 @@ export default function PokerLab() {
               <button key={s.code} type="button" disabled={!pendingRank}
                 onClick={() => { if (!pendingRank) return; appendCard(pendingRank, s.code); setPendingRank(null); }}
                 className="w-12 h-12 text-xl rounded-md border border-border bg-surface-elevated transition-colors hover:border-accent/40 disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{ color: s.red ? "#b83232" : "var(--color-ink)" }}>
+                style={{ color: s.red ? "var(--color-card-red)" : "var(--color-ink)" }}>
                 {s.label}
               </button>
             ))}
@@ -308,7 +308,7 @@ export default function PokerLab() {
 
         {error && (
           <p className="rounded-md border px-3 py-2 font-mono text-fluid-xs" role="alert"
-            style={{ borderColor: "rgba(180,50,50,0.3)", background: "rgba(180,50,50,0.06)", color: "#b83232" }}>
+            style={{ borderColor: "rgb(200 40 58 / 0.4)", background: "rgb(200 40 58 / 0.1)", color: "var(--color-card-red)" }}>
             {error}
           </p>
         )}
@@ -320,7 +320,7 @@ export default function PokerLab() {
 
         {/* Stats */}
         <div className="p-5 sm:p-6 border-b" style={{ borderColor: "var(--color-border)" }}>
-          <p className="font-mono text-fluid-xs text-accent tracking-wide mb-4">// results</p>
+          <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-4">// results</p>
           <dl className="space-y-3">
             <div className="flex items-baseline justify-between gap-4">
               <dt className="text-fluid-sm text-muted">Hero equity</dt>
