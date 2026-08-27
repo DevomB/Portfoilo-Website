@@ -123,7 +123,7 @@ export default function HeroSection() {
             className="font-black leading-[0.93] tracking-tighter mb-8"
             style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
           >
-            Backend<br />Software<br />Engineer
+            Trader<br />Engineer<br />Researcher
           </motion.h1>
 
           <motion.p

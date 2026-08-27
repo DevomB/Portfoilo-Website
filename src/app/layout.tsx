@@ -20,13 +20,13 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
-    default: "Devom Brahmbhatt — Backend Engineer",
+    default: "Devom Brahmbhatt — Trader · Engineer · Researcher",
     template: "%s · Devom Brahmbhatt",
   },
   description:
-    "Devom Brahmbhatt — Backend Engineer. Building resilient APIs, data-intensive systems, and applied simulations. Roosevelt Connect, Virtual Medical Missions, WebWork Innovations.",
+    "Devom Brahmbhatt — Trader · Engineer · Researcher. Building resilient APIs, data-intensive systems, and applied simulations. Roosevelt Connect, Virtual Medical Missions, WebWork Innovations.",
   openGraph: {
-    title: "Devom Brahmbhatt — Backend Engineer",
+    title: "Devom Brahmbhatt — Trader · Engineer · Researcher",
     description:
       "Backend Engineer: PostgreSQL, Node, C++, Next.js. Portfolio, projects, and live demos.",
     type: "website",

@@ -106,7 +106,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             letterSpacing: "-0.01em",
           }}
         >
-          Backend Software Engineer
+          Trader · Engineer · Researcher
         </p>
       </motion.div>
 
