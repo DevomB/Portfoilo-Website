@@ -128,7 +128,7 @@ export default function HeroSection() {
 
           <motion.p
             {...fade(0.2)}
-            className="mb-7 leading-relaxed"
+            className="mb-10 leading-relaxed"
             style={{ fontSize: "var(--text-base)", color: "var(--color-muted)", maxWidth: "38ch" }}
           >
             Building resilient APIs, data-intensive systems, and applied simulations.
