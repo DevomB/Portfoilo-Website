@@ -107,7 +107,7 @@ export default function HeroSection() {
         ))}
       </div>
 
-      <div className="relative w-full grid grid-cols-1 items-center justify-center gap-12 lg:grid-cols-[auto_400px] lg:gap-[clamp(3rem,7vw,8rem)]">
+      <div className="relative w-full grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_400px] lg:gap-24">
         <div>
           <motion.h2
             {...fade(0)}
