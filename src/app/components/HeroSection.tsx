@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ServerLog from "./ServerLog";
+import { useInkAlign } from "../hooks/useInkAlign";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&" as const;
 const NAME = "Devom Brahmbhatt";
@@ -52,6 +53,9 @@ const fade = (delay: number) => ({
 
 export default function HeroSection() {
   const { display: nameDisplay, scramble } = useScramble(NAME);
+  const nameRef = useRef<HTMLHeadingElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  useInkAlign(titleRef, nameRef); // ink-edge align the big title to the name, per device
 
   return (
     <section className="relative hero-fold overflow-hidden flex items-center">
@@ -110,6 +114,7 @@ export default function HeroSection() {
       <div className="relative w-full grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_400px] lg:gap-24">
         <div>
           <motion.h2
+            ref={nameRef}
             {...fade(0)}
             className="font-semibold tracking-tight mb-5 cursor-default select-none"
             style={{ fontSize: "var(--text-2xl)", color: "var(--color-ink)" }}
@@ -119,6 +124,7 @@ export default function HeroSection() {
           </motion.h2>
 
           <motion.h1
+            ref={titleRef}
             {...fade(0.1)}
             className="font-black leading-[0.93] tracking-tighter mb-8"
             style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
