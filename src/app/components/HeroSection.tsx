@@ -8,6 +8,7 @@ import { useInkAlign } from "../hooks/useInkAlign";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&" as const;
 const NAME = "Devom Brahmbhatt";
+const TITLE_LINES = ["Trader", "Engineer", "Researcher"] as const;
 
 const SQL_GHOSTS = [
   { text: "SELECT * FROM projects WHERE featured = true ORDER BY created_at DESC;", top: "12%", left: "-1%", rotate: -1.5 },
@@ -55,7 +56,7 @@ export default function HeroSection() {
   const { display: nameDisplay, scramble } = useScramble(NAME);
   const nameRef = useRef<HTMLHeadingElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  useInkAlign(titleRef, nameRef); // ink-edge align the big title to the name, per device
+  useInkAlign(titleRef, nameRef, { target: TITLE_LINES[0][0], reference: NAME[0] }); // ink-edge align title to name
 
   return (
     <section className="relative hero-fold overflow-hidden flex items-center">
@@ -129,7 +130,7 @@ export default function HeroSection() {
             className="font-black leading-[0.93] tracking-tighter mb-8"
             style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
           >
-            Trader<br />Engineer<br />Researcher
+            {TITLE_LINES[0]}<br />{TITLE_LINES[1]}<br />{TITLE_LINES[2]}
           </motion.h1>
 
           <motion.p

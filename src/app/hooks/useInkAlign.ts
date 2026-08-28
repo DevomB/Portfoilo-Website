@@ -8,9 +8,8 @@ import { useLayoutEffect, type RefObject } from "react";
  * `target` left/right so both lines' ink edges coincide exactly. Recomputed on
  * resize and when fonts finish loading, so it stays pixel-exact per device.
  */
-function inkOffset(el: HTMLElement): number {
-  const text = (el.textContent ?? "").trim();
-  if (!text) return 0;
+function inkOffset(el: HTMLElement, glyph: string): number {
+  if (!glyph) return 0;
   const cs = getComputedStyle(el);
   const size = parseFloat(cs.fontSize);
   const dpr = window.devicePixelRatio || 1;
@@ -25,7 +24,7 @@ function inkOffset(el: HTMLElement): number {
   ctx.font = `${cs.fontStyle} ${cs.fontWeight} ${size}px ${cs.fontFamily}`;
   ctx.textBaseline = "top";
   ctx.fillStyle = "#fff";
-  ctx.fillText(text[0]!, pad, size * 0.1);
+  ctx.fillText(glyph, pad, size * 0.1);
   const data = ctx.getImageData(0, 0, w, h).data;
   for (let x = 0; x < w; x++)
     for (let y = 0; y < h; y++)
@@ -33,20 +32,25 @@ function inkOffset(el: HTMLElement): number {
   return 0;
 }
 
-export function useInkAlign(target: RefObject<HTMLElement | null>, reference: RefObject<HTMLElement | null>) {
+/** `glyphs` are the FIXED first characters of each line — never read from the DOM,
+ *  because the name scrambles on hover and would poison the measurement. */
+export function useInkAlign(
+  target: RefObject<HTMLElement | null>,
+  reference: RefObject<HTMLElement | null>,
+  glyphs: { target: string; reference: string },
+) {
   useLayoutEffect(() => {
     const t = target.current, r = reference.current;
     if (!t || !r) return;
     const apply = () => {
       t.style.marginLeft = "0px";
-      const delta = inkOffset(t) - inkOffset(r);
+      const delta = inkOffset(t, glyphs.target) - inkOffset(r, glyphs.reference);
       const dpr = window.devicePixelRatio || 1;
       t.style.marginLeft = `${-Math.round(delta * dpr) / dpr}px`; // snap to device pixels
     };
     apply();
     document.fonts?.ready.then(apply);
-    const ro = new ResizeObserver(apply);
-    ro.observe(t); ro.observe(r);
-    return () => ro.disconnect();
-  }, [target, reference]);
+    window.addEventListener("resize", apply);
+    return () => window.removeEventListener("resize", apply);
+  }, [target, reference, glyphs.target, glyphs.reference]);
 }
