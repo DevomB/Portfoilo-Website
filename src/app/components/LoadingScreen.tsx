@@ -1,216 +1,336 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { fullDeck, mulberry32, shuffleInPlace } from "@/lib/pokerCards";
 
+// ── Geometry ──────────────────────────────────────────────────────────────────
+// A fixed pixel design scaled as one composition to fit any viewport, so the fan
+// and the name inside it always hold the same proportions.
+const BOX = 580;      // design canvas (square) — sized to clear the pulled-out cards
+const COUNT = 36;     // cards in the fan
+const CARD_W = 52;
+const CARD_H = 74;
+const RING_R = 210;   // canvas centre → card centre
+const LIFT = 26;      // extra radius for a card pulled out of the fan
+const SEED = 0xc0ffee;
 
-const BOOT_LINES = [
-  { level: "sys",  text: "Linux devomb-server 6.8.0 #1 SMP x86_64 GNU/Linux" },
-  { level: "ok",   text: "Started Local File Systems" },
-  { level: "ok",   text: "Started Network Manager" },
-  { level: "ok",   text: "Started OpenSSH Server Daemon" },
-  { level: "sys",  text: "systemd[1]: Reached target Multi-User System" },
-  { level: "info", text: "postgres[1842]: starting PostgreSQL 16.2 on x86_64-pc-linux-gnu" },
-  { level: "ok",   text: "postgres[1842]: listening on port 5432, max_connections=200" },
-  { level: "info", text: "postgres[1842]: running 14 pending migrations" },
-  { level: "ok",   text: "postgres[1842]: migrations complete, 14 applied (127ms)" },
-  { level: "info", text: "redis[2109]: Redis 7.2.4 starting · pid=2109 · port=6379" },
-  { level: "ok",   text: "redis[2109]: Server initialized, accepting connections" },
-  { level: "info", text: "redis[2109]: loading RDB snapshot (12.4 MB)" },
-  { level: "ok",   text: "redis[2109]: RDB loaded in 0.31s · keys=42834" },
-  { level: "info", text: "node[3001]: env=production commit=8f893d1 region=us-west-2" },
-  { level: "ok",   text: "node[3001]: PostgreSQL pool ready (max=20)" },
-  { level: "ok",   text: "node[3001]: Redis connected at localhost:6379" },
-  { level: "info", text: "node[3001]: registering API routes" },
-  { level: "ok",   text: "node[3001]: /api/projects    GET  (12 handlers)" },
-  { level: "ok",   text: "node[3001]: /api/equity      POST (Monte Carlo)" },
-  { level: "ok",   text: "node[3001]: /api/health      GET" },
-  { level: "ok",   text: "node[3001]: API server listening on :3000" },
-  { level: "info", text: "nginx[4401]: config test OK · worker_processes=auto" },
-  { level: "ok",   text: "nginx[4401]: start worker process 4402" },
-  { level: "ok",   text: "nginx[4401]: TLS certificate valid until 2027-01-22" },
-  { level: "info", text: "worker[5001]: Monte Carlo equity engine (threads=8)" },
-  { level: "ok",   text: "worker[5001]: throughput ≈ 1.2M iter/s · status=ready" },
-  { level: "info", text: "telemetry: initializing OpenTelemetry tracer" },
-  { level: "ok",   text: "telemetry: traces  → otel-collector:4317" },
-  { level: "ok",   text: "telemetry: metrics → prometheus:9090" },
-  { level: "ok",   text: "cron[6001]: scheduled jobs registered (3 active)" },
-  { level: "sys",  text: "All services nominal. uptime=0d 0h 0m 1.4s ✓" },
-];
+// Cards that turn face-up once the fan has opened, spread around the ring.
+const REVEALED = [3, 10, 17, 24, 31];
 
-const LINE_STAGGER = 82;
-const COMPLETE_DELAY = 650;
-
-function levelColor(level: string) {
-  if (level === "ok")   return "var(--color-ok)";
-  if (level === "sys")  return "rgb(var(--brand-purple-rgb) / 0.95)";
-  return "var(--color-muted)";
-}
-
-function levelTag(level: string) {
-  if (level === "ok")   return " OK  ";
-  if (level === "sys")  return " SYS ";
-  return "INFO ";
-}
+const RANKS = "23456789TJQKA";
+const SUITS = ["♣", "♦", "♥", "♠"];
+const isRed = (suit: number) => suit === 1 || suit === 2;
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
+const easeOut = [0.16, 0.84, 0.34, 1] as [number, number, number, number];
 
+// ── Choreography (seconds) ────────────────────────────────────────────────────
+const FAN_START = 0.45;
+const FAN_STEP = 0.012;
+const FAN_DUR = 0.65;
+const FAN_END = FAN_START + (COUNT - 1) * FAN_STEP + FAN_DUR;
+const REVEAL_START = FAN_END - 0.1;
+const REVEAL_STEP = 0.08;
+const REVEAL_DUR = 0.45;
+const NAME_AT = 1.3;
+const HOLD = 2.95; // onComplete
+
+// ── Card faces ────────────────────────────────────────────────────────────────
+function CardBack() {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        borderRadius: 6,
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        border: "1px solid rgb(var(--brand-purple-rgb) / 0.5)",
+        background: `
+          repeating-linear-gradient(45deg, rgb(var(--brand-purple-rgb) / 0.28) 0 2px, transparent 2px 5px),
+          repeating-linear-gradient(-45deg, rgb(var(--brand-purple-rgb) / 0.28) 0 2px, transparent 2px 5px),
+          linear-gradient(155deg, var(--color-surface-elevated) 0%, var(--color-surface) 100%)
+        `,
+        boxShadow:
+          "inset 0 0 0 3px rgb(var(--brand-black-rgb) / 0.62), inset 0 0 0 4px rgb(var(--brand-purple-rgb) / 0.3), 0 2px 8px rgb(var(--brand-black-rgb) / 0.7)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <span
+        style={{
+          width: 11,
+          height: 11,
+          transform: "rotate(45deg)",
+          border: "1px solid rgb(var(--brand-green-rgb) / 0.55)",
+          background: "rgb(var(--brand-green-rgb) / 0.1)",
+        }}
+      />
+    </div>
+  );
+}
+
+function CardFace({ rank, suit }: { rank: number; suit: number }) {
+  const color = isRed(suit) ? "var(--color-card-red)" : "var(--color-card-black)";
+  const glyph = SUITS[suit];
+  const label = RANKS[rank - 2];
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        borderRadius: 6,
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+        transform: "rotateY(180deg)",
+        background: "linear-gradient(160deg, var(--color-card-face) 0%, var(--color-card-face-2) 100%)",
+        border: "1px solid var(--color-card-edge)",
+        boxShadow:
+          "0 4px 14px rgb(var(--brand-black-rgb) / 0.75), 0 0 0 2px rgb(var(--brand-purple-rgb) / 0.28)",
+      }}
+    >
+      <div style={{ position: "absolute", top: 4, left: 5, color, lineHeight: 1 }}>
+        <div style={{ fontSize: 12, fontWeight: 800, fontFamily: "var(--font-mono), monospace" }}>{label}</div>
+        <div style={{ fontSize: 8, marginTop: 1 }}>{glyph}</div>
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color,
+          fontSize: 24,
+        }}
+      >
+        {glyph}
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: 4,
+          right: 5,
+          color,
+          lineHeight: 1,
+          transform: "rotate(180deg)",
+          fontFamily: "var(--font-mono), monospace",
+        }}
+      >
+        <div style={{ fontSize: 12, fontWeight: 800 }}>{label}</div>
+        <div style={{ fontSize: 8, marginTop: 1 }}>{glyph}</div>
+      </div>
+    </div>
+  );
+}
+
+// ── Splash ────────────────────────────────────────────────────────────────────
 export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
-  const [visibleCount, setVisibleCount] = useState(0);
+  const reduce = useReducedMotion() ?? false;
+  const [fanned, setFanned] = useState(false);
+  const [revealing, setRevealing] = useState(false);
+  const [scale, setScale] = useState(1);
+
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  const doneRef = useRef(false);
 
   useEffect(() => {
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    BOOT_LINES.forEach((_, i) => {
-      timers.push(setTimeout(() => setVisibleCount(i + 1), 320 + i * LINE_STAGGER));
-    });
-    timers.push(
-      setTimeout(
-        () => onCompleteRef.current(),
-        320 + BOOT_LINES.length * LINE_STAGGER + COMPLETE_DELAY
-      )
-    );
-    return () => timers.forEach(clearTimeout);
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+
+  const finish = useCallback(() => {
+    if (doneRef.current) return;
+    doneRef.current = true;
+    onCompleteRef.current();
   }, []);
+
+  // Deterministic shuffle — identical on server and client, no hydration drift.
+  const deck = useMemo(() => {
+    const cards = fullDeck();
+    shuffleInPlace(cards, mulberry32(SEED));
+    return cards.slice(0, COUNT);
+  }, []);
+
+  // Fit the whole composition to the viewport. CSS cannot divide a length by a
+  // number to get a scale factor, so the ratio is measured here instead.
+  useEffect(() => {
+    const fit = () =>
+      setScale(Math.min(1, (window.innerWidth - 32) / BOX, (window.innerHeight - 48) / BOX));
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, []);
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setFanned(true), reduce ? 0 : FAN_START * 1000),
+      setTimeout(() => setRevealing(true), reduce ? 0 : REVEAL_START * 1000),
+      setTimeout(finish, reduce ? 900 : HOLD * 1000),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, [reduce, finish]);
+
+  // Any deliberate input cuts the intro short.
+  useEffect(() => {
+    const skip = () => finish();
+    window.addEventListener("pointerdown", skip);
+    window.addEventListener("keydown", skip);
+    window.addEventListener("wheel", skip, { passive: true });
+    return () => {
+      window.removeEventListener("pointerdown", skip);
+      window.removeEventListener("keydown", skip);
+      window.removeEventListener("wheel", skip);
+    };
+  }, [finish]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-[200] flex flex-col items-center overflow-hidden"
+      className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden select-none"
       style={{ background: "var(--color-bg)" }}
-      exit={{ opacity: 0, transition: { duration: 0.4, ease: "easeIn" } }}
+      exit={{ opacity: 0, scale: 1.06, transition: { duration: 0.45, ease: "easeIn" } }}
     >
-      {/* Name + subtitle */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease }}
-        className="flex flex-col items-center text-center select-none"
-        style={{ marginTop: "clamp(3.5rem, 11vh, 7rem)" }}
-      >
-        <h1
-          className="font-sans font-black tracking-tight leading-none"
-          style={{
-            fontSize: "clamp(2rem, 4vw + 0.5rem, 3.8rem)",
-            color: "var(--color-accent)",
-            letterSpacing: "-0.025em",
-          }}
-        >
-          Devom Brahmbhatt
-        </h1>
-        <p
-          className="font-sans font-semibold tracking-tight mt-2"
-          style={{
-            fontSize: "clamp(0.85rem, 1.5vw + 0.2rem, 1.15rem)",
-            color: "var(--color-muted)",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          Trader · Engineer · Researcher
-        </p>
-      </motion.div>
-
-      {/* Terminal — tall enough to overflow below the viewport */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, delay: 0.32, ease }}
+      {/* purple wash behind the fan */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute"
         style={{
-          marginTop: "clamp(1.2rem, 2.5vh, 2rem)",
-          width: "min(700px, calc(100vw - 2rem))",
-          height: "65vh",
+          width: "70vmax",
+          height: "70vmax",
+          background: "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.16) 0%, transparent 62%)",
+          filter: "blur(60px)",
+        }}
+      />
+
+      <div
+        style={{
+          position: "relative",
+          width: BOX,
+          height: BOX,
           flexShrink: 0,
-          background: "var(--color-surface)",
-          border: "1px solid rgb(var(--brand-purple-rgb) / 0.2)",
-          borderBottom: "none",
-          borderRadius: "10px 10px 0 0",
-          display: "flex",
-          flexDirection: "column",
-          overflow: "hidden",
+          transform: `scale(${scale})`,
         }}
       >
-        {/* Chrome */}
-        <div
-          style={{
-            flexShrink: 0,
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            padding: "9px 14px",
-            borderBottom: "1px solid rgb(var(--brand-purple-rgb) / 0.13)",
-            background: "rgb(var(--brand-purple-rgb) / 0.045)",
-          }}
+        {/* The deck: stacked, then spun open into a full circle */}
+        <motion.div
+          className="absolute inset-0"
+          initial={reduce ? false : { rotate: -14, scale: 0.94, opacity: 0 }}
+          animate={{ rotate: 0, scale: 1, opacity: 1 }}
+          transition={{ duration: reduce ? 0.3 : 1.9, ease: easeOut }}
         >
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-danger)", flexShrink: 0 }} />
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-warn)", flexShrink: 0 }} />
-          <span style={{ width: 10, height: 10, borderRadius: "50%", background: "var(--color-ok)", flexShrink: 0 }} />
-          <span
-            style={{
-              marginLeft: "auto",
-              fontFamily: "var(--font-mono, monospace)",
-              fontSize: "0.58rem",
-              color: "rgb(var(--brand-purple-rgb) / 0.45)",
-              letterSpacing: "0.05em",
-            }}
-          >
-            boot.log — devomb-server
-          </span>
-        </div>
+          {deck.map((card, i) => {
+            const angle = (i * 360) / COUNT;
+            const revealed = REVEALED.includes(i);
+            // A revealed card only pulls out of the fan once its turn to flip arrives.
+            const showing = revealed && revealing;
+            const radius = RING_R + (showing ? LIFT : 0);
+            const revealDelay = reduce ? 0 : REVEALED.indexOf(i) * REVEAL_STEP;
 
-        {/* Log output */}
-        <div
-          style={{
-            flex: 1,
-            padding: "12px 14px 0",
-            fontFamily: "var(--font-mono, monospace)",
-            fontSize: "clamp(0.58rem, 0.9vw + 0.1rem, 0.7rem)",
-            lineHeight: 1.7,
-            overflowY: "hidden",
-          }}
-        >
-          {BOOT_LINES.slice(0, visibleCount).map((line, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.12 }}
-              style={{ display: "flex", gap: "8px" }}
-            >
-              <span
+            return (
+              <motion.div
+                key={i}
+                // arm — rotates about the canvas centre, carrying the card outward
                 style={{
-                  flexShrink: 0,
-                  color: levelColor(line.level),
-                  fontWeight: 700,
-                  letterSpacing: "0.03em",
-                  fontSize: "0.56rem",
-                  alignSelf: "baseline",
-                  marginTop: "0.2em",
-                  whiteSpace: "nowrap",
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  width: CARD_W,
+                  height: CARD_H,
+                  marginLeft: -CARD_W / 2,
+                  marginTop: -CARD_H / 2,
+                  zIndex: revealed ? 10 : 1,
                 }}
+                initial={reduce ? false : { rotate: 0, opacity: 0 }}
+                animate={
+                  fanned
+                    ? { rotate: reduce ? angle : angle + 360, opacity: 1 }
+                    : { rotate: (i % 2 ? 1 : -1) * (2 + (i % 5)), opacity: 1 }
+                }
+                transition={
+                  fanned
+                    ? {
+                        rotate: {
+                          duration: reduce ? 0.3 : FAN_DUR,
+                          delay: reduce ? 0 : i * FAN_STEP,
+                          ease: easeOut,
+                        },
+                        opacity: { duration: 0.2 },
+                      }
+                    : { duration: 0.35, delay: 0.08 + i * 0.008, ease }
+                }
               >
-                [{levelTag(line.level)}]
-              </span>
-              <span style={{ color: "var(--color-ink)" }}>{line.text}</span>
-            </motion.div>
-          ))}
+                <motion.div
+                  // Radial offset along the arm's rotated axis. A card that is being
+                  // shown also cancels its arm's rotation so the face reads upright.
+                  style={{ width: "100%", height: "100%", perspective: 700 }}
+                  initial={reduce ? false : { y: 0, rotate: 0 }}
+                  animate={{ y: fanned ? -radius : 0, rotate: showing ? -angle : 0 }}
+                  transition={{
+                    duration: reduce ? 0.3 : revealing ? REVEAL_DUR : FAN_DUR,
+                    delay: reduce ? 0 : revealing ? revealDelay : i * FAN_STEP,
+                    ease: easeOut,
+                  }}
+                >
+                  <motion.div
+                    style={{
+                      position: "relative",
+                      width: "100%",
+                      height: "100%",
+                      transformStyle: "preserve-3d",
+                    }}
+                    initial={reduce ? false : { rotateY: 0 }}
+                    animate={{ rotateY: showing ? 180 : 0 }}
+                    transition={{ duration: reduce ? 0.3 : REVEAL_DUR, delay: revealDelay, ease }}
+                  >
+                    <CardBack />
+                    <CardFace rank={card.rank} suit={card.suit} />
+                  </motion.div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
 
-          {visibleCount > 0 && visibleCount < BOOT_LINES.length && (
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.7, repeat: Infinity, repeatType: "mirror" }}
-              style={{
-                display: "inline-block",
-                width: "0.45em",
-                height: "0.85em",
-                background: "rgb(var(--brand-purple-rgb) / 0.65)",
-                verticalAlign: "text-bottom",
-                marginLeft: "2px",
-                borderRadius: "1px",
-              }}
-            />
-          )}
+        {/* Name sits in the hole of the fan and never rotates with it */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+          <motion.h1
+            className="font-sans font-black tracking-tight leading-none whitespace-nowrap"
+            style={{ fontSize: 30, color: "var(--color-accent-dim)", letterSpacing: "-0.03em" }}
+            initial={reduce ? false : { opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: reduce ? 0.3 : 0.7, delay: reduce ? 0 : NAME_AT, ease }}
+          >
+            Devom Brahmbhatt
+          </motion.h1>
+          <motion.p
+            className="font-mono whitespace-nowrap"
+            style={{ fontSize: 11, marginTop: 10, color: "var(--color-muted)", letterSpacing: "0.14em" }}
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: reduce ? 0.3 : 0.6, delay: reduce ? 0 : NAME_AT + 0.16, ease }}
+          >
+            TRADER · ENGINEER · RESEARCHER
+          </motion.p>
         </div>
-      </motion.div>
+      </div>
+
+      {/* skip hint */}
+      <motion.p
+        className="absolute font-mono"
+        style={{
+          bottom: "max(1.75rem, env(safe-area-inset-bottom, 0px) + 1rem)",
+          fontSize: "0.58rem",
+          letterSpacing: "0.16em",
+          color: "var(--color-muted)",
+        }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.45 }}
+        transition={{ duration: 0.6, delay: reduce ? 0 : 1.9 }}
+      >
+        CLICK TO SKIP
+      </motion.p>
     </motion.div>
   );
 }
