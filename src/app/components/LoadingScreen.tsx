@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fullDeck, mulberry32, shuffleInPlace } from "@/lib/pokerCards";
 
 // ── Geometry ──────────────────────────────────────────────────────────────────
@@ -13,10 +13,25 @@ const CARD_W = 52;
 const CARD_H = 74;
 const RING_R = 210;   // canvas centre → card centre
 const LIFT = 26;      // extra radius for a card pulled out of the fan
-const SEED = 0xc0ffee;
+const REVEAL_COUNT = 5;
 
-// Cards that turn face-up once the fan has opened, spread around the ring.
-const REVEALED = [3, 10, 17, 24, 31];
+const STEP_DEG = 360 / COUNT;  // angular gap between neighbours in the closed ring
+
+// The deck starts squared up in the centre, rises as one stack to 12 o'clock,
+// and then unfurls clockwise: every card sweeps the same way round the
+// circumference to its seat, the last one tracing almost the whole circle.
+const seatAngle = (i: number) => i * STEP_DEG;
+
+// A card being shown cancels its arm's rotation so the face reads upright. Taking
+// that the short way round keeps a card seated at 350° from spinning most of a
+// turn just to straighten up.
+const uprightRotate = (angle: number) => (((-angle % 360) + 540) % 360) - 180;
+
+// A squared-up stack has a little slop in it. This tilt lives on the card itself,
+// NOT on the arm: an arm tilt is invisible at the centre but becomes a lateral
+// offset once the card is at radius — it was smearing the stack apart during the
+// rise. A local tilt keeps every card in the same spot at any radius.
+const stackSlop = (i: number) => (i % 2 ? 1 : -1) * (0.7 + (i % 5) * 0.5);
 
 const RANKS = "23456789TJQKA";
 const SUITS = ["♣", "♦", "♥", "♠"];
@@ -24,17 +39,50 @@ const isRed = (suit: number) => suit === 1 || suit === 2;
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
 const easeOut = [0.16, 0.84, 0.34, 1] as [number, number, number, number];
+// the rise: slow launch, fast middle, soft landing — deliberate, mechanical
+const glide = [0.55, 0, 0.15, 1] as [number, number, number, number];
+// real overshoot for the pull-out only — true peak ≈ 1.09, i.e. ~2.3px of
+// visible spring on the 26px travel. Never used on the arm sweep, where
+// overshoot scales with distance and swung the far cards ~25° past their seats.
+const settle = [0.3, 1.56, 0.62, 1] as [number, number, number, number];
 
 // ── Choreography (seconds) ────────────────────────────────────────────────────
-const FAN_START = 0.45;
-const FAN_STEP = 0.012;
-const FAN_DUR = 0.65;
-const FAN_END = FAN_START + (COUNT - 1) * FAN_STEP + FAN_DUR;
-const REVEAL_START = FAN_END - 0.1;
-const REVEAL_STEP = 0.08;
-const REVEAL_DUR = 0.45;
-const NAME_AT = 1.3;
-const HOLD = 2.95; // onComplete
+// Every value below is baked into a per-card `delay` at mount. Nothing here is
+// driven by React state, so the whole sequence runs without a single re-render
+// mid-flight. Phases are strictly sequential: the stack finishes rising before
+// the fan peels, the ring closes before the reveals pull out.
+const APPEAR = 0.1;        // stack fades in as one object
+const APPEAR_DUR = 0.35;
+
+const LIFT_START = 0.42;   // stack rides to 12 o'clock
+const LIFT_STEP = 0.0005;  // ~18ms of total trail: parallax enough to read as
+                           // cards, tight enough to stay one object at glide's
+                           // peak velocity (~26px elongation, half a card)
+const LIFT_DUR = 0.5;
+const LIFT_END = LIFT_START + (COUNT - 1) * LIFT_STEP + LIFT_DUR; // ≈ 0.94
+
+const FAN_START = LIFT_END + 0.08; // the settle beat, derived so the
+                                   // stack-lands-before-peel guarantee survives retuning
+const FAN_STEP = 0.013;
+// Constant sweep RATE, not constant duration: with one duration for every card,
+// angular velocity is proportional to seat index — the far cards smear past at
+// thousands of deg/s and every card overtakes its still-moving predecessor. At
+// one rate the cards travel as a ribbon, each peeling off over already-seated
+// neighbours, spaced FAN_RATE × FAN_STEP ≈ 5° apart in flight.
+const FAN_RATE = 400; // deg/s
+const fanDur = (i: number) => Math.max(0.35, seatAngle(i) / FAN_RATE);
+const FAN_END = FAN_START + (COUNT - 1) * FAN_STEP + fanDur(COUNT - 1); // ≈ 2.35
+
+const REVEAL_START = FAN_END + 0.12; // ring closes, a beat, then the flips
+const REVEAL_STEP = 0.07;
+const REVEAL_DUR = 0.42;
+
+const NAME_AT = 1.4;       // resolves inside the ring while it is still closing
+const HOLD = REVEAL_START + (REVEAL_COUNT - 1) * REVEAL_STEP + REVEAL_DUR + 0.75;
+
+// Server render and first client render must agree, so the deck starts from a
+// fixed seed and is reshuffled on mount — see the boot effect below.
+const SSR_SEED = 0xc0ffee;
 
 // ── Card faces ────────────────────────────────────────────────────────────────
 function CardBack() {
@@ -130,9 +178,14 @@ function CardFace({ rank, suit }: { rank: number; suit: number }) {
 // ── Splash ────────────────────────────────────────────────────────────────────
 export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const reduce = useReducedMotion() ?? false;
-  const [fanned, setFanned] = useState(false);
-  const [revealing, setRevealing] = useState(false);
-  const [scale, setScale] = useState(1);
+  const boxRef = useRef<HTMLDivElement>(null);
+  // `go` holds the whole choreography at its resting pose until the main thread
+  // is actually free. Framer's delays run on wall-clock time, so starting at
+  // mount means the opening beats tick away while the browser is still parsing
+  // bundles and hydrating — you never see them, and the fan appears to jump in
+  // part-way. Seed and go land in one state object so this costs one re-render.
+  const [boot, setBoot] = useState({ seed: SSR_SEED, go: false });
+  const { seed, go } = boot;
 
   const onCompleteRef = useRef(onComplete);
   const doneRef = useRef(false);
@@ -147,31 +200,79 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     onCompleteRef.current();
   }, []);
 
-  // Deterministic shuffle — identical on server and client, no hydration drift.
-  const deck = useMemo(() => {
-    const cards = fullDeck();
-    shuffleInPlace(cards, mulberry32(SEED));
-    return cards.slice(0, COUNT);
+  // Hold until the fonts have resolved and a frame has actually rendered, then
+  // reshuffle and release the animation in the same pass. Waiting on fonts stops
+  // a swap from reflowing the name mid-flight; waiting on a rAF stops the intro
+  // from starting against a blocked main thread. The race caps the wait so a
+  // slow font can never stall the intro.
+  useEffect(() => {
+    let cancelled = false;
+    let raf = 0;
+
+    const release = () => {
+      if (cancelled) return;
+      raf = requestAnimationFrame(() => {
+        if (!cancelled) setBoot({ seed: (Math.random() * 0xffffffff) >>> 0, go: true });
+      });
+    };
+
+    const fonts = document.fonts;
+    if (fonts?.ready) {
+      Promise.race([fonts.ready, new Promise((r) => setTimeout(r, 600))]).then(release);
+    } else {
+      release();
+    }
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
+  // A fresh 52-card shuffle each load, so the ring — and the five cards that
+  // turn over — are different every time.
+  const deck = useMemo(() => {
+    const cards = fullDeck();
+    shuffleInPlace(cards, mulberry32(seed));
+    return cards.slice(0, COUNT);
+  }, [seed]);
+
+  // Which seats flip face-up: evenly spread around the ring so the composition
+  // stays balanced, but from a random starting seat so it is never the same five
+  // positions twice. Maps seat index → flip order.
+  const revealRank = useMemo(() => {
+    const offset = Math.floor(mulberry32(seed ^ 0x9e3779b9)() * COUNT);
+    const gap = COUNT / REVEAL_COUNT;
+    const m = new Map<number, number>();
+    for (let k = 0; k < REVEAL_COUNT; k++) {
+      m.set((offset + Math.round(k * gap)) % COUNT, k);
+    }
+    return m;
+  }, [seed]);
+
   // Fit the whole composition to the viewport. CSS cannot divide a length by a
-  // number to get a scale factor, so the ratio is measured here instead.
-  useEffect(() => {
-    const fit = () =>
-      setScale(Math.min(1, (window.innerWidth - 32) / BOX, (window.innerHeight - 48) / BOX));
+  // number to get a scale factor, so the ratio is measured here instead. Written
+  // imperatively to the container — never through state — so a mid-intro window
+  // drag cannot re-render 80-odd motion components per resize event. React never
+  // writes this style key itself (it isn't in the JSX), so the imperative value
+  // survives every React commit. Layout effect: measured before first paint.
+  useLayoutEffect(() => {
+    const fit = () => {
+      const s = Math.min(1, (window.innerWidth - 32) / BOX, (window.innerHeight - 48) / BOX);
+      if (boxRef.current) boxRef.current.style.transform = `scale(${s})`;
+    };
     fit();
     window.addEventListener("resize", fit);
     return () => window.removeEventListener("resize", fit);
   }, []);
 
+  // Clock the hand-off from the moment the intro is actually released, not from
+  // mount, or a slow boot eats the end of the animation.
   useEffect(() => {
-    const timers = [
-      setTimeout(() => setFanned(true), reduce ? 0 : FAN_START * 1000),
-      setTimeout(() => setRevealing(true), reduce ? 0 : REVEAL_START * 1000),
-      setTimeout(finish, reduce ? 900 : HOLD * 1000),
-    ];
-    return () => timers.forEach(clearTimeout);
-  }, [reduce, finish]);
+    if (!go) return;
+    const timer = setTimeout(finish, reduce ? 900 : HOLD * 1000);
+    return () => clearTimeout(timer);
+  }, [go, reduce, finish]);
 
   // Any deliberate input cuts the intro short.
   useEffect(() => {
@@ -186,52 +287,94 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     };
   }, [finish]);
 
+  // Reduced motion snaps every transform to its final pose (duration 0) and the
+  // root crossfades in instead. Compressing the delays but keeping durations
+  // would cram a 350° spin, a 210px flight and a 3D flip into one 300ms burst —
+  // MORE violent motion than the intro it replaces, the opposite of the request.
+  const t = (delay: number, duration: number, curve = easeOut) =>
+    reduce ? { delay: 0, duration: 0 } : { delay, duration, ease: curve };
+
   return (
     <motion.div
       className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden select-none"
       style={{ background: "var(--color-bg)" }}
-      exit={{ opacity: 0, scale: 1.06, transition: { duration: 0.45, ease: "easeIn" } }}
+      initial={{ opacity: reduce ? 0 : 1 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      exit={{ opacity: 0, transition: { duration: 0.45, ease: "easeIn" } }}
     >
-      {/* purple wash behind the fan */}
+      {/* Purple wash. A radial gradient is already soft, so it carries no blur
+          filter — a 70vmax blur(60px) is a full-screen GPU pass every frame. */}
       <div
         aria-hidden
         className="pointer-events-none absolute"
         style={{
-          width: "70vmax",
-          height: "70vmax",
-          background: "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.16) 0%, transparent 62%)",
-          filter: "blur(60px)",
+          width: "90vmax",
+          height: "90vmax",
+          background:
+            "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.15) 0%, rgb(var(--brand-purple-rgb) / 0.05) 34%, transparent 60%)",
         }}
       />
 
       <div
+        ref={boxRef}
         style={{
           position: "relative",
           width: BOX,
           height: BOX,
           flexShrink: 0,
-          transform: `scale(${scale})`,
+          // transform is written imperatively by the fit effect — keep it out
+          // of JSX so React and the effect never fight over the same style key
         }}
       >
-        {/* The deck: stacked, then spun open into a full circle */}
+        {/* Faint guide ring the fan seats itself onto */}
+        <motion.div
+          aria-hidden
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            left: "50%",
+            top: "50%",
+            width: RING_R * 2,
+            height: RING_R * 2,
+            marginLeft: -RING_R,
+            marginTop: -RING_R,
+            border: "1px solid rgb(var(--brand-purple-rgb) / 0.14)",
+          }}
+          initial={reduce ? false : { opacity: 0, scale: 0.85 }}
+          animate={go ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.85 }}
+          transition={t(LIFT_START, 0.9)}
+        />
+
+        {/* The deck fades in HERE, as one group — not per card. 36 stacked
+            per-card opacities alpha-composite (1 − (1−a)³⁶), so the pile reads
+            ~90% solid within two frames: a pop, not a fade. Group opacity is a
+            true fade, and one tween replaces 36. The 0.94→1 scale gives the
+            arrival a little weight; it lands before the rise gets going. */}
         <motion.div
           className="absolute inset-0"
-          initial={reduce ? false : { rotate: -14, scale: 0.94, opacity: 0 }}
-          animate={{ rotate: 0, scale: 1, opacity: 1 }}
-          transition={{ duration: reduce ? 0.3 : 1.9, ease: easeOut }}
+          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
+          animate={go ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
+          transition={{
+            opacity: t(APPEAR, APPEAR_DUR),
+            scale: t(APPEAR, APPEAR_DUR + 0.1),
+          }}
         >
           {deck.map((card, i) => {
-            const angle = (i * 360) / COUNT;
-            const revealed = REVEALED.includes(i);
-            // A revealed card only pulls out of the fan once its turn to flip arrives.
-            const showing = revealed && revealing;
-            const radius = RING_R + (showing ? LIFT : 0);
-            const revealDelay = reduce ? 0 : REVEALED.indexOf(i) * REVEAL_STEP;
+            const angle = seatAngle(i);
+            const rank = revealRank.get(i);
+            const isRevealed = rank !== undefined;
+            const revealAt = REVEAL_START + (rank ?? 0) * REVEAL_STEP;
+            const slop = stackSlop(i);
 
             return (
               <motion.div
                 key={i}
-                // arm — rotates about the canvas centre, carrying the card outward
+                // arm — pivots about the canvas centre, carrying the card round
+                // the ring. It holds 0° until its own peel-off beat, so the rise
+                // happens at rotation 0 and the stack stays perfectly aligned.
+                // zIndex is promoted only at the flip beat (duration 0 = a
+                // scheduled set, no tween): baked from mount, sweeping cards
+                // visibly dived UNDER the five still-anonymous reveal seats.
                 style={{
                   position: "absolute",
                   left: "50%",
@@ -240,76 +383,95 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                   height: CARD_H,
                   marginLeft: -CARD_W / 2,
                   marginTop: -CARD_H / 2,
-                  zIndex: revealed ? 10 : 1,
+                  zIndex: 1,
                 }}
-                initial={reduce ? false : { rotate: 0, opacity: 0 }}
-                animate={
-                  fanned
-                    ? { rotate: reduce ? angle : angle + 360, opacity: 1 }
-                    : { rotate: (i % 2 ? 1 : -1) * (2 + (i % 5)), opacity: 1 }
-                }
-                transition={
-                  fanned
-                    ? {
-                        rotate: {
-                          duration: reduce ? 0.3 : FAN_DUR,
-                          delay: reduce ? 0 : i * FAN_STEP,
-                          ease: easeOut,
-                        },
-                        opacity: { duration: 0.2 },
-                      }
-                    : { duration: 0.35, delay: 0.08 + i * 0.008, ease }
-                }
+                initial={reduce ? false : { rotate: 0, zIndex: 1 }}
+                animate={{
+                  rotate: go ? angle : 0,
+                  zIndex: go && isRevealed ? 10 : 1,
+                }}
+                transition={{
+                  rotate: t(FAN_START + i * FAN_STEP, fanDur(i)),
+                  zIndex: { delay: reduce ? 0 : revealAt, duration: 0 },
+                }}
               >
                 <motion.div
-                  // Radial offset along the arm's rotated axis. A card that is being
-                  // shown also cancels its arm's rotation so the face reads upright.
-                  style={{ width: "100%", height: "100%", perspective: 700 }}
-                  initial={reduce ? false : { y: 0, rotate: 0 }}
-                  animate={{ y: fanned ? -radius : 0, rotate: showing ? -angle : 0 }}
+                  // the lift: the stack rides out of the centre to the ring as one
+                  // tight unit. The stack slop is a local tilt here, so it never
+                  // becomes a positional offset; it eases away exactly as the
+                  // card's arm starts to sweep, straightening as it peels off.
+                  style={{ position: "relative", width: "100%", height: "100%" }}
+                  initial={reduce ? false : { y: 0, rotate: slop }}
+                  animate={{ y: go ? -RING_R : 0, rotate: go ? 0 : slop }}
                   transition={{
-                    duration: reduce ? 0.3 : revealing ? REVEAL_DUR : FAN_DUR,
-                    delay: reduce ? 0 : revealing ? revealDelay : i * FAN_STEP,
-                    ease: easeOut,
+                    y: t(LIFT_START + i * LIFT_STEP, LIFT_DUR, glide),
+                    rotate: t(FAN_START + i * FAN_STEP, fanDur(i)),
                   }}
                 >
-                  <motion.div
-                    style={{
-                      position: "relative",
-                      width: "100%",
-                      height: "100%",
-                      transformStyle: "preserve-3d",
-                    }}
-                    initial={reduce ? false : { rotateY: 0 }}
-                    animate={{ rotateY: showing ? 180 : 0 }}
-                    transition={{ duration: reduce ? 0.3 : REVEAL_DUR, delay: revealDelay, ease }}
-                  >
+                  {/* Only the cards that actually turn over carry the flip rig.
+                      A 3D context and a second painted face on all 36 is most of
+                      the mount cost for something 31 of them never show. */}
+                  {isRevealed ? (
+                    <motion.div
+                      // the pull-out: a shown card takes a little extra radius,
+                      // grows a touch to become focal, and cancels its arm's
+                      // rotation so the face reads upright.
+                      style={{ width: "100%", height: "100%", perspective: 700 }}
+                      initial={reduce ? false : { y: 0, rotate: 0, scale: 1 }}
+                      animate={
+                        go
+                          ? { y: -LIFT, rotate: uprightRotate(angle), scale: 1.12 }
+                          : { y: 0, rotate: 0, scale: 1 }
+                      }
+                      transition={{
+                        y: t(revealAt, REVEAL_DUR, settle),
+                        scale: t(revealAt, REVEAL_DUR, settle),
+                        rotate: t(revealAt, REVEAL_DUR),
+                      }}
+                    >
+                      <motion.div
+                        style={{
+                          position: "relative",
+                          width: "100%",
+                          height: "100%",
+                          transformStyle: "preserve-3d",
+                        }}
+                        initial={reduce ? false : { rotateY: 0 }}
+                        animate={{ rotateY: go ? 180 : 0 }}
+                        transition={t(revealAt, REVEAL_DUR, ease)}
+                      >
+                        <CardBack />
+                        <CardFace rank={card.rank} suit={card.suit} />
+                      </motion.div>
+                    </motion.div>
+                  ) : (
                     <CardBack />
-                    <CardFace rank={card.rank} suit={card.suit} />
-                  </motion.div>
+                  )}
                 </motion.div>
               </motion.div>
             );
           })}
         </motion.div>
 
-        {/* Name sits in the hole of the fan and never rotates with it */}
+        {/* Name sits in the hole of the fan and never rotates with it. Animated
+            with transform/opacity only — letter-spacing was forcing layout on
+            every frame, right in the middle of the sweep. */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
           <motion.h1
             className="font-sans font-black tracking-tight leading-none whitespace-nowrap"
             style={{ fontSize: 30, color: "var(--color-accent-dim)", letterSpacing: "-0.03em" }}
-            initial={reduce ? false : { opacity: 0, y: 8, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: reduce ? 0.3 : 0.7, delay: reduce ? 0 : NAME_AT, ease }}
+            initial={reduce ? false : { opacity: 0, y: 10, scale: 0.97 }}
+            animate={go ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.97 }}
+            transition={t(NAME_AT, 0.8)}
           >
             Devom Brahmbhatt
           </motion.h1>
           <motion.p
             className="font-mono whitespace-nowrap"
             style={{ fontSize: 11, marginTop: 10, color: "var(--color-muted)", letterSpacing: "0.14em" }}
-            initial={reduce ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: reduce ? 0.3 : 0.6, delay: reduce ? 0 : NAME_AT + 0.16, ease }}
+            initial={reduce ? false : { opacity: 0, y: 4 }}
+            animate={go ? { opacity: 1, y: 0 } : { opacity: 0, y: 4 }}
+            transition={t(NAME_AT + 0.15, 0.6)}
           >
             TRADER · ENGINEER · RESEARCHER
           </motion.p>
@@ -326,8 +488,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           color: "var(--color-muted)",
         }}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.45 }}
-        transition={{ duration: 0.6, delay: reduce ? 0 : 1.9 }}
+        animate={{ opacity: go ? 0.45 : 0 }}
+        transition={t(2.0, 0.6)}
       >
         CLICK TO SKIP
       </motion.p>

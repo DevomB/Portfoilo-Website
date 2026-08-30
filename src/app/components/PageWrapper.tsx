@@ -1,27 +1,37 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import LoadingScreen from "./LoadingScreen";
 
+type Stage = "checking" | "intro" | "ready";
+
 export default function PageWrapper({ children }: { children: ReactNode }) {
-  const [loaded, setLoaded] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem("intro_seen") === "1";
-  });
+  // Resolved in an effect rather than the useState initializer: reading
+  // sessionStorage during render made the server (which always says "show the
+  // intro") disagree with a returning client, and React responds to that
+  // hydration mismatch by throwing the whole tree away and re-rendering it from
+  // scratch — the single biggest startup cost on revisits. The undecided frame
+  // renders nothing, which is invisible: both the splash and the page sit on
+  // the same black background.
+  const [stage, setStage] = useState<Stage>("checking");
+
+  useEffect(() => {
+    setStage(sessionStorage.getItem("intro_seen") === "1" ? "ready" : "intro");
+  }, []);
 
   const handleComplete = () => {
     sessionStorage.setItem("intro_seen", "1");
-    setLoaded(true);
+    setStage("ready");
   };
 
   return (
     <>
       <AnimatePresence>
-        {!loaded && <LoadingScreen key="loading" onComplete={handleComplete} />}
+        {stage === "intro" && <LoadingScreen key="loading" onComplete={handleComplete} />}
       </AnimatePresence>
       <AnimatePresence>
-        {loaded && (
+        {stage === "ready" && (
           <motion.div
             key="content"
             initial={{ opacity: 0 }}
