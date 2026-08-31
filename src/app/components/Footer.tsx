@@ -1,76 +1,48 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
+
+const links = [
+  { label: "GitHub", href: "https://github.com/DevomB", external: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/devomb/", external: true },
+  { label: "NPM", href: "https://www.npmjs.com/~devomb", external: true },
+  { label: "Crates", href: "https://crates.io/users/DevomB", external: true },
+  { label: "Privacy", href: "/privacy", external: false },
+  { label: "Terms", href: "/terms", external: false },
+];
 
 export default function Footer() {
-  const [ts, setTs] = useState<string | null>(null);
   const year = new Date().getFullYear();
-
-  useEffect(() => {
-    setTs(new Date().toISOString());
-  }, []);
 
   return (
     <footer className="relative overflow-hidden border-t bg-bg" style={{ borderColor: "rgb(var(--brand-purple-rgb) / 0.22)" }}>
-      {/* minimal top bar */}
-      <div className="mx-auto flex w-[min(100%-2*var(--shell-inline),76rem)] items-center justify-between px-[var(--shell-inline)] py-8">
-        <div className="flex items-center gap-2">
-          <span
-            className="relative flex h-2 w-2"
-            aria-hidden
-          >
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-          </span>
-          <span className="font-mono text-[0.65rem] text-muted">server online</span>
-          {ts && (
-            <>
-              <span className="font-mono text-[0.65rem] text-muted/40">·</span>
-              <span className="font-mono text-[0.65rem] text-muted/40 select-none">{ts}</span>
-            </>
-          )}
-        </div>
-
-        <div className="flex items-center gap-5">
-          {[
-            { label: "GitHub", href: "https://github.com/DevomB" },
-            { label: "LinkedIn", href: "https://www.linkedin.com/in/devomb/" },
-            { label: "npm", href: "https://www.npmjs.com/package/poker-calculations" },
-          ].map((l) => (
+      {/* centered link row, copyright on its own line beneath */}
+      <div className="mx-auto w-[min(100%-2*var(--shell-inline),76rem)] px-[var(--shell-inline)] pt-8 pb-1">
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+          {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
               className="font-mono text-fluid-xs text-muted transition-colors hover:text-ink"
             >
               {l.label}
             </Link>
           ))}
-          <span className="font-mono text-[0.65rem] text-muted/40">© {year}</span>
         </div>
+        <p className="mt-5 text-center font-mono text-fluid-xs text-muted opacity-60">
+          © {year} Devom Brahmbhatt
+        </p>
       </div>
 
-      {/* giant name — partially cut off at bottom */}
-      <div
-        className="select-none overflow-hidden"
-        style={{
-          /* show first line fully + ~35% of second line */
-          maxHeight: "1.38em",
-          fontSize: "clamp(3.8rem, 13.5vw, 17rem)",
-        }}
-        aria-hidden
-      >
+      <div className="select-none overflow-hidden" style={{ marginTop: "-5px" }} aria-hidden>
         <p
-          className="font-black leading-none tracking-tighter"
+          className="text-center font-black leading-none tracking-tighter whitespace-nowrap"
           style={{
-            fontSize: "inherit",
+            fontSize: "clamp(2.8rem, 16.8vw, 20.8rem)",
             color: "var(--color-accent-dim)",
-            paddingLeft: "var(--shell-inline)",
+            paddingInline: "var(--shell-inline)",
           }}
         >
-          DEVOM<br />BRAHMBATT
+          DEVOM
         </p>
       </div>
 
