@@ -85,7 +85,7 @@ export default function Navbar() {
           // the wordmark's own face: Goldman bold, sized as a mark, not a link
           className="font-brand font-bold text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
         >
-          devomb<span className="text-accent">.</span>com
+          DevomB<span className="text-accent">.</span>com
         </Link>
 
         {/* desktop nav */}
