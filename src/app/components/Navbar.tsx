@@ -82,8 +82,9 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          // the wordmark's own face: Goldman bold, sized as a mark, not a link
-          className="font-brand font-bold text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
+          // the wordmark's own face (Prosto One, single weight), sized as a
+          // mark rather than a nav link
+          className="font-brand text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
         >
           DevomB<span className="text-accent">.</span>com
         </Link>
