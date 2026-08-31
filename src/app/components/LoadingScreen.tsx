@@ -200,6 +200,26 @@ function buildForcedHand(kind: string, rng: () => number): Card[] | null {
 // Glow strength behind a revealed card, by hand tier.
 const GLOW_ALPHA = [0, 0, 0.35, 0.35, 0.6, 0.6, 0.85, 0.85, 1, 1] as const;
 
+// Which seats flip face-up: evenly spread, ALWAYS anchored at seat 0. A closed
+// ring of flat cards cannot overlap cyclically — z-order is a strict ladder, so
+// somewhere one card must sit under both neighbours, and that seam is
+// structurally the first-laid card, seat 0. Anchoring the reveals at seat 0
+// pulls the seam card out of the ring plane (radius + scale + zIndex 10, first
+// to flip), so the double-overlap never survives to be seen and the remaining
+// ring is a perfect one-directional spiral. The CARDS stay fully random; only
+// the frame positions are fixed. `rank` maps seat → flip order.
+const REVEAL_SEATS = (() => {
+  const gap = COUNT / REVEAL_COUNT;
+  const order: number[] = [];
+  const rank = new Map<number, number>();
+  for (let k = 0; k < REVEAL_COUNT; k++) {
+    const seat = Math.round(k * gap) % COUNT;
+    order.push(seat);
+    rank.set(seat, k);
+  }
+  return { order, rank };
+})();
+
 // ── Card faces ────────────────────────────────────────────────────────────────
 function CardBack() {
   return (
@@ -361,22 +381,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     };
   }, []);
 
-  // Which seats flip face-up: evenly spread around the ring so the composition
-  // stays balanced, but from a random starting seat so it is never the same five
-  // positions twice. `rank` maps seat index → flip order; `order` is the inverse.
-  const revealSeats = useMemo(() => {
-    const offset = Math.floor(mulberry32(seed ^ 0x9e3779b9)() * COUNT);
-    const gap = COUNT / REVEAL_COUNT;
-    const order: number[] = [];
-    const rank = new Map<number, number>();
-    for (let k = 0; k < REVEAL_COUNT; k++) {
-      const seat = (offset + Math.round(k * gap)) % COUNT;
-      order.push(seat);
-      rank.set(seat, k);
-    }
-    return { order, rank };
-  }, [seed]);
-  const revealRank = revealSeats.rank;
+  const revealRank = REVEAL_SEATS.rank;
 
   // A fresh 52-card shuffle each load, so the ring — and the five cards that
   // turn over — are different every time. With ?hand=, the constructed hand is
@@ -387,7 +392,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     const forced = force ? buildForcedHand(force, mulberry32(seed ^ 0x51ed270b)) : null;
     if (forced) {
       forced.forEach((card, k) => {
-        const seat = revealSeats.order[k]!;
+        const seat = REVEAL_SEATS.order[k]!;
         const at = cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
         const tmp = cards[seat]!;
         cards[seat] = cards[at]!;
@@ -395,14 +400,14 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
       });
     }
     return cards.slice(0, COUNT);
-  }, [seed, force, revealSeats]);
+  }, [seed, force]);
 
   // The five revealed cards ARE a poker hand — classify it. This is what the
   // poker-calculations addon's evaluateBestHand() reports server-side; the
   // native binary cannot load in the browser, so the JS mirror does it here.
   const hand = useMemo(
-    () => classifyFive(revealSeats.order.map((seat) => deck[seat]!)),
-    [deck, revealSeats],
+    () => classifyFive(REVEAL_SEATS.order.map((seat) => deck[seat]!)),
+    [deck],
   );
   const celebrate = hand.tier >= 6; // full house or better earns confetti
 
