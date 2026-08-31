@@ -17,11 +17,32 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
   const [stage, setStage] = useState<Stage>("checking");
 
   useEffect(() => {
-    setStage(sessionStorage.getItem("intro_seen") === "1" ? "ready" : "intro");
+    // ?intro replays the splash on demand; ?hand=<category> previews a forced
+    // deal, which is pointless if the splash is skipped — both bypass the gate.
+    const params = new URLSearchParams(window.location.search);
+    const forceIntro = params.has("intro") || params.has("hand");
+    // Guarded: the sessionStorage ACCESSOR itself throws SecurityError in
+    // browsers with site data blocked (block-all-cookies, some webviews); with
+    // no error boundary above us an uncaught effect error would blank the site.
+    let seen: string | null = null;
+    try {
+      seen = sessionStorage.getItem("intro_seen");
+    } catch {
+      // storage unavailable — treat as first visit and play the intro
+    }
+    // Deliberate: the stage must resolve after hydration — reading
+    // sessionStorage during render is an SSR mismatch (see comment above).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStage(!forceIntro && seen === "1" ? "ready" : "intro");
   }, []);
 
   const handleComplete = () => {
-    sessionStorage.setItem("intro_seen", "1");
+    try {
+      sessionStorage.setItem("intro_seen", "1");
+    } catch {
+      // storage blocked — the intro will replay next visit, which is fine;
+      // an unguarded throw here would leave the splash latched shut instead
+    }
     setStage("ready");
   };
 

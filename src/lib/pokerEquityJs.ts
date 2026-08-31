@@ -9,7 +9,7 @@ import {
 } from "./pokerCards";
 
 /** Best 5-card strength as lexicographically comparable tuple (higher wins). */
-function evaluateFive(cards: Card[]): number[] {
+export function evaluateFive(cards: Card[]): number[] {
   const ranks = cards.map((c) => c.rank).sort((a, b) => b - a);
   const suits = cards.map((c) => c.suit);
   const flush = new Set(suits).size === 1;
@@ -72,6 +72,35 @@ function evaluateFive(cards: Card[]): number[] {
     return [1, p, ...kickers];
   }
   return [0, ...ranks];
+}
+
+// Category names for the evaluateFive tuple's leading value, matching the
+// vocabulary of the poker-calculations native addon's HandEvalResult.rank.
+// Tier 9 (royal flush) is a display-level distinction of the [8, 14] tuple.
+const HAND_NAMES = [
+  "High Card",
+  "One Pair",
+  "Two Pair",
+  "Three of a Kind",
+  "Straight",
+  "Flush",
+  "Full House",
+  "Four of a Kind",
+  "Straight Flush",
+  "Royal Flush",
+] as const;
+
+export type HandClass = { tier: number; name: (typeof HAND_NAMES)[number] };
+
+/**
+ * Classify exactly five cards for display. The native addon exposes the same
+ * information via evaluateBestHand(), but it cannot load in the browser — this
+ * is the client-side mirror used by the splash screen.
+ */
+export function classifyFive(cards: Card[]): HandClass {
+  const v = evaluateFive(cards);
+  const tier = v[0] === 8 && v[1] === 14 ? 9 : v[0]!;
+  return { tier, name: HAND_NAMES[tier]! };
 }
 
 function bestFiveIndices(cards: Card[]): number[] {

@@ -2,16 +2,19 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { fullDeck, mulberry32, shuffleInPlace } from "@/lib/pokerCards";
+import { fullDeck, mulberry32, shuffleInPlace, type Card } from "@/lib/pokerCards";
+import { classifyFive } from "@/lib/pokerEquityJs";
+import SplashConfetti from "./SplashConfetti";
 
 // ── Geometry ──────────────────────────────────────────────────────────────────
 // A fixed pixel design scaled as one composition to fit any viewport, so the fan
 // and the name inside it always hold the same proportions.
-const BOX = 580;      // design canvas (square) — sized to clear the pulled-out cards
-const COUNT = 36;     // cards in the fan
+const BOX = 680;      // design canvas (square) — sized to clear the pulled-out cards
+const COUNT = 52;     // the WHOLE deck rides the ring — every card is on screen
 const CARD_W = 52;
 const CARD_H = 74;
-const RING_R = 210;   // canvas centre → card centre
+const RING_R = 250;   // canvas centre → card centre; sized so 52 cards at ~30px
+                      // pitch overlap like a properly spread deck, corner indices clear
 const LIFT = 26;      // extra radius for a card pulled out of the fan
 const REVEAL_COUNT = 5;
 
@@ -39,6 +42,10 @@ const isRed = (suit: number) => suit === 1 || suit === 2;
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
 const easeOut = [0.16, 0.84, 0.34, 1] as [number, number, number, number];
+// the sweep MUST be linear: any curve would desynchronise the in-flight cards
+// (same curve, different durations → different angles) and the moving deck
+// would smear apart instead of travelling as one stack
+const linear = [0, 0, 1, 1] as [number, number, number, number];
 // the rise: slow launch, fast middle, soft landing — deliberate, mechanical
 const glide = [0.55, 0, 0.15, 1] as [number, number, number, number];
 // real overshoot for the pull-out only — true peak ≈ 1.09, i.e. ~2.3px of
@@ -63,26 +70,135 @@ const LIFT_END = LIFT_START + (COUNT - 1) * LIFT_STEP + LIFT_DUR; // ≈ 0.94
 
 const FAN_START = LIFT_END + 0.08; // the settle beat, derived so the
                                    // stack-lands-before-peel guarantee survives retuning
-const FAN_STEP = 0.013;
-// Constant sweep RATE, not constant duration: with one duration for every card,
-// angular velocity is proportional to seat index — the far cards smear past at
-// thousands of deg/s and every card overtakes its still-moving predecessor. At
-// one rate the cards travel as a ribbon, each peeling off over already-seated
-// neighbours, spaced FAN_RATE × FAN_STEP ≈ 5° apart in flight.
-const FAN_RATE = 400; // deg/s
-const fanDur = (i: number) => Math.max(0.35, seatAngle(i) / FAN_RATE);
-const FAN_END = FAN_START + (COUNT - 1) * FAN_STEP + fanDur(COUNT - 1); // ≈ 2.35
+// The deck itself travels the ring. Every card starts the sweep TOGETHER at
+// 12 o'clock and moves clockwise at ONE constant rate, stopping dead at its own
+// seat. Shared start + shared rate + linear easing means every in-flight card is
+// at the same angle on every frame: they read as a single moving stack that
+// deposits its bottom card at each seat it passes — not a fountain of cards
+// flying from a point to park on a circle. Card 0 is laid immediately; the deck
+// thins as it goes; cards 50/51 land overlapping seat 0 from above. DOM order is
+// the stack order (card 0 bottom → 51 top), so laid cards always sit under the
+// deck that is still passing over them.
+const SWEEP_RATE = 340; // deg/s — full circle in ~1.03s
+const sweepDur = (i: number) => seatAngle(i) / SWEEP_RATE;
+// a laid card squares up its slop tilt just as it slides out from under the deck
+const SETTLE_DUR = 0.3;
+const FAN_END = FAN_START + sweepDur(COUNT - 1); // ≈ 2.05
 
 const REVEAL_START = FAN_END + 0.12; // ring closes, a beat, then the flips
 const REVEAL_STEP = 0.07;
 const REVEAL_DUR = 0.42;
 
+const REVEAL_END = REVEAL_START + (REVEAL_COUNT - 1) * REVEAL_STEP + REVEAL_DUR;
+
 const NAME_AT = 1.4;       // resolves inside the ring while it is still closing
-const HOLD = REVEAL_START + (REVEAL_COUNT - 1) * REVEAL_STEP + REVEAL_DUR + 0.75;
+const LABEL_AT = REVEAL_END - 0.18;  // hand name lands as the last flip settles
+const CONFETTI_AT = REVEAL_END + 0.05;
+const HOLD = REVEAL_END + 0.95; // long enough to actually read the hand label
+const CELEBRATE_HOLD = 1.15; // extra dwell when the deal earns confetti
 
 // Server render and first client render must agree, so the deck starts from a
 // fixed seed and is reshuffled on mount — see the boot effect below.
 const SSR_SEED = 0xc0ffee;
+
+// ── Forced hands (?hand= preview) ─────────────────────────────────────────────
+// Full house or better is a ~1-in-590 deal, so the celebration tiers would be
+// unpreviewable on honest randomness. ?hand=royal|straightflush|quads|fullhouse|
+// flush|straight|trips|twopair|pair|highcard swaps a constructed hand into the
+// reveal seats (the rest of the ring stays random). Preview-only: no param, no
+// rigging.
+const FORCE_TIER: Record<string, number> = {
+  highcard: 0, pair: 1, twopair: 2, trips: 3, three: 3, straight: 4, flush: 5,
+  fullhouse: 6, full: 6, boat: 6, quads: 7, four: 7, straightflush: 8, sf: 8,
+  royal: 9, royalflush: 9,
+};
+
+function buildForcedHand(kind: string, rng: () => number): Card[] | null {
+  const key = kind.toLowerCase().replace(/[^a-z]/g, "");
+  const tier = FORCE_TIER[key];
+  if (tier === undefined) return null;
+
+  const pick = (n: number) => Math.floor(rng() * n);
+  const drawRanks = (n: number, excl: number[]) => {
+    const out: number[] = [];
+    while (out.length < n) {
+      const r = 2 + pick(13);
+      if (!excl.includes(r) && !out.includes(r)) out.push(r);
+    }
+    return out;
+  };
+  const isStraightSet = (ranks: number[]) => {
+    const s = [...ranks].sort((a, b) => a - b);
+    return (
+      (s[4]! - s[0]! === 4 && new Set(s).size === 5) ||
+      (s[0] === 2 && s[1] === 3 && s[2] === 4 && s[3] === 5 && s[4] === 14)
+    );
+  };
+
+  const suit = pick(4);
+  let hand: Card[];
+
+  if (tier === 9) {
+    hand = [14, 13, 12, 11, 10].map((rank) => ({ rank, suit }));
+  } else if (tier === 8) {
+    const high = 5 + pick(9); // 5..13 — never ace-high, that would be the royal
+    const ranks = high === 5 ? [14, 2, 3, 4, 5] : [0, 1, 2, 3, 4].map((k) => high - k);
+    hand = ranks.map((rank) => ({ rank, suit }));
+  } else if (tier === 7) {
+    const [quad, kicker] = drawRanks(2, []);
+    hand = [0, 1, 2, 3].map((s) => ({ rank: quad!, suit: s }));
+    hand.push({ rank: kicker!, suit: pick(4) });
+  } else if (tier === 6) {
+    const [trip, pair] = drawRanks(2, []);
+    const omit = pick(4);
+    hand = [0, 1, 2, 3].filter((s) => s !== omit).map((s) => ({ rank: trip!, suit: s }));
+    const p1 = pick(4);
+    hand.push({ rank: pair!, suit: p1 }, { rank: pair!, suit: (p1 + 1 + pick(3)) % 4 });
+  } else if (tier === 5) {
+    let ranks: number[];
+    do { ranks = drawRanks(5, []); } while (isStraightSet(ranks));
+    hand = ranks.map((rank) => ({ rank, suit }));
+  } else if (tier === 4) {
+    const high = 5 + pick(10); // 5..14, wheel through broadway
+    const ranks = high === 5 ? [14, 2, 3, 4, 5] : [0, 1, 2, 3, 4].map((k) => high - k);
+    const suits = ranks.map(() => pick(4));
+    if (new Set(suits).size === 1) suits[4] = (suits[4]! + 1) % 4;
+    hand = ranks.map((rank, k) => ({ rank, suit: suits[k]! }));
+  } else if (tier === 3) {
+    const [trip, k1, k2] = drawRanks(3, []);
+    const omit = pick(4);
+    hand = [0, 1, 2, 3].filter((s) => s !== omit).map((s) => ({ rank: trip!, suit: s }));
+    hand.push({ rank: k1!, suit: pick(4) }, { rank: k2!, suit: pick(4) });
+  } else if (tier === 2) {
+    const [r1, r2, kick] = drawRanks(3, []);
+    const s1 = pick(4);
+    const s2 = pick(4);
+    hand = [
+      { rank: r1!, suit: s1 }, { rank: r1!, suit: (s1 + 1 + pick(3)) % 4 },
+      { rank: r2!, suit: s2 }, { rank: r2!, suit: (s2 + 1 + pick(3)) % 4 },
+      { rank: kick!, suit: pick(4) },
+    ];
+  } else if (tier === 1) {
+    const [p, k1, k2, k3] = drawRanks(4, []);
+    const s1 = pick(4);
+    hand = [
+      { rank: p!, suit: s1 }, { rank: p!, suit: (s1 + 1 + pick(3)) % 4 },
+      { rank: k1!, suit: pick(4) }, { rank: k2!, suit: pick(4) }, { rank: k3!, suit: pick(4) },
+    ];
+  } else {
+    let ranks: number[];
+    do { ranks = drawRanks(5, []); } while (isStraightSet(ranks));
+    const suits = ranks.map(() => pick(4));
+    if (new Set(suits).size === 1) suits[4] = (suits[4]! + 1) % 4;
+    hand = ranks.map((rank, k) => ({ rank, suit: suits[k]! }));
+  }
+
+  // A construction bug must degrade to an honest deal, never a wrong label.
+  return classifyFive(hand).tier === tier ? hand : null;
+}
+
+// Glow strength behind a revealed card, by hand tier.
+const GLOW_ALPHA = [0, 0, 0.35, 0.35, 0.6, 0.6, 0.85, 0.85, 1, 1] as const;
 
 // ── Card faces ────────────────────────────────────────────────────────────────
 function CardBack() {
@@ -184,8 +300,12 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
   // mount means the opening beats tick away while the browser is still parsing
   // bundles and hydrating — you never see them, and the fan appears to jump in
   // part-way. Seed and go land in one state object so this costs one re-render.
-  const [boot, setBoot] = useState({ seed: SSR_SEED, go: false });
-  const { seed, go } = boot;
+  const [boot, setBoot] = useState<{ seed: number; go: boolean; force: string | null }>({
+    seed: SSR_SEED,
+    go: false,
+    force: null,
+  });
+  const { seed, go, force } = boot;
 
   const onCompleteRef = useRef(onComplete);
   const doneRef = useRef(false);
@@ -197,7 +317,14 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
   const finish = useCallback(() => {
     if (doneRef.current) return;
     doneRef.current = true;
-    onCompleteRef.current();
+    try {
+      onCompleteRef.current();
+    } catch (err) {
+      // a failed hand-off must never latch the splash shut — un-latch so the
+      // next skip or timer can retry the escape, and let the error surface
+      doneRef.current = false;
+      throw err;
+    }
   }, []);
 
   // Hold until the fonts have resolved and a frame has actually rendered, then
@@ -212,7 +339,12 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     const release = () => {
       if (cancelled) return;
       raf = requestAnimationFrame(() => {
-        if (!cancelled) setBoot({ seed: (Math.random() * 0xffffffff) >>> 0, go: true });
+        if (!cancelled)
+          setBoot({
+            seed: (Math.random() * 0xffffffff) >>> 0,
+            go: true,
+            force: new URLSearchParams(window.location.search).get("hand"),
+          });
       });
     };
 
@@ -229,26 +361,50 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     };
   }, []);
 
+  // Which seats flip face-up: evenly spread around the ring so the composition
+  // stays balanced, but from a random starting seat so it is never the same five
+  // positions twice. `rank` maps seat index → flip order; `order` is the inverse.
+  const revealSeats = useMemo(() => {
+    const offset = Math.floor(mulberry32(seed ^ 0x9e3779b9)() * COUNT);
+    const gap = COUNT / REVEAL_COUNT;
+    const order: number[] = [];
+    const rank = new Map<number, number>();
+    for (let k = 0; k < REVEAL_COUNT; k++) {
+      const seat = (offset + Math.round(k * gap)) % COUNT;
+      order.push(seat);
+      rank.set(seat, k);
+    }
+    return { order, rank };
+  }, [seed]);
+  const revealRank = revealSeats.rank;
+
   // A fresh 52-card shuffle each load, so the ring — and the five cards that
-  // turn over — are different every time.
+  // turn over — are different every time. With ?hand=, the constructed hand is
+  // swapped into the reveal seats; the ring around it stays random.
   const deck = useMemo(() => {
     const cards = fullDeck();
     shuffleInPlace(cards, mulberry32(seed));
-    return cards.slice(0, COUNT);
-  }, [seed]);
-
-  // Which seats flip face-up: evenly spread around the ring so the composition
-  // stays balanced, but from a random starting seat so it is never the same five
-  // positions twice. Maps seat index → flip order.
-  const revealRank = useMemo(() => {
-    const offset = Math.floor(mulberry32(seed ^ 0x9e3779b9)() * COUNT);
-    const gap = COUNT / REVEAL_COUNT;
-    const m = new Map<number, number>();
-    for (let k = 0; k < REVEAL_COUNT; k++) {
-      m.set((offset + Math.round(k * gap)) % COUNT, k);
+    const forced = force ? buildForcedHand(force, mulberry32(seed ^ 0x51ed270b)) : null;
+    if (forced) {
+      forced.forEach((card, k) => {
+        const seat = revealSeats.order[k]!;
+        const at = cards.findIndex((c) => c.rank === card.rank && c.suit === card.suit);
+        const tmp = cards[seat]!;
+        cards[seat] = cards[at]!;
+        cards[at] = tmp;
+      });
     }
-    return m;
-  }, [seed]);
+    return cards.slice(0, COUNT);
+  }, [seed, force, revealSeats]);
+
+  // The five revealed cards ARE a poker hand — classify it. This is what the
+  // poker-calculations addon's evaluateBestHand() reports server-side; the
+  // native binary cannot load in the browser, so the JS mirror does it here.
+  const hand = useMemo(
+    () => classifyFive(revealSeats.order.map((seat) => deck[seat]!)),
+    [deck, revealSeats],
+  );
+  const celebrate = hand.tier >= 6; // full house or better earns confetti
 
   // Fit the whole composition to the viewport. CSS cannot divide a length by a
   // number to get a scale factor, so the ratio is measured here instead. Written
@@ -270,9 +426,10 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
   // mount, or a slow boot eats the end of the animation.
   useEffect(() => {
     if (!go) return;
-    const timer = setTimeout(finish, reduce ? 900 : HOLD * 1000);
+    const hold = HOLD + (celebrate ? CELEBRATE_HOLD : 0);
+    const timer = setTimeout(finish, reduce ? 900 : hold * 1000);
     return () => clearTimeout(timer);
-  }, [go, reduce, finish]);
+  }, [go, reduce, celebrate, finish]);
 
   // Any deliberate input cuts the intro short.
   useEffect(() => {
@@ -345,10 +502,10 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           transition={t(LIFT_START, 0.9)}
         />
 
-        {/* The deck fades in HERE, as one group — not per card. 36 stacked
+        {/* The deck fades in HERE, as one group — not per card. 52 stacked
             per-card opacities alpha-composite (1 − (1−a)³⁶), so the pile reads
             ~90% solid within two frames: a pop, not a fade. Group opacity is a
-            true fade, and one tween replaces 36. The 0.94→1 scale gives the
+            true fade, and one tween replaces 52. The 0.94→1 scale gives the
             arrival a little weight; it lands before the rise gets going. */}
         <motion.div
           className="absolute inset-0"
@@ -370,8 +527,9 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
               <motion.div
                 key={i}
                 // arm — pivots about the canvas centre, carrying the card round
-                // the ring. It holds 0° until its own peel-off beat, so the rise
-                // happens at rotation 0 and the stack stays perfectly aligned.
+                // the ring. All arms launch together at FAN_START and rotate at
+                // the same linear rate; each stops at its own seat, so the
+                // superposition of in-flight cards IS the travelling deck.
                 // zIndex is promoted only at the flip beat (duration 0 = a
                 // scheduled set, no tween): baked from mount, sweeping cards
                 // visibly dived UNDER the five still-anonymous reveal seats.
@@ -391,25 +549,26 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                   zIndex: go && isRevealed ? 10 : 1,
                 }}
                 transition={{
-                  rotate: t(FAN_START + i * FAN_STEP, fanDur(i)),
+                  rotate: t(FAN_START, sweepDur(i), linear),
                   zIndex: { delay: reduce ? 0 : revealAt, duration: 0 },
                 }}
               >
                 <motion.div
                   // the lift: the stack rides out of the centre to the ring as one
                   // tight unit. The stack slop is a local tilt here, so it never
-                  // becomes a positional offset; it eases away exactly as the
-                  // card's arm starts to sweep, straightening as it peels off.
+                  // becomes a positional offset. In-flight cards KEEP their tilt —
+                  // the travelling deck stays a loose stack — and each card
+                  // squares up as it is deposited, starting just before its seat.
                   style={{ position: "relative", width: "100%", height: "100%" }}
                   initial={reduce ? false : { y: 0, rotate: slop }}
                   animate={{ y: go ? -RING_R : 0, rotate: go ? 0 : slop }}
                   transition={{
                     y: t(LIFT_START + i * LIFT_STEP, LIFT_DUR, glide),
-                    rotate: t(FAN_START + i * FAN_STEP, fanDur(i)),
+                    rotate: t(Math.max(FAN_START, FAN_START + sweepDur(i) - 0.1), SETTLE_DUR),
                   }}
                 >
                   {/* Only the cards that actually turn over carry the flip rig.
-                      A 3D context and a second painted face on all 36 is most of
+                      A 3D context and a second painted face on all 52 is most of
                       the mount cost for something 31 of them never show. */}
                   {isRevealed ? (
                     <motion.div
@@ -429,6 +588,28 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                         rotate: t(revealAt, REVEAL_DUR),
                       }}
                     >
+                      {/* hand-strength glow — pre-painted gradient, opacity only */}
+                      {GLOW_ALPHA[hand.tier]! > 0 && (
+                        <motion.div
+                          aria-hidden
+                          style={{
+                            position: "absolute",
+                            inset: -18,
+                            borderRadius: 18,
+                            pointerEvents: "none",
+                            background:
+                              hand.tier >= 8
+                                ? "radial-gradient(circle, rgb(var(--brand-purple-rgb) / 0.55) 0%, rgb(var(--brand-green-rgb) / 0.24) 46%, transparent 72%)"
+                                : "radial-gradient(circle, rgb(var(--brand-green-rgb) / 0.42) 0%, transparent 70%)",
+                          }}
+                          initial={reduce ? false : { opacity: 0 }}
+                          animate={{ opacity: go ? GLOW_ALPHA[hand.tier]! : 0 }}
+                          // synced to the hand being NAMED, sweeping the ring in
+                          // flip order — blooming per-flip leaked the verdict
+                          // before the fifth card's face even existed
+                          transition={t(LABEL_AT + (rank ?? 0) * 0.05, 0.5)}
+                        />
+                      )}
                       <motion.div
                         style={{
                           position: "relative",
@@ -475,8 +656,44 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
           >
             TRADER · ENGINEER · RESEARCHER
           </motion.p>
+
+          {/* the dealt hand, named as the last flip settles — evaluated live,
+              treatment scales with strength */}
+          <motion.p
+            className="font-mono whitespace-nowrap"
+            style={{
+              fontSize: 10,
+              marginTop: 16,
+              letterSpacing: "0.24em",
+              // four-step ladder aligned with GLOW_ALPHA's pairs, so the drama
+              // gradient is legible: pair-ish → dim green → bright-dim → full
+              color:
+                hand.tier >= 6
+                  ? "var(--color-secondary)"
+                  : hand.tier >= 4
+                    ? "var(--color-secondary-dim)"
+                    : hand.tier >= 2
+                      ? "rgb(var(--brand-green-rgb) / 0.6)"
+                      : "var(--color-muted)",
+              textShadow: celebrate ? "0 0 18px rgb(var(--brand-green-rgb) / 0.5)" : undefined,
+            }}
+            initial={reduce ? false : { opacity: 0, y: 5 }}
+            animate={go ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
+            transition={t(LABEL_AT, 0.55)}
+          >
+            {celebrate ? `♠ ${hand.name.toUpperCase()} ♠` : hand.name.toUpperCase()}
+          </motion.p>
         </div>
       </div>
+
+      {/* confetti for a full house or better — canvas, mounts only when earned */}
+      {go && celebrate && !reduce && (
+        <SplashConfetti
+          delayMs={CONFETTI_AT * 1000}
+          count={hand.tier >= 9 ? 320 : hand.tier >= 8 ? 240 : 150}
+          rain={hand.tier >= 8}
+        />
+      )}
 
       {/* skip hint */}
       <motion.p
