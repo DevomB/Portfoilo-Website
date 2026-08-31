@@ -9,7 +9,7 @@ import { useLoaded } from "../contexts/LoadedContext";
 // response time from the Navigation Timing API.
 const LOG_LINES = [
   { delay: 0,    type: "info",   text: "> booting devomb.core" },
-  { delay: 550,  type: "module", text: "> next 16 · tailwind · framer motion" },
+  { delay: 550,  type: "module", text: "> Next 16 · Tailwind · Framer" },
   { delay: 1150, type: "ok",     text: "> routes compiled" },
   { delay: 1750, type: "info",   text: "> listening on {host}" },
   { delay: 2350, type: "ok",     text: "> GET {path} 200 · {ms} ms" },
