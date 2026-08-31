@@ -21,8 +21,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata: Metadata = {
   ...(siteUrl ? { metadataBase: new URL(siteUrl) } : {}),
   title: {
-    default: "Devom Brahmbhatt — Trader · Engineer · Researcher",
-    template: "%s · Devom Brahmbhatt",
+    default: "Devom B",
+    template: "%s · Devom B",
   },
   description:
     "Devom Brahmbhatt — Trader · Engineer · Researcher. Building resilient APIs, data-intensive systems, and applied simulations. Roosevelt Connect, Virtual Medical Missions, WebWork Innovations.",
