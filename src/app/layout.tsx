@@ -2,7 +2,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, Instrument_Serif } from "next/font/google";
 import MotionProvider from "./components/MotionProvider";
 
 const bricolage = Bricolage_Grotesque({
@@ -14,6 +14,17 @@ const bricolage = Bricolage_Grotesque({
 const mono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+});
+
+// Brand voice for the wordmark only: an editorial serif italic set against the
+// grotesque and the mono. Italic is the only style the mark uses, so that is
+// the only face shipped.
+const brand = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
+  variable: "--font-brand",
+  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -43,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body
-        className={`${bricolage.variable} ${mono.variable} font-sans antialiased`}
+        className={`${bricolage.variable} ${mono.variable} ${brand.variable} font-sans antialiased`}
       >
         <MotionProvider>{children}</MotionProvider>
         <Analytics />

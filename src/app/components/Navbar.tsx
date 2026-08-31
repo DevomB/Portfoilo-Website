@@ -46,7 +46,8 @@ function LiveClock() {
         aria-hidden
       />
       <span className="tabular-nums">{time}</span>
-      <span className="text-muted/50">·</span>
+      {/* 1px spacer: time -> zone reads as one unit (6 + 1 + 6 = 13px) */}
+      <span className="inline-block w-px" aria-hidden />
       <span>{tzAbbr}</span>
     </span>
   );
@@ -81,7 +82,10 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          className="font-mono text-fluid-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+          // the wordmark is the one place the site speaks in a serif: an
+          // editorial italic against the grotesque + mono everywhere else
+          className="font-brand italic text-[1.375rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
+          style={{ transform: "translateY(-1px)" }}
         >
           devomb<span className="text-accent">.</span>com
         </Link>

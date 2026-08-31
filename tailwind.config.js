@@ -33,6 +33,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        brand: ["var(--font-brand)", "Georgia", "serif"],
       },
       fontSize: {
         "fluid-xs": "var(--text-xs)",
