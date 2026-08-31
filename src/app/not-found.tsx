@@ -19,13 +19,9 @@ export default function NotFound() {
             <span className="ml-3 font-mono text-[0.6rem] text-muted/60">bash — 80×24</span>
           </div>
           {/* terminal body */}
-          <div className="bg-white px-5 py-6 font-mono text-fluid-sm space-y-2">
+          <div className="bg-surface px-5 py-6 font-mono text-fluid-sm space-y-2">
             <p className="text-muted">
-              <span className="text-secondary">devom@brahmbhatt</span>
-              <span className="text-muted">:</span>
-              <span className="text-ink">~</span>
-              <span className="text-muted">$ </span>
-              GET {"{path}"}
+              <span className="text-secondary">{">"}</span> GET {"{path}"}
             </p>
             <p className="text-danger">
               Error: 404 — route not found
