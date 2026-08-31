@@ -9,18 +9,19 @@ import { useLoaded } from "../contexts/LoadedContext";
 // response time from the Navigation Timing API.
 const LOG_LINES = [
   { delay: 0,    type: "info",   text: "> booting devomb.core" },
-  { delay: 550,  type: "module", text: "> next 16 · react 19 · turbopack" },
+  { delay: 550,  type: "module", text: "> next 16 · typescript · tailwind" },
   { delay: 1150, type: "ok",     text: "> routes compiled · rsc ready" },
   { delay: 1750, type: "info",   text: "> listening on {host}" },
   { delay: 2350, type: "ok",     text: "> GET {path} 200 · {ms} ms" },
   { delay: 2950, type: "ready",  text: "> ready ✓" },
 ];
 
+// A booted, healthy server logs in green. Only the narration lines stay muted.
 const lineColor: Record<string, string> = {
   info:   "var(--color-muted)",
   module: "var(--color-secondary)",
-  ok:     "var(--color-accent)",
-  ready:  "var(--color-accent)",
+  ok:     "var(--color-secondary)",
+  ready:  "var(--color-secondary)",
 };
 
 export default function ServerLog() {

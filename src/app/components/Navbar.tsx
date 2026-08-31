@@ -82,7 +82,7 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          // the wordmark's own face (Prosto One, single weight), sized as a
+          // the wordmark's own face (Zen Dots, single weight), sized as a
           // mark rather than a nav link
           className="font-brand text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
         >

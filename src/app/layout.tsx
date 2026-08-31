@@ -2,7 +2,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Bricolage_Grotesque, Geist_Mono, Prosto_One } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono, Zen_Dots } from "next/font/google";
 import MotionProvider from "./components/MotionProvider";
 
 const bricolage = Bricolage_Grotesque({
@@ -16,10 +16,10 @@ const mono = Geist_Mono({
   variable: "--font-mono",
 });
 
-// Brand face for the wordmark only: Prosto One (single weight, 400),
+// Brand face for the wordmark only: Zen Dots (single weight, 400),
 // self-hosted like the others so there is no runtime request to Google and
 // no swap flash.
-const brand = Prosto_One({
+const brand = Zen_Dots({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-brand",
