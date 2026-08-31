@@ -2,7 +2,7 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
-import { Bricolage_Grotesque, Geist_Mono, Zen_Dots } from "next/font/google";
+import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
 import MotionProvider from "./components/MotionProvider";
 
 const bricolage = Bricolage_Grotesque({
@@ -14,16 +14,6 @@ const bricolage = Bricolage_Grotesque({
 const mono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-});
-
-// Brand face for the wordmark only: Zen Dots (single weight, 400),
-// self-hosted like the others so there is no runtime request to Google and
-// no swap flash.
-const brand = Zen_Dots({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-brand",
-  display: "swap",
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -53,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <body
-        className={`${bricolage.variable} ${mono.variable} ${brand.variable} font-sans antialiased`}
+        className={`${bricolage.variable} ${mono.variable} font-sans antialiased`}
       >
         <MotionProvider>{children}</MotionProvider>
         <Analytics />

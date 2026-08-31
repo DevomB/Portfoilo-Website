@@ -81,9 +81,7 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          // the wordmark's own face (Zen Dots, single weight), sized as a
-          // mark rather than a nav link
-          className="font-brand text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
+          className="font-mono text-fluid-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
         >
           DevomB<span className="text-accent">.</span>com
         </Link>
