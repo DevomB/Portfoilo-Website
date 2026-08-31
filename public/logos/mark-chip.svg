@@ -1,9 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- The chip: poker chip with rim stripes, joker-green diamond at center -->
-  <circle cx="32" cy="32" r="27" fill="#0d0a14" stroke="#7c00ff" stroke-width="3.5"/>
-  <circle cx="32" cy="32" r="27" fill="none" stroke="#a35cff" stroke-width="5"
-          stroke-dasharray="7 14.2" stroke-dashoffset="3.5"/>
-  <circle cx="32" cy="32" r="17" fill="none" stroke="#09ff00" stroke-width="1.5"
-          stroke-dasharray="3 5.4" opacity="0.55"/>
-  <rect x="26.5" y="26.5" width="11" height="11" transform="rotate(45 32 32)" fill="#09ff00"/>
+  <!-- The chip, refined: reads two ways on purpose. As a poker chip — dark
+       clay, purple ring, alternating edge spots. As an instrument dial — a
+       fine tick ring like a latency gauge, one data point dead centre. The
+       mark covers the whole portfolio: the poker engine, the backtesting and
+       low-latency systems work, without spelling any of it out. -->
+  <circle cx="32" cy="32" r="28" fill="#0d0a14" stroke="#7c00ff" stroke-width="3"/>
+  <!-- edge spots: 8, alternating green/purple like a real chip's edge -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#09ff00" stroke-width="5"
+          stroke-dasharray="8 35.98" stroke-dashoffset="4"/>
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#a35cff" stroke-width="5"
+          stroke-dasharray="8 35.98" stroke-dashoffset="25.99"/>
+  <!-- instrument ring: fine ticks, the gauge read -->
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#a35cff" stroke-width="1.4"
+          stroke-dasharray="1.6 2.4" opacity="0.7"/>
+  <!-- the data point -->
+  <rect x="26" y="26" width="12" height="12" transform="rotate(45 32 32)" fill="#09ff00"/>
 </svg>
