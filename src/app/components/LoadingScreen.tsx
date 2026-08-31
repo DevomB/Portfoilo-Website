@@ -662,29 +662,31 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             TRADER · ENGINEER · RESEARCHER
           </motion.p>
 
-          {/* the dealt hand, named as the last flip settles — evaluated live,
-              treatment scales with strength */}
+          {/* the dealt hand, named as the last flip settles — this is the
+              intro's payoff line, so it reads as a verdict, not a caption:
+              bold, bigger than the subtitle, ink-white floor. The green
+              strength ladder rides on top so color still carries meaning. */}
           <motion.p
-            className="font-mono whitespace-nowrap"
+            className="font-mono whitespace-nowrap font-bold"
             style={{
-              fontSize: 10,
-              marginTop: 16,
-              letterSpacing: "0.24em",
-              // four-step ladder aligned with GLOW_ALPHA's pairs, so the drama
-              // gradient is legible: pair-ish → dim green → bright-dim → full
+              fontSize: 15,
+              marginTop: 18,
+              letterSpacing: "0.18em",
+              // ladder aligned with GLOW_ALPHA's pairs — the floor is ink,
+              // never muted: an ordinary deal is still worth announcing
               color:
                 hand.tier >= 6
                   ? "var(--color-secondary)"
                   : hand.tier >= 4
                     ? "var(--color-secondary-dim)"
                     : hand.tier >= 2
-                      ? "rgb(var(--brand-green-rgb) / 0.6)"
-                      : "var(--color-muted)",
-              textShadow: celebrate ? "0 0 18px rgb(var(--brand-green-rgb) / 0.5)" : undefined,
+                      ? "rgb(var(--brand-green-rgb) / 0.78)"
+                      : "var(--color-ink)",
+              textShadow: celebrate ? "0 0 20px rgb(var(--brand-green-rgb) / 0.55)" : undefined,
             }}
-            initial={reduce ? false : { opacity: 0, y: 5 }}
-            animate={go ? { opacity: 1, y: 0 } : { opacity: 0, y: 5 }}
-            transition={t(LABEL_AT, 0.55)}
+            initial={reduce ? false : { opacity: 0, y: 8, scale: 0.94 }}
+            animate={go ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 8, scale: 0.94 }}
+            transition={t(LABEL_AT, 0.6, settle)}
           >
             {celebrate ? `♠ ${hand.name.toUpperCase()} ♠` : hand.name.toUpperCase()}
           </motion.p>
