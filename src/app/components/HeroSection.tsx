@@ -178,12 +178,6 @@ export default function HeroSection() {
           className="hidden lg:block"
         >
           <ServerLog />
-          <p
-            className="mt-2.5 font-mono text-right select-none"
-            style={{ fontSize: "0.58rem", color: "var(--color-muted)" }}
-          >
-            devom@brahmbhatt:~$
-          </p>
         </m.div>
       </div>
     </section>
