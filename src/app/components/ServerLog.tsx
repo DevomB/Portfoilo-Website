@@ -3,15 +3,17 @@
 import { useEffect, useState } from "react";
 import { useLoaded } from "../contexts/LoadedContext";
 
-// "{host}" is replaced at runtime with wherever the site is actually being
-// served from — localhost:3000, devomb.com, a preview URL.
+// A log of the SITE, in the order a real server prints it. Two lines are live:
+// {host} is wherever this is actually served from (localhost:3000, devomb.com,
+// a preview URL), and the GET line reports this page's real path and measured
+// response time from the Navigation Timing API.
 const LOG_LINES = [
   { delay: 0,    type: "info",   text: "> booting devomb.core" },
-  { delay: 550,  type: "module", text: "> loading modules: ", tail: "[pg, redis, ws, wasm]" },
-  { delay: 1200, type: "ok",     text: "> postgres pool ready · 20 conn" },
-  { delay: 1800, type: "ok",     text: "> poker engine warm · 1.2M hands/s" },
-  { delay: 2400, type: "info",   text: "> listening on {host}" },
-  { delay: 3000, type: "ready",  text: "> ready ✓" },
+  { delay: 550,  type: "module", text: "> next 16 · react 19 · turbopack" },
+  { delay: 1150, type: "ok",     text: "> routes compiled · rsc ready" },
+  { delay: 1750, type: "info",   text: "> listening on {host}" },
+  { delay: 2350, type: "ok",     text: "> GET {path} 200 · {ms} ms" },
+  { delay: 2950, type: "ready",  text: "> ready ✓" },
 ];
 
 const lineColor: Record<string, string> = {
@@ -23,7 +25,7 @@ const lineColor: Record<string, string> = {
 
 export default function ServerLog() {
   const [visible, setVisible] = useState<number[]>([]);
-  const [host, setHost] = useState("localhost");
+  const [live, setLive] = useState({ host: "localhost", path: "/", ms: 0 });
   // The page is mounted beneath the splash from the first render; the log
   // waits for the reveal so its lines are not all spent before anyone sees it.
   const loaded = useLoaded();
@@ -32,14 +34,30 @@ export default function ServerLog() {
     if (!loaded) return;
     const timers = LOG_LINES.map((line, i) =>
       setTimeout(() => {
-        // read the real host as the first line lands — well before the
-        // "listening on" line needs it
-        if (i === 0) setHost(window.location.host || "localhost");
+        if (i === 0) {
+          // read the real values as the first line lands — well before the
+          // lines that print them
+          const nav = performance.getEntriesByType("navigation")[0] as
+            | PerformanceNavigationTiming
+            | undefined;
+          const ms = nav ? Math.round(nav.responseEnd - nav.requestStart) : 0;
+          setLive({
+            host: window.location.host || "localhost",
+            path: window.location.pathname || "/",
+            ms: ms > 0 ? ms : 18,
+          });
+        }
         setVisible((v) => [...v, i]);
       }, line.delay)
     );
     return () => timers.forEach(clearTimeout);
   }, [loaded]);
+
+  const render = (text: string) =>
+    text
+      .replace("{host}", live.host)
+      .replace("{path}", live.path)
+      .replace("{ms}", String(live.ms));
 
   return (
     <div
@@ -59,17 +77,9 @@ export default function ServerLog() {
         {LOG_LINES.map((line, i) =>
           visible.includes(i) ? (
             <p key={i} style={{ color: lineColor[line.type] ?? "var(--color-muted)" }}>
-              {line.type === "module"
-                ? <>
-                    <span style={{ color: "var(--color-muted)" }}>{line.text}</span>
-                    <span style={{ color: "var(--color-secondary)", fontWeight: 600 }}>{line.tail}</span>
-                  </>
-                : line.text.replace("{host}", host)}
+              {render(line.text)}
             </p>
           ) : null
-        )}
-        {visible.length === LOG_LINES.length && (
-          <p className="animate-pulse" style={{ color: "var(--color-accent)", opacity: 0.5 }}>_</p>
         )}
       </div>
     </div>
