@@ -9,6 +9,13 @@ type Stage = "checking" | "intro" | "ready";
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
 
+// Module scope is the exact signal for "was this a real page load": a refresh
+// or fresh visit re-evaluates the module (flag resets, splash plays); client-
+// side navigation around the site keeps the same JS context (flag survives,
+// terms -> home goes straight to the page). No storage involved, so a refresh
+// always replays.
+let introPlayedThisLoad = false;
+
 export default function PageWrapper({ children }: { children: ReactNode }) {
   // The splash plays on EVERY load — it is the site's front door, not a
   // one-time onboarding. Any click, key or scroll skips it.
@@ -33,8 +40,10 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
   const [stage, setStage] = useState<Stage>("checking");
 
   useEffect(() => {
+    // ?hand= previews always run the splash — they are pointless without it
+    const force = new URLSearchParams(window.location.search).has("hand");
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStage("intro");
+    setStage(introPlayedThisLoad && !force ? "ready" : "intro");
   }, []);
 
   const ready = stage === "ready";
@@ -45,7 +54,15 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
         <div aria-hidden className="fixed inset-0 z-[200]" style={{ background: "var(--color-bg)" }} />
       )}
       <AnimatePresence>
-        {stage === "intro" && <LoadingScreen key="loading" onComplete={() => setStage("ready")} />}
+        {stage === "intro" && (
+          <LoadingScreen
+            key="loading"
+            onComplete={() => {
+              introPlayedThisLoad = true;
+              setStage("ready");
+            }}
+          />
+        )}
       </AnimatePresence>
       {/* inert while hidden: no focus, no pointer, out of the a11y tree */}
       <m.div
