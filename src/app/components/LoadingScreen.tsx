@@ -555,8 +555,15 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                 // compositor and cannot stutter when a script task lands mid-
                 // flight. All 52 WAAPI animations are created in the one go
                 // commit, so they share a timeline start and the shared-rate
-                // sync of the travelling deck holds. will-change keeps the
-                // layer alive after framer cancels the finished animation.
+                // sync of the travelling deck holds.
+                //
+                // Measured, not assumed (CDP traces, real framer engine): on
+                // desktop this saves ~1ms of main thread per frame — both paths
+                // already hold 60fps there. Under 4x CPU throttle the main
+                // thread is no cheaper, but the compositor keeps drawing every
+                // vsync (45/45) where the JS path drew 23-42: the sweep stays
+                // smooth on a starved phone. No will-change: it measured as no
+                // benefit and slightly worse (more persistent layers).
                 //
                 // zIndex is promoted only at the flip beat (duration 0 = a
                 // scheduled set, no tween): baked from mount, sweeping cards
@@ -570,7 +577,6 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                   marginLeft: -CARD_W / 2,
                   marginTop: -CARD_H / 2,
                   zIndex: 1,
-                  willChange: "transform",
                 }}
                 initial={reduce ? false : { transform: "rotate(0deg)", zIndex: 1 }}
                 animate={{
@@ -589,7 +595,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                   // the travelling deck stays a loose stack — and each card
                   // squares up as it is deposited, starting just before its seat.
                   // Same WAAPI reasoning as the arm: one transform string.
-                  style={{ position: "relative", width: "100%", height: "100%", willChange: "transform" }}
+                  style={{ position: "relative", width: "100%", height: "100%" }}
                   initial={reduce ? false : { transform: atRest }}
                   animate={{ transform: go ? [atRest, risen, risen, laid] : atRest }}
                   transition={{
