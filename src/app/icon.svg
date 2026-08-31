@@ -1,13 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- The chip, refined: reads two ways on purpose. As a poker chip — dark
-       clay, purple ring, alternating edge spots. As an instrument dial — a
-       fine tick ring like a latency gauge, one data point dead centre. -->
-  <circle cx="32" cy="32" r="28" fill="#0d0a14" stroke="#7c00ff" stroke-width="3"/>
-  <circle cx="32" cy="32" r="28" fill="none" stroke="#09ff00" stroke-width="5"
-          stroke-dasharray="8 35.98" stroke-dashoffset="4"/>
-  <circle cx="32" cy="32" r="28" fill="none" stroke="#a35cff" stroke-width="5"
-          stroke-dasharray="8 35.98" stroke-dashoffset="25.99"/>
-  <circle cx="32" cy="32" r="19" fill="none" stroke="#a35cff" stroke-width="1.4"
-          stroke-dasharray="1.6 2.4" opacity="0.7"/>
-  <rect x="26" y="26" width="12" height="12" transform="rotate(45 32 32)" fill="#09ff00"/>
+  <!-- The stack: the deck before the deal — three cards squared up, the top
+       one carrying the green pip -->
+  <rect x="11" y="17" width="30" height="40" rx="6" fill="#150d22" stroke="#7c00ff" stroke-width="2.4" opacity="0.55"/>
+  <rect x="16" y="12" width="30" height="40" rx="6" fill="#120c1c" stroke="#7c00ff" stroke-width="2.6" opacity="0.8"/>
+  <rect x="21" y="7" width="30" height="40" rx="6" fill="#0d0a14" stroke="#a35cff" stroke-width="3"/>
+  <rect x="31.5" y="22.5" width="9" height="9" transform="rotate(45 36 27)" fill="#09ff00"/>
 </svg>
