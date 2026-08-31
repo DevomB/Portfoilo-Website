@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
+import MotionProvider from "./components/MotionProvider";
 
 const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -44,7 +45,7 @@ export default function RootLayout({
       <body
         className={`${bricolage.variable} ${mono.variable} font-sans antialiased`}
       >
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <Analytics />
       </body>
     </html>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0 },
@@ -27,13 +27,13 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
+      <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // contact
-      </motion.p>
+      </m.p>
 
       <div>
         {links.map((l, i) => (
-          <motion.div key={l.label} {...fade(i * 0.06)}>
+          <m.div key={l.label} {...fade(i * 0.06)}>
             {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
             <Link
               href={l.href}
@@ -43,7 +43,7 @@ export default function ContactSection() {
               <span className="font-semibold text-fluid-base" style={{ color: "var(--color-secondary)" }}>{l.label}</span>
               <span className="font-mono text-fluid-xs text-muted/60 shrink-0">{l.sub}</span>
             </Link>
-          </motion.div>
+          </m.div>
         ))}
         <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
       </div>

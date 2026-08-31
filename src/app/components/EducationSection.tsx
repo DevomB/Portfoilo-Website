@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0 },
@@ -41,13 +41,13 @@ const certs = [
 export default function EducationSection() {
   return (
     <section id="education" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
+      <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // education
-      </motion.p>
+      </m.p>
 
       <div className="mb-10">
         {schools.map((s, i) => (
-          <motion.div key={s.name} {...fade(i * 0.06)}>
+          <m.div key={s.name} {...fade(i * 0.06)}>
             {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
             <div className="flex gap-5 py-7">
               <span
@@ -75,12 +75,12 @@ export default function EducationSection() {
                 )}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         ))}
         <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
       </div>
 
-      <motion.div {...fade(0.15)}>
+      <m.div {...fade(0.15)}>
         <p className="font-mono text-fluid-xs mb-5" style={{ color: "var(--color-muted)", opacity: 0.5 }}>
           SELECT name, issued_at FROM credentials ORDER BY issued_at DESC;
         </p>
@@ -101,7 +101,7 @@ export default function EducationSection() {
           ))}
           <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
         </div>
-      </motion.div>
+      </m.div>
     </section>
   );
 }

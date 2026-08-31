@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import PokerLab from "./PokerLab";
 
 interface Props {
@@ -39,7 +39,7 @@ export default function DemoModal({ demoSlug }: Props) {
         {open && (
           <>
             {/* Backdrop */}
-            <motion.div
+            <m.div
               key="backdrop"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -51,12 +51,12 @@ export default function DemoModal({ demoSlug }: Props) {
               aria-hidden
             />
 
-            {/* Panel — positioning wrapper keeps centering; motion.div handles animation */}
+            {/* Panel — positioning wrapper keeps centering; m.div handles animation */}
             <div
               className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               style={{ width: "calc(100% - 2rem)", maxWidth: "56rem" }}
             >
-            <motion.div
+            <m.div
               key="panel"
               role="dialog"
               aria-modal
@@ -111,7 +111,7 @@ export default function DemoModal({ demoSlug }: Props) {
                   C++ engine · Monte Carlo vs one random villain · no burn cards in demo
                 </p>
               </div>
-            </motion.div>
+            </m.div>
             </div>
           </>
         )}

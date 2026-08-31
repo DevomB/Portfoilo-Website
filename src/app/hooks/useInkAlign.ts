@@ -49,7 +49,10 @@ export function useInkAlign(
       t.style.marginLeft = `${-Math.round(delta * dpr) / dpr}px`; // snap to device pixels
     };
     apply();
-    document.fonts?.ready.then(apply);
+    // The page now mounts under the splash, by which time the fonts have
+    // usually already resolved — re-measuring then is a wasted double pass
+    // (two canvas rasters + getComputedStyle) inside the hand-off task.
+    if (document.fonts && document.fonts.status !== "loaded") document.fonts.ready.then(apply);
     window.addEventListener("resize", apply);
     return () => window.removeEventListener("resize", apply);
   }, [target, reference, glyphs.target, glyphs.reference]);

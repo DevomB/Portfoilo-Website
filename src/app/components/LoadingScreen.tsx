@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { fullDeck, mulberry32, shuffleInPlace, type Card } from "@/lib/pokerCards";
 import { classifyFive } from "@/lib/pokerEquityJs";
@@ -457,7 +457,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
     reduce ? { delay: 0, duration: 0 } : { delay, duration, ease: curve };
 
   return (
-    <motion.div
+    <m.div
       className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden select-none"
       style={{ background: "var(--color-bg)" }}
       initial={{ opacity: reduce ? 0 : 1 }}
@@ -490,7 +490,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         }}
       >
         {/* Faint guide ring the fan seats itself onto */}
-        <motion.div
+        <m.div
           aria-hidden
           className="absolute rounded-full pointer-events-none"
           style={{
@@ -512,7 +512,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             ~90% solid within two frames: a pop, not a fade. Group opacity is a
             true fade, and one tween replaces 52. The 0.94→1 scale gives the
             arrival a little weight; it lands before the rise gets going. */}
-        <motion.div
+        <m.div
           className="absolute inset-0"
           initial={reduce ? false : { opacity: 0, scale: 0.94 }}
           animate={go ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
@@ -528,13 +528,36 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             const revealAt = REVEAL_START + (rank ?? 0) * REVEAL_STEP;
             const slop = stackSlop(i);
 
+            // The lift's two motions — the rise (y) and the slop settle (rotate)
+            // — never overlap in time, so they fold into ONE four-keyframe
+            // transform: rest → risen → (hold) → laid. Keyframe offsets carry
+            // the timing, a per-segment ease array carries the curves.
+            const liftStart = LIFT_START + i * LIFT_STEP;
+            const settleStart = Math.max(FAN_START, FAN_START + sweepDur(i) - 0.1);
+            const liftSpan = settleStart + SETTLE_DUR - liftStart;
+            const atRest = `translateY(0px) rotate(${slop}deg)`;
+            const risen = `translateY(${-RING_R}px) rotate(${slop}deg)`;
+            const laid = `translateY(${-RING_R}px) rotate(0deg)`;
+
             return (
-              <motion.div
+              <m.div
                 key={i}
                 // arm — pivots about the canvas centre, carrying the card round
                 // the ring. All arms launch together at FAN_START and rotate at
                 // the same linear rate; each stops at its own seat, so the
                 // superposition of in-flight cards IS the travelling deck.
+                //
+                // Animated as a `transform` STRING, not `rotate`: framer only
+                // hands opacity/clipPath/filter/transform to WAAPI. Individual
+                // transform props run on its JS frame loop, which meant 104
+                // style.transform writes + a full re-layerize every frame on the
+                // main thread; as a string the whole sweep runs on the
+                // compositor and cannot stutter when a script task lands mid-
+                // flight. All 52 WAAPI animations are created in the one go
+                // commit, so they share a timeline start and the shared-rate
+                // sync of the travelling deck holds. will-change keeps the
+                // layer alive after framer cancels the finished animation.
+                //
                 // zIndex is promoted only at the flip beat (duration 0 = a
                 // scheduled set, no tween): baked from mount, sweeping cards
                 // visibly dived UNDER the five still-anonymous reveal seats.
@@ -547,36 +570,44 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                   marginLeft: -CARD_W / 2,
                   marginTop: -CARD_H / 2,
                   zIndex: 1,
+                  willChange: "transform",
                 }}
-                initial={reduce ? false : { rotate: 0, zIndex: 1 }}
+                initial={reduce ? false : { transform: "rotate(0deg)", zIndex: 1 }}
                 animate={{
-                  rotate: go ? angle : 0,
+                  transform: `rotate(${go ? angle : 0}deg)`,
                   zIndex: go && isRevealed ? 10 : 1,
                 }}
                 transition={{
-                  rotate: t(FAN_START, sweepDur(i), linear),
+                  transform: t(FAN_START, sweepDur(i), linear),
                   zIndex: { delay: reduce ? 0 : revealAt, duration: 0 },
                 }}
               >
-                <motion.div
+                <m.div
                   // the lift: the stack rides out of the centre to the ring as one
                   // tight unit. The stack slop is a local tilt here, so it never
                   // becomes a positional offset. In-flight cards KEEP their tilt —
                   // the travelling deck stays a loose stack — and each card
                   // squares up as it is deposited, starting just before its seat.
-                  style={{ position: "relative", width: "100%", height: "100%" }}
-                  initial={reduce ? false : { y: 0, rotate: slop }}
-                  animate={{ y: go ? -RING_R : 0, rotate: go ? 0 : slop }}
+                  // Same WAAPI reasoning as the arm: one transform string.
+                  style={{ position: "relative", width: "100%", height: "100%", willChange: "transform" }}
+                  initial={reduce ? false : { transform: atRest }}
+                  animate={{ transform: go ? [atRest, risen, risen, laid] : atRest }}
                   transition={{
-                    y: t(LIFT_START + i * LIFT_STEP, LIFT_DUR, glide),
-                    rotate: t(Math.max(FAN_START, FAN_START + sweepDur(i) - 0.1), SETTLE_DUR),
+                    transform: reduce
+                      ? { delay: 0, duration: 0 }
+                      : {
+                          delay: liftStart,
+                          duration: liftSpan,
+                          times: [0, LIFT_DUR / liftSpan, (settleStart - liftStart) / liftSpan, 1],
+                          ease: [glide, linear, easeOut],
+                        },
                   }}
                 >
                   {/* Only the cards that actually turn over carry the flip rig.
                       A 3D context and a second painted face on all 52 is most of
                       the mount cost for something 31 of them never show. */}
                   {isRevealed ? (
-                    <motion.div
+                    <m.div
                       // the pull-out: a shown card takes a little extra radius,
                       // grows a touch to become focal, and cancels its arm's
                       // rotation so the face reads upright.
@@ -595,7 +626,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                     >
                       {/* hand-strength glow — pre-painted gradient, opacity only */}
                       {GLOW_ALPHA[hand.tier]! > 0 && (
-                        <motion.div
+                        <m.div
                           aria-hidden
                           style={{
                             position: "absolute",
@@ -615,7 +646,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                           transition={t(LABEL_AT + (rank ?? 0) * 0.05, 0.5)}
                         />
                       )}
-                      <motion.div
+                      <m.div
                         style={{
                           position: "relative",
                           width: "100%",
@@ -628,22 +659,22 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
                       >
                         <CardBack />
                         <CardFace rank={card.rank} suit={card.suit} />
-                      </motion.div>
-                    </motion.div>
+                      </m.div>
+                    </m.div>
                   ) : (
                     <CardBack />
                   )}
-                </motion.div>
-              </motion.div>
+                </m.div>
+              </m.div>
             );
           })}
-        </motion.div>
+        </m.div>
 
         {/* Name sits in the hole of the fan and never rotates with it. Animated
             with transform/opacity only — letter-spacing was forcing layout on
             every frame, right in the middle of the sweep. */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-          <motion.h1
+          <m.h1
             className="font-sans font-black tracking-tight leading-none whitespace-nowrap"
             style={{ fontSize: 30, color: "var(--color-accent-dim)", letterSpacing: "-0.03em" }}
             initial={reduce ? false : { opacity: 0, y: 10, scale: 0.97 }}
@@ -651,8 +682,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             transition={t(NAME_AT, 0.8)}
           >
             Devom Brahmbhatt
-          </motion.h1>
-          <motion.p
+          </m.h1>
+          <m.p
             className="font-mono whitespace-nowrap"
             style={{ fontSize: 11, marginTop: 10, color: "var(--color-muted)", letterSpacing: "0.14em" }}
             initial={reduce ? false : { opacity: 0, y: 4 }}
@@ -660,13 +691,13 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             transition={t(NAME_AT + 0.15, 0.6)}
           >
             TRADER · ENGINEER · RESEARCHER
-          </motion.p>
+          </m.p>
 
           {/* the dealt hand, named as the last flip settles — this is the
               intro's payoff line, so it reads as a verdict, not a caption:
               bold, bigger than the subtitle, ink-white floor. The green
               strength ladder rides on top so color still carries meaning. */}
-          <motion.p
+          <m.p
             className="font-mono whitespace-nowrap font-bold"
             style={{
               fontSize: 15,
@@ -689,7 +720,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             transition={t(LABEL_AT, 0.6, settle)}
           >
             {celebrate ? `♠ ${hand.name.toUpperCase()} ♠` : hand.name.toUpperCase()}
-          </motion.p>
+          </m.p>
         </div>
       </div>
 
@@ -703,7 +734,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
       )}
 
       {/* skip hint */}
-      <motion.p
+      <m.p
         className="absolute font-mono"
         style={{
           bottom: "max(1.75rem, env(safe-area-inset-bottom, 0px) + 1rem)",
@@ -716,7 +747,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         transition={t(2.0, 0.6)}
       >
         CLICK TO SKIP
-      </motion.p>
-    </motion.div>
+      </m.p>
+    </m.div>
   );
 }

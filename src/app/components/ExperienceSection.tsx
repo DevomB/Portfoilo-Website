@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0 },
@@ -57,13 +57,13 @@ const roles = [
 export default function ExperienceSection() {
   return (
     <section id="experience" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
+      <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // experience
-      </motion.p>
+      </m.p>
 
       <div>
         {roles.map((job, i) => (
-          <motion.article key={job.org + job.title} {...fade(i * 0.06)}>
+          <m.article key={job.org + job.title} {...fade(i * 0.06)}>
             {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
             <div className="flex gap-5 py-7">
               <span
@@ -94,7 +94,7 @@ export default function ExperienceSection() {
                 </ul>
               </div>
             </div>
-          </motion.article>
+          </m.article>
         ))}
         <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
       </div>

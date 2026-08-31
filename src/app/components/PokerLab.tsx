@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence, LazyMotion, domMax } from "framer-motion";
 import { dealRandomHoleCards } from "@/lib/pokerCards";
 import { findSampleWin, type SampleWin } from "@/lib/pokerEquityJs";
 
@@ -55,7 +55,7 @@ function Card({
   const color = card.red ? "var(--color-card-red)" : "var(--color-card-black)";
 
   return (
-    <motion.div
+    <m.div
       layout
       style={{
         width: w,
@@ -84,7 +84,7 @@ function Card({
         <div style={{ fontSize: rSize, fontWeight: 800 }}>{card.rank}</div>
         <div style={{ fontSize: sSize, marginTop: 1 }}>{card.suitLabel}</div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -193,6 +193,9 @@ export default function PokerLab() {
   });
 
   return (
+    // `layout` animations need domMax; nested here so that weight ships
+    // only on routes that render the lab, never on `/` (see MotionProvider)
+    <LazyMotion features={domMax}>
     <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
 
       {/* ── LEFT: Controls ─────────────────────────── */}
@@ -358,7 +361,7 @@ export default function PokerLab() {
           )}
           {running && (
             <div className="mt-5 flex items-center gap-2">
-              <motion.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
+              <m.div animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
                 className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--color-accent)" }} />
               <span className="font-mono text-fluid-xs text-accent">simulating…</span>
             </div>
@@ -377,13 +380,13 @@ export default function PokerLab() {
               {displayBoard.map((card, i) => (
                 <AnimatePresence key={i} mode="wait">
                   {card ? (
-                    <motion.div key={card.code}
+                    <m.div key={card.code}
                       initial={{ opacity: 0, y: -14 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -8 }}
                       transition={{ duration: 0.3, delay: i * 0.05, ease }}>
                       <Card card={card} size="md" />
-                    </motion.div>
+                    </m.div>
                   ) : (
                     <EmptySlot key={`empty-${i}`} size="md" />
                   )}
@@ -401,7 +404,7 @@ export default function PokerLab() {
             <div className="flex gap-2">
               <AnimatePresence mode="sync">
                 {heroCards.slice(0, 2).map((card, i) => (
-                  <motion.div key={card.code}
+                  <m.div key={card.code}
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
@@ -411,7 +414,7 @@ export default function PokerLab() {
                       highlight={sample ? sample.heroInBest[i] : false}
                       size="md"
                     />
-                  </motion.div>
+                  </m.div>
                 ))}
                 {heroCards.length === 0 && <EmptySlot size="md" />}
                 {heroCards.length === 1 && <EmptySlot size="md" />}
@@ -422,7 +425,7 @@ export default function PokerLab() {
           {/* Villain row — only shown after simulation */}
           <AnimatePresence>
             {sampleVillain && (
-              <motion.div
+              <m.div
                 key="villain"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -433,27 +436,28 @@ export default function PokerLab() {
                 </p>
                 <div className="flex gap-2">
                   {sampleVillain.map((card, i) => (
-                    <motion.div key={card.code}
+                    <m.div key={card.code}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.28, delay: 0.2 + i * 0.07, ease }}>
                       <Card card={card} dim size="md" />
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
             )}
           </AnimatePresence>
 
           {/* Legend */}
           {sample && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.5 }}
+            <m.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.5 }}
               className="font-mono text-[0.58rem]" style={{ color: "var(--color-muted)", opacity: 0.45 }}>
               teal border = contributes to best hand · villain dimmed = losing
-            </motion.p>
+            </m.p>
           )}
         </div>
       </div>
     </div>
+    </LazyMotion>
   );
 }

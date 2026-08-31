@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ServerLog from "./ServerLog";
 import { useInkAlign } from "../hooks/useInkAlign";
+import { useLoaded } from "../contexts/LoadedContext";
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%!&" as const;
 const NAME = "Devom Brahmbhatt";
@@ -46,14 +47,17 @@ function useScramble(text: string) {
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
 
-const fade = (delay: number) => ({
-  initial: { opacity: 0, y: 10 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, delay, ease },
-});
-
 export default function HeroSection() {
   const { display: nameDisplay, scramble } = useScramble(NAME);
+  // The hero is mounted beneath the splash from the first render, so its
+  // entrance is gated on the reveal instead of playing unseen under the
+  // cover. `initial: false` holds the hidden pose statically until then.
+  const loaded = useLoaded();
+  const fade = (delay: number) => ({
+    initial: false as const,
+    animate: loaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 },
+    transition: { duration: 0.7, delay, ease },
+  });
   const nameRef = useRef<HTMLHeadingElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   useInkAlign(titleRef, nameRef, { target: TITLE_LINES[0][0], reference: NAME[0] }); // ink-edge align title to name
@@ -114,7 +118,7 @@ export default function HeroSection() {
 
       <div className="relative w-full grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_400px] lg:gap-24">
         <div>
-          <motion.h2
+          <m.h2
             ref={nameRef}
             {...fade(0)}
             className="font-semibold tracking-tight mb-5 cursor-default select-none"
@@ -122,27 +126,27 @@ export default function HeroSection() {
             onMouseEnter={scramble}
           >
             {nameDisplay}
-          </motion.h2>
+          </m.h2>
 
-          <motion.h1
+          <m.h1
             ref={titleRef}
             {...fade(0.1)}
             className="font-black leading-[0.93] tracking-tighter mb-8"
             style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
           >
             {TITLE_LINES[0]}<br />{TITLE_LINES[1]}<br />{TITLE_LINES[2]}
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             {...fade(0.2)}
             className="mb-10 leading-relaxed"
             style={{ fontSize: "var(--text-base)", color: "var(--color-muted)", maxWidth: "38ch" }}
           >
             Building resilient APIs, data-intensive systems, and applied simulations.
             Based in Eastvale, CA.
-          </motion.p>
+          </m.p>
 
-          <motion.div {...fade(0.3)} className="flex items-center gap-3">
+          <m.div {...fade(0.3)} className="flex items-center gap-3">
             <Link
               href="#projects"
               className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors"
@@ -166,10 +170,10 @@ export default function HeroSection() {
             >
               GitHub
             </Link>
-          </motion.div>
+          </m.div>
         </div>
 
-        <motion.div
+        <m.div
           {...fade(0.35)}
           className="hidden lg:block"
         >
@@ -180,7 +184,7 @@ export default function HeroSection() {
           >
             devom@brahmbhatt:~$
           </p>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

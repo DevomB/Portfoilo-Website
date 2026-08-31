@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { projects } from "@/data/projects";
 
 const fade = (delay = 0) => ({
@@ -14,13 +14,13 @@ const fade = (delay = 0) => ({
 export default function ProjectsSection() {
   return (
     <section id="projects" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
+      <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // projects
-      </motion.p>
+      </m.p>
 
       <div>
         {projects.map((p, i) => (
-          <motion.div key={p.slug} {...fade(i * 0.06)}>
+          <m.div key={p.slug} {...fade(i * 0.06)}>
             {i > 0 && <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />}
             <Link
               href={`/projects/${p.slug}`}
@@ -48,7 +48,7 @@ export default function ProjectsSection() {
                 </p>
               </div>
             </Link>
-          </motion.div>
+          </m.div>
         ))}
         <div className="w-full h-px" style={{ background: "var(--color-border)" }} aria-hidden />
       </div>

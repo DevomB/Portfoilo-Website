@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0 },
@@ -22,12 +22,12 @@ const stack = [
 export default function AboutSection() {
   return (
     <section id="about" className="scroll-mt-28 section-y">
-      <motion.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
+      <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
         // about
-      </motion.p>
+      </m.p>
 
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-        <motion.div {...fade(0.05)}>
+        <m.div {...fade(0.05)}>
           <div className="space-y-4 text-fluid-base leading-relaxed text-muted">
             <p>
               Based in Eastvale, California. I design and build backends for
@@ -40,9 +40,9 @@ export default function AboutSection() {
               telemedicine sessions in rural Kenya.
             </p>
           </div>
-        </motion.div>
+        </m.div>
 
-        <motion.div {...fade(0.1)}>
+        <m.div {...fade(0.1)}>
           <p className="mb-4 font-mono text-fluid-xs text-muted/50 uppercase tracking-widest">Stack</p>
           <div className="flex flex-wrap gap-x-5 gap-y-4">
             {stack.map((s) => (
@@ -59,7 +59,7 @@ export default function AboutSection() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

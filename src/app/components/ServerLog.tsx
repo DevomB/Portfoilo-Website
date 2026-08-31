@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLoaded } from "../contexts/LoadedContext";
 
 const LOG_LINES = [
   { delay: 0,    text: "> initializing server...",             type: "info" },
@@ -20,13 +21,17 @@ const lineColor: Record<string, string> = {
 
 export default function ServerLog() {
   const [visible, setVisible] = useState<number[]>([]);
+  // The page is mounted beneath the splash from the first render; the log
+  // waits for the reveal so its lines are not all spent before anyone sees it.
+  const loaded = useLoaded();
 
   useEffect(() => {
+    if (!loaded) return;
     const timers = LOG_LINES.map((line, i) =>
       setTimeout(() => setVisible((v) => [...v, i]), line.delay)
     );
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [loaded]);
 
   return (
     <div
