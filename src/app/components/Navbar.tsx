@@ -82,10 +82,8 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          // the wordmark is the one place the site speaks in a serif: an
-          // editorial italic against the grotesque + mono everywhere else
-          className="font-brand italic text-[1.375rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
-          style={{ transform: "translateY(-1px)" }}
+          // the wordmark's own face: Goldman bold, sized as a mark, not a link
+          className="font-brand font-bold text-[1.25rem] leading-none tracking-[-0.01em] text-ink transition-colors hover:text-accent-dim"
         >
           devomb<span className="text-accent">.</span>com
         </Link>
