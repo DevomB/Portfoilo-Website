@@ -35,3 +35,4 @@ yarn-error.log*
 next-env.d.ts
 # local Python env for api/ functions (pnpm setup:desk)
 .venv/
+__pycache__/
