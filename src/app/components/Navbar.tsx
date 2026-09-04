@@ -80,7 +80,8 @@ export default function Navbar() {
         {/* logo */}
         <Link
           href="/"
-          className="font-mono text-fluid-sm font-semibold tracking-tight text-ink transition-colors hover:text-accent"
+          className="font-wordmark text-fluid-sm font-extrabold tracking-tight text-ink transition-colors hover:text-accent"
+          style={{ fontVariationSettings: '"wdth" 125' }}
         >
           DEVOMB<span className="text-accent">.</span>COM
         </Link>

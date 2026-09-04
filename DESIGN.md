@@ -189,8 +189,8 @@ set in `src/app/layout.tsx` and exposed as Tailwind utilities in
 | `font-sans` (default) | IBM Plex Sans 400–700 | body copy, row names, taglines, legal prose |
 | `font-display` | Bricolage Grotesque | the hero (name line + H1), the splash, and small UI chrome: nav links, buttons, pills |
 | `font-title` | Space Grotesk 700 | page titles and section headings on project, demo, and legal pages |
-| `font-mono` | Geist Mono | everything machine-facing: `//` labels, dates, all numerals, chips, footer links, navbar wordmark, code, terminals |
-| `font-wordmark` | Anybody, `"wdth" 125` | the footer `DEVOM` only |
+| `font-mono` | Geist Mono | everything machine-facing: `//` labels, dates, all numerals, chips, footer links, the navbar clock, code, terminals |
+| `font-wordmark` | Anybody, `"wdth" 125` | both wordmarks — the navbar `DEVOMB.COM` and the footer `DEVOM` |
 
 **Why the split.** The home page has no large headings — it is a hero and
 then rows — so the body face carries almost everything and needs to be a
@@ -211,7 +211,9 @@ page**. The home page is a hero followed by rows of 13px semibold names,
 - **Display** — hero H1 only. Bricolage 900 (`font-display`), `clamp(2.75rem, min(5.5vw +
   1rem, 13vh), 6rem)`, leading 0.93, tracking `-0.05em`, colour **accent**.
   The tallest thing on the page; the `13vh` term keeps it inside the fold.
-- **Wordmark** — the footer `DEVOM`. Anybody 800 at 125% width
+- **Wordmark** — both wordmarks. The navbar `DEVOMB.COM` sets it at
+  `text-fluid-sm`; the footer `DEVOM` is the same face at display scale:
+  Anybody 800 at 125% width
   (`font-wordmark`, `font-variation-settings: "wdth" 125`) in **accent-dim**,
   `clamp(2.1rem, 12.7vw, 15.7rem)`, centred, pulled 5px up into the copyright
   line. The size was derived by measuring glyph advances so the word spans
@@ -226,7 +228,7 @@ page**. The home page is a hero followed by rows of 13px semibold names,
   (`.prose-readable`). Legal pages are the longest prose on the site.
 - **Label / Mono** — Geist Mono at `text-fluid-xs`. Section identifiers
   (`// experience`, in **secondary**), dates, chips, footer links, the
-  navbar wordmark and clock, terminal output, row indices. All numerals on
+  the navbar clock, terminal output, row indices. All numerals on
   the site are mono with `tabular-nums` so columns align.
 
 ### Named rules
@@ -277,7 +279,9 @@ loops.
 
 **Navbar.** Fixed, 3.5rem tall. Transparent at the top; on scroll `bg` at
 90% with `backdrop-blur-xl` and a purple 25% bottom border. Left: the
-wordmark `DEVOMB.COM` in Geist Mono semibold, all caps, the `.` in accent. Centre:
+wordmark `DEVOMB.COM` in Anybody 800 at 125% width (`font-wordmark`),
+`text-fluid-sm`, all caps, the `.` in accent — the footer wordmark at reading
+size, so the header and footer read as one object. Centre:
 About / Experience / Projects. Right: a live clock with a green dot
 (`tabular-nums`), and a GitHub pill. Mobile: hamburger opens a drawer on `bg`.
 
