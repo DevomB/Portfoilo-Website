@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "setup:desk": "python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt",
+    "dev:desk": ".venv/Scripts/python scripts/carddesk_dev.py",
     "build": "next build",
     "start": "next start",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=true eslint ."

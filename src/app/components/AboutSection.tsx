@@ -35,9 +35,10 @@ export default function AboutSection() {
               C++ simulation engines.
             </p>
             <p>
-              Currently leading engineering at Roosevelt Connect and Virtual Medical
-              Missions: thousands of students, and patient records during live
-              telemedicine sessions in rural Kenya.
+              Lately: an event-driven backtesting engine in Rust, a deterministic
+              event runtime in OCaml, a Go engine that plays, and poker math shipped
+              as an npm package with a C++ core. Everything demoed on this site runs
+              the real thing — nothing is ported to make it fit.
             </p>
           </div>
         </m.div>

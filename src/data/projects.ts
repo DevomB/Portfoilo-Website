@@ -11,6 +11,8 @@ export type Project = {
   techStack: string[];
   githubUrl?: string;
   npmPackage?: string;
+  /** PyPI distribution name, e.g. "cardquant" — renders a pip snippet. */
+  pypiPackage?: string;
   /** Route of the live, in-site demo for this project, e.g. "/poker-lab". */
   demoPath?: string;
   liveUrl?: string;
@@ -25,7 +27,7 @@ export const projects: Project[] = [
     description:
       "A from-scratch C++20 No-Limit Texas Hold'em engine covering the full dealing pipeline, betting phases, hand evaluation, and parallel Monte Carlo equity simulation. Built as an algorithms and systems playground — the same engine powers the PokerLab demo on this site via the poker-calculations npm package.",
     techStack: ["C++20", "CMake", "GoogleTest", "Node.js", "N-API"],
-    githubUrl: "https://github.com/DevomB/Poker-Bot",
+    githubUrl: "https://github.com/DevomB/Poker-Calculations",
     npmPackage: "poker-calculations",
     demoPath: "/poker-lab",
     readmeSections: [
@@ -44,39 +46,27 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "roosevelt-connect",
-    name: "Roosevelt Connect",
-    tagline: "Platform for resources, messaging, and academics at Eleanor Roosevelt HS.",
+    slug: "cardquant",
+    name: "CardQuant",
+    tagline: "Options on the sum of drawn cards — theo and Greeks, priced exactly, live.",
     description:
-      "A Flutter-based mobile + web platform serving thousands of students at Eleanor Roosevelt High School. Provides school resources, peer messaging, academic tools, and teacher/admin portals — all backed by REST APIs and a PostgreSQL data layer.",
-    techStack: ["Flutter", "Dart", "Node.js", "PostgreSQL", "REST APIs", "TypeScript"],
+      "A Python library for the trading-firm mock games: IMC's card-sum options and Jane Street's Figgie. CardValuation prices European calls and puts on the sum of n cards drawn from a deck by exact combinatorial enumeration — no Monte Carlo — and reports Delta, Gamma, and the 'one more card' time Greeks: Theta, Charm and Color. The desk on this site runs the published package, unmodified, on CPython.",
+    techStack: ["Python", "NumPy", "Combinatorics", "PyPI", "Vercel Functions"],
+    githubUrl: "https://github.com/DevomB/cardquant",
+    pypiPackage: "cardquant",
+    demoPath: "/card-desk",
     readmeSections: [
       {
-        title: "What it does",
-        body: "Roosevelt Connect centralises school life into a single app: announcements, club sign-ups, grade and schedule lookups, and a direct-messaging layer between students and staff. The backend exposes versioned REST endpoints consumed by the Flutter client and a Next.js web companion.",
+        title: "How the pricing works",
+        body: "The final sum of n cards is a discrete distribution, and for a deck without replacement it is fully enumerable: a dynamic program over rank counts builds the number of ways every partial sum can occur, weighted by binomial coefficients. Theo is the expectation of max(S − K, 0) — or max(K − S, 0) for a put — over that distribution. Every number the desk shows is exact, not sampled.",
       },
       {
-        title: "Backend design",
-        body: "The API layer is a Node/TypeScript service with PostgreSQL. Schema design prioritises read performance for the frequently-queried student roster and schedule tables — heavy use of partial indexes and connection pooling via pg-pool. Auth is JWT-based with refresh token rotation.",
-      },
-    ],
-  },
-  {
-    slug: "virtual-medical-missions",
-    name: "Virtual Medical Missions",
-    tagline: "501(c)(3) telemedicine platform — scheduling, records, and live session support.",
-    description:
-      "VMM deploys volunteer doctors to rural communities (most recently 400+ patients in Kenya) through a telemedicine platform I co-built and currently lead as President / Head of Computer Science. The system handles pre-mission scheduling, live-session patient records with high read/write throughput, and post-mission analytics.",
-    techStack: ["Next.js", "TypeScript", "PostgreSQL", "Tailwind CSS", "Vercel"],
-    liveUrl: "https://www.vmmhealthcare.org/",
-    readmeSections: [
-      {
-        title: "System design under live conditions",
-        body: "During a mission, the platform handles concurrent record writes from multiple volunteer stations. PostgreSQL row-level locking and optimistic concurrency patterns keep data consistent without session blocking. The read replica handles analytics queries so they don't contend with live writes.",
+        title: "The Greeks, on a deck",
+        body: "Delta is the probability the option expires in the money. Gamma is the change in Delta across one strike. The time Greeks are defined by the only clock a card game has — the next draw: Theta, Charm and Color are the change in Theo, Delta and Gamma when one more card, the expected one, is drawn. Seeing a card re-prices everything, which is exactly what the desk lets you watch.",
       },
       {
-        title: "Stack choices",
-        body: "Next.js + Vercel for fast iteration and zero-config deploys. PostgreSQL chosen for its ACID guarantees — patient records can't afford eventual consistency. Tailwind keeps the UI fast to build and easy for non-engineer volunteers to read on-screen during consultations.",
+        title: "Why it runs as Python",
+        body: "The desk does not port the math. It calls the published cardquant package on real CPython behind a serverless function, and because every price is a pure function of the cards seen, the results are cached at the edge — a state anyone has priced before is served without running Python again.",
       },
     ],
   },

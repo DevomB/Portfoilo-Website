@@ -1,0 +1,7 @@
+# Python Functions under api/ (Vercel installs from this file).
+cardquant==0.1.10
+# cardquant imports rich for its table printer but does not declare it — see
+# cardquant/IMC.py. Declared here so the function can import the package.
+rich
+numpy
+pandas

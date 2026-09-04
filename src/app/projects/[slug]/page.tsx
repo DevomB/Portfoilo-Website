@@ -115,7 +115,19 @@ export default async function ProjectPage({
                 npm
               </Link>
             )}
-            {project.demoPath && <PokerLabModal />}
+            {project.demoPath === "/poker-lab" ? (
+              <PokerLabModal />
+            ) : project.demoPath ? (
+              <Link
+                href={project.demoPath}
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 font-display text-fluid-sm font-semibold text-white transition-all hover:bg-accent-dim"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l14 9-14 9V3z" />
+                </svg>
+                Open live demo
+              </Link>
+            ) : null}
           </div>
 
           {/* npm snippet */}
@@ -127,6 +139,19 @@ export default async function ProjectPage({
               </div>
               <pre className="px-4 py-3 font-mono text-fluid-xs text-ink overflow-x-auto">
                 <span className="text-muted">$ </span>npm install {project.npmPackage}
+              </pre>
+            </div>
+          )}
+
+          {/* pip snippet */}
+          {project.pypiPackage && (
+            <div className="mb-10 rounded-xl border border-accent/20 bg-code-bg overflow-hidden">
+              <div className="flex items-center justify-between border-b border-accent/10 px-4 py-2.5">
+                <span className="font-mono text-fluid-xs text-accent/70">pip</span>
+                <CopyButton text={`pip install ${project.pypiPackage}`} />
+              </div>
+              <pre className="px-4 py-3 font-mono text-fluid-xs text-ink overflow-x-auto">
+                <span className="text-muted">$ </span>pip install {project.pypiPackage}
               </pre>
             </div>
           )}
