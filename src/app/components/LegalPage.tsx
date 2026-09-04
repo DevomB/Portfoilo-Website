@@ -31,7 +31,7 @@ export default function LegalPage({
           </Link>
 
           <header className="mb-10 max-w-2xl">
-            <h1 className="text-fluid-4xl font-bold tracking-tight text-ink">{title}</h1>
+            <h1 className="font-title text-fluid-4xl font-bold tracking-tight text-ink">{title}</h1>
             <p className="mt-3 text-fluid-lg text-muted">{lede}</p>
             <p className="mt-4 font-mono text-fluid-xs text-muted opacity-60">
               last updated {updated}
@@ -56,7 +56,7 @@ export function LegalSection({
 }) {
   return (
     <section className="border-t border-border py-8 first:border-t-0 first:pt-0">
-      <h2 className="text-fluid-xl font-semibold tracking-tight text-ink">{heading}</h2>
+      <h2 className="font-title text-fluid-xl font-semibold tracking-tight text-ink">{heading}</h2>
       <div className="mt-3 space-y-3 text-fluid-base leading-relaxed text-muted">
         {children}
       </div>

@@ -31,8 +31,11 @@ module.exports = {
         ok: "var(--color-ok)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],          // IBM Plex Sans — body
+        display: ["var(--font-display)", "system-ui", "sans-serif"],   // Bricolage — hero, UI chrome
+        title: ["var(--font-title)", "system-ui", "sans-serif"],       // Space Grotesk — page titles
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],       // Geist Mono — data
+        wordmark: ["var(--font-wordmark)", "system-ui", "sans-serif"], // Anybody — footer DEVOM
       },
       fontSize: {
         "fluid-xs": "var(--text-xs)",

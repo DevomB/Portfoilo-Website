@@ -35,9 +35,14 @@ export default function Footer() {
 
       <div className="select-none overflow-hidden" style={{ marginTop: "-5px" }} aria-hidden>
         <p
-          className="text-center font-black leading-none tracking-tighter whitespace-nowrap"
+          className="text-center font-wordmark leading-none whitespace-nowrap"
           style={{
-            fontSize: "clamp(2.8rem, 16.8vw, 20.8rem)",
+            /* Anybody at 125% width is 1.32x wider than Bricolage for DEVOM,
+               so 16.8vw -> 12.7vw keeps the same span across the footer. */
+            fontSize: "clamp(2.1rem, 12.7vw, 15.7rem)",
+            fontWeight: 800,
+            letterSpacing: "-0.02em",
+            fontVariationSettings: '"wdth" 125',
             color: "var(--color-accent-dim)",
             paddingInline: "var(--shell-inline)",
           }}

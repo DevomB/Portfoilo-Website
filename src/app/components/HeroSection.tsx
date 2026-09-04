@@ -121,7 +121,7 @@ export default function HeroSection() {
           <m.h2
             ref={nameRef}
             {...fade(0)}
-            className="font-semibold tracking-tight mb-5 cursor-default select-none"
+            className="font-display font-semibold tracking-tight mb-5 cursor-default select-none"
             style={{ fontSize: "var(--text-2xl)", color: "var(--color-ink)" }}
             onMouseEnter={scramble}
           >
@@ -131,7 +131,7 @@ export default function HeroSection() {
           <m.h1
             ref={titleRef}
             {...fade(0.1)}
-            className="font-black leading-[0.93] tracking-tighter mb-8"
+            className="font-display font-black leading-[0.93] tracking-tighter mb-8"
             style={{ fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)", color: "var(--color-accent)" }}
           >
             {TITLE_LINES[0]}<br />{TITLE_LINES[1]}<br />{TITLE_LINES[2]}
@@ -149,7 +149,7 @@ export default function HeroSection() {
           <m.div {...fade(0.3)} className="flex items-center gap-3">
             <Link
               href="#projects"
-              className="inline-flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors"
+              className="inline-flex items-center gap-2 rounded-md px-4 py-2 font-display text-sm font-semibold transition-colors"
               style={{ background: "var(--color-accent)", color: "var(--color-surface-elevated)", fontSize: "var(--text-sm)" }}
               onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-accent-dim)")}
               onMouseLeave={(e) => (e.currentTarget.style.background = "var(--color-accent)")}
@@ -160,7 +160,7 @@ export default function HeroSection() {
               href="https://github.com/DevomB"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 text-sm font-medium transition-colors hover:border-accent/40 hover:text-accent"
+              className="inline-flex items-center gap-2 rounded-md border px-4 py-2 font-display text-sm font-medium transition-colors hover:border-accent/40 hover:text-accent"
               style={{
                 borderColor: "var(--color-border)",
                 background: "transparent",

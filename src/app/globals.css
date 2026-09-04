@@ -134,3 +134,11 @@ body {
     white-space: nowrap;
   }
 }
+
+/* Pointer-aware copy: "click" on mouse devices, "tap" on touch. Pure CSS so
+   the server render is deterministic and nothing flips after hydration. */
+.on-touch { display: none; }
+@media (hover: none) and (pointer: coarse) {
+  .on-mouse { display: none; }
+  .on-touch { display: inline; }
+}
