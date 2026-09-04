@@ -2,9 +2,7 @@ import PageWrapper from "./components/PageWrapper";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
-import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
-import EducationSection from "./components/EducationSection";
 import Footer from "./components/Footer";
 
 export default function Home() {
@@ -15,9 +13,7 @@ export default function Home() {
         <div className="page-shell">
           <HeroSection />
           <AboutSection />
-          <ExperienceSection />
           <ProjectsSection />
-          <EducationSection />
         </div>
         <Footer />
       </main>

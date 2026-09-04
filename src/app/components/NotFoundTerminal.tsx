@@ -10,7 +10,6 @@ import { suggestRoute } from "@/lib/suggestRoute";
 const ROUTES: readonly string[] = [
   "/",
   "/#about",
-  "/#experience",
   "/#projects",
   "/privacy",
   "/terms",
