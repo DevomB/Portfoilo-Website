@@ -58,7 +58,7 @@ export default function ExperienceSection() {
   return (
     <section id="experience" className="scroll-mt-28 section-y">
       <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
-        // experience
+        {"// experience"}
       </m.p>
 
       <div>

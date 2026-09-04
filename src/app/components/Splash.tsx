@@ -312,7 +312,7 @@ function CardFace({ rank, suit }: { rank: number; suit: number }) {
 }
 
 // ── Splash ────────────────────────────────────────────────────────────────────
-export default function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+export default function Splash({ onComplete }: { onComplete: () => void }) {
   const reduce = useReducedMotion() ?? false;
   const boxRef = useRef<HTMLDivElement>(null);
   // `go` holds the whole choreography at its resting pose until the main thread
@@ -681,7 +681,7 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
             every frame, right in the middle of the sweep. */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
           <m.h1
-            className="font-sans font-black tracking-tight leading-none whitespace-nowrap"
+            className="font-display font-black tracking-tight leading-none whitespace-nowrap"
             style={{ fontSize: 30, color: "var(--color-accent-dim)", letterSpacing: "-0.03em" }}
             initial={reduce ? false : { opacity: 0, y: 10, scale: 0.97 }}
             animate={go ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 10, scale: 0.97 }}
@@ -752,7 +752,8 @@ export default function LoadingScreen({ onComplete }: { onComplete: () => void }
         animate={{ opacity: go ? 0.45 : 0 }}
         transition={t(2.0, 0.6)}
       >
-        CLICK TO SKIP
+        <span className="on-mouse">CLICK</span>
+        <span className="on-touch">TAP</span>{" "}TO SKIP
       </m.p>
     </m.div>
   );

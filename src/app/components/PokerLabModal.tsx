@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import PokerLab from "./PokerLab";
 
-interface Props {
-  demoSlug: string;
-}
-
-export default function DemoModal({ demoSlug }: Props) {
+/* The in-page PokerLab demo, opened from the Poker-Bot project page.
+   The full-page version lives at /poker-lab. */
+export default function PokerLabModal() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -26,7 +24,7 @@ export default function DemoModal({ demoSlug }: Props) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 text-fluid-sm font-medium text-ink transition-all hover:border-accent/40 hover:bg-accent-bg hover:text-accent-dim"
+        className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 font-display text-fluid-sm font-medium text-ink transition-all hover:border-accent/40 hover:bg-accent-bg hover:text-accent-dim"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -60,7 +58,7 @@ export default function DemoModal({ demoSlug }: Props) {
               key="panel"
               role="dialog"
               aria-modal
-              aria-label={`${demoSlug} live demo`}
+              aria-label="PokerLab live demo"
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.97 }}
@@ -78,7 +76,7 @@ export default function DemoModal({ demoSlug }: Props) {
                 style={{ borderColor: "var(--color-border)" }}
               >
                 <div>
-                  <p className="font-mono text-fluid-xs text-secondary tracking-wide">// {demoSlug}</p>
+                  <p className="font-mono text-fluid-xs text-secondary tracking-wide">{"// poker-lab"}</p>
                   <p className="font-semibold text-fluid-base text-ink mt-0.5">
                     PokerLab · NL Hold&apos;em Equity
                   </p>

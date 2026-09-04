@@ -2,7 +2,7 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
-import LoadingScreen from "./LoadingScreen";
+import Splash from "./Splash";
 import { LoadedContext } from "../contexts/LoadedContext";
 
 type Stage = "checking" | "intro" | "ready";
@@ -55,7 +55,7 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
       )}
       <AnimatePresence>
         {stage === "intro" && (
-          <LoadingScreen
+          <Splash
             key="loading"
             onComplete={() => {
               introPlayedThisLoad = true;

@@ -15,7 +15,7 @@ export default function ProjectsSection() {
   return (
     <section id="projects" className="scroll-mt-28 section-y">
       <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
-        // projects
+        {"// projects"}
       </m.p>
 
       <div>
@@ -36,9 +36,9 @@ export default function ProjectsSection() {
               <div className="flex-1 min-w-0">
                 <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
                   <p className="font-semibold text-fluid-sm text-ink">{p.name}</p>
-                  {(p.demoSlug || p.liveUrl) && (
+                  {(p.demoPath || p.liveUrl) && (
                     <span className="font-mono text-fluid-xs text-accent shrink-0">
-                      {p.demoSlug ? "live demo ↗" : "site ↗"}
+                      {p.demoPath ? "live demo ↗" : "site ↗"}
                     </span>
                   )}
                 </div>

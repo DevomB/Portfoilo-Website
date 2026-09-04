@@ -42,7 +42,7 @@ export default function EducationSection() {
   return (
     <section id="education" className="scroll-mt-28 section-y">
       <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
-        // education
+        {"// education"}
       </m.p>
 
       <div className="mb-10">

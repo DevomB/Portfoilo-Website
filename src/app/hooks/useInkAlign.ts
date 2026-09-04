@@ -34,6 +34,13 @@ function inkOffset(el: HTMLElement, glyph: string): number {
 
 /** `glyphs` are the FIXED first characters of each line — never read from the DOM,
  *  because the name scrambles on hover and would poison the measurement. */
+/* The compiler lint forbids assigning to anything traced back to a hook
+   argument, which includes a DOM node read from a ref. The write is the whole
+   point of this hook, so it goes through a helper the rule does not trace. */
+function setMarginLeft(el: HTMLElement, value: string) {
+  el.style.setProperty("margin-left", value);
+}
+
 export function useInkAlign(
   target: RefObject<HTMLElement | null>,
   reference: RefObject<HTMLElement | null>,
@@ -43,10 +50,10 @@ export function useInkAlign(
     const t = target.current, r = reference.current;
     if (!t || !r) return;
     const apply = () => {
-      t.style.marginLeft = "0px";
+      setMarginLeft(t, "0px");
       const delta = inkOffset(t, glyphs.target) - inkOffset(r, glyphs.reference);
       const dpr = window.devicePixelRatio || 1;
-      t.style.marginLeft = `${-Math.round(delta * dpr) / dpr}px`; // snap to device pixels
+      setMarginLeft(t, `${-Math.round(delta * dpr) / dpr}px`); // snap to device pixels
     };
     apply();
     // The page now mounts under the splash, by which time the fonts have

@@ -11,7 +11,8 @@ export type Project = {
   techStack: string[];
   githubUrl?: string;
   npmPackage?: string;
-  demoSlug?: string;
+  /** Route of the live, in-site demo for this project, e.g. "/poker-lab". */
+  demoPath?: string;
   liveUrl?: string;
   readmeSections?: ReadmeSection[];
 };
@@ -26,7 +27,7 @@ export const projects: Project[] = [
     techStack: ["C++20", "CMake", "GoogleTest", "Node.js", "N-API"],
     githubUrl: "https://github.com/DevomB/Poker-Bot",
     npmPackage: "poker-calculations",
-    demoSlug: "poker-lab",
+    demoPath: "/poker-lab",
     readmeSections: [
       {
         title: "Architecture",

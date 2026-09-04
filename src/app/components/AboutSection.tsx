@@ -23,7 +23,7 @@ export default function AboutSection() {
   return (
     <section id="about" className="scroll-mt-28 section-y">
       <m.p {...fade(0)} className="font-mono text-fluid-xs text-secondary tracking-wide mb-10">
-        // about
+        {"// about"}
       </m.p>
 
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">

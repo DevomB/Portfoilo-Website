@@ -323,7 +323,7 @@ export default function PokerLab() {
 
         {/* Stats */}
         <div className="p-5 sm:p-6 border-b" style={{ borderColor: "var(--color-border)" }}>
-          <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-4">// results</p>
+          <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-4">{"// results"}</p>
           <dl className="space-y-3">
             <div className="flex items-baseline justify-between gap-4">
               <dt className="text-fluid-sm text-muted">Hero equity</dt>
