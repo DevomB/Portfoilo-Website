@@ -56,11 +56,11 @@ const anybody = Anybody({
    iMessage, LinkedIn, and X get a relative path and render a blank card. */
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://devomb.com";
 
-/* One title and one description, shared by <head>, Open Graph, and Twitter —
-   and kept in step with the hero, which reads Trader · Engineer · Researcher. */
+/* One title shared by <head>, Open Graph, and Twitter, in step with the hero.
+   Deliberately no description: Next falls og:/twitter:description back to the
+   top-level one, and the link-preview card is the mark, the name, and the
+   tagline — nothing else. */
 const TITLE = "Devom Brahmbhatt — Trader · Engineer · Researcher";
-const DESCRIPTION =
-  "Trader, engineer, and researcher. Systems that hold up under real traffic — PostgreSQL, Node, C++, Next.js — plus a C++ poker equity engine you can run live.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -68,10 +68,8 @@ export const metadata: Metadata = {
     default: "Devom B",
     template: "%s · Devom B",
   },
-  description: DESCRIPTION,
   openGraph: {
     title: TITLE,
-    description: DESCRIPTION,
     type: "website",
     locale: "en_US",
     url: "/",
@@ -80,7 +78,6 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: TITLE,
-    description: DESCRIPTION,
   },
 };
 
