@@ -13,4 +13,4 @@ Open [http://localhost:3000](http://localhost:3000). Production build: `npm run 
 
 ## Environment
 
-Optional: `NEXT_PUBLIC_SITE_URL` (canonical URL for metadata) and `NEXT_PUBLIC_CONTACT_EMAIL` (shows a mailto on the contact section).
+Optional: `NEXT_PUBLIC_SITE_URL` — canonical URL for metadata and link-preview images. Defaults to `https://devomb.com` when unset.

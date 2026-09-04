@@ -1,37 +1,53 @@
 ---
 name: Devom Brahmbhatt Portfolio
-description: Backend engineer portfolio. Dual-audience design â€” readable by anyone, appreciated by developers.
+description: Portfolio for a trader, engineer, and researcher. Black canvas, two committed hues, a poker deck as the brand object.
 colors:
+  # brand — the only three values that are ever edited (src/app/globals.css)
   astroblack: "#000000"
   royal-purple: "#7c00ff"
   joker-green: "#09ff00"
-  royal-purple-lift: "#a35cff"
-  surface: "#f3ead2"
-  surface-elevated: "#fdf9ea"
-  border-warm: "#e5d9b8"
-  ink: "#1c1916"
-  ink-muted: "#78705f"
-  code-bg: "#e9f0f5"
+  # semantic — derived from the three above
+  bg: "#000000"
+  surface: "#0b0810"
+  surface-elevated: "#120c1c"
+  border: "rgb(124 0 255 / 0.28)"
+  ink: "#f2eefa"
+  muted: "#9a8fb0"
+  accent: "#7c00ff"
+  accent-dim: "#a35cff"
+  accent-bg: "rgb(124 0 255 / 0.16)"
+  code-bg: "#0e0916"
+  secondary: "#09ff00"
+  secondary-dim: "#5cff55"
+  secondary-bg: "rgb(9 255 0 / 0.12)"
+  danger: "#ff4d5e"
+  warn: "#febc2e"
+  ok: "#09ff00"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
-    fontSize: "clamp(3rem, 5.5vw + 1rem, 6rem)"
+    fontSize: "clamp(2.75rem, min(5.5vw + 1rem, 13vh), 6rem)"
     fontWeight: 900
     lineHeight: 0.93
-    letterSpacing: "-0.03em"
-  headline:
-    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
-    fontSize: "clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem)"
-    fontWeight: 700
-    lineHeight: 1.15
+    letterSpacing: "-0.05em"
+  wordmark:
+    fontFamily: "Anybody, system-ui, sans-serif"
+    fontVariationSettings: '"wdth" 125'
+    fontSize: "clamp(2.1rem, 12.7vw, 15.7rem)"
+    fontWeight: 800
+    lineHeight: 1
     letterSpacing: "-0.02em"
+  page-title:
+    fontFamily: "Space Grotesk, system-ui, sans-serif"
+    fontSize: "clamp(1.875rem, 1.35rem + 2.2vw, 2.25rem)"
+    fontWeight: 700
+    letterSpacing: "-0.025em"
   title:
-    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
-    fontSize: "clamp(0.9375rem, 0.88rem + 0.25vw, 1rem)"
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
+    fontSize: "clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem)"
     fontWeight: 600
-    lineHeight: 1.4
   body:
-    fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
+    fontFamily: "IBM Plex Sans, system-ui, sans-serif"
     fontSize: "clamp(0.9375rem, 0.88rem + 0.25vw, 1rem)"
     fontWeight: 400
     lineHeight: 1.65
@@ -39,173 +55,293 @@ typography:
     fontFamily: "Geist Mono, ui-monospace, monospace"
     fontSize: "clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem)"
     fontWeight: 400
-    letterSpacing: "0.08em"
+    letterSpacing: "0.025em"
 rounded:
-  button: "0.375rem"
+  button: "0.5rem"
   card: "0.75rem"
   pill: "999px"
 spacing:
   section-y: "clamp(2.5rem, 4vw + 1.5rem, 5rem)"
   shell-inline: "clamp(1rem, 3vw + 0.5rem, 2rem)"
-  item-y: "1.75rem"
+  header-offset: "max(7rem, env(safe-area-inset-top) + 4.5rem)"
   max-width: "76rem"
+  prose-measure: "62ch"
 components:
   button-primary:
-    backgroundColor: "{colors.royal-purple}"
-    textColor: "{colors.surface-elevated}"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.button}"
-    padding: "0.5rem 1rem"
+    padding: "0.625rem 1.25rem"
   button-primary-hover:
-    backgroundColor: "{colors.royal-purple-lift}"
-    textColor: "{colors.surface-elevated}"
+    backgroundColor: "{colors.accent-dim}"
   button-ghost:
-    backgroundColor: "transparent"
-    textColor: "{colors.ink-muted}"
+    backgroundColor: "{colors.surface}"
+    borderColor: "{colors.border}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.button}"
     padding: "0.5rem 1rem"
   button-ghost-hover:
-    backgroundColor: "transparent"
-    textColor: "{colors.royal-purple}"
+    borderColor: "rgb(124 0 255 / 0.4)"
+    backgroundColor: "{colors.accent-bg}"
+    textColor: "{colors.accent-dim}"
 ---
 
 # Design System: Devom Brahmbhatt Portfolio
 
+> **Read this first if you are a future session.** The site is **black-canvas,
+> two-hue** — Royal Purple for structure, Joker Green for signal — with a
+> poker deck as its brand object. Earlier revisions of this file described a
+> light "Field Cream / System Teal" palette. That system is gone; nothing in
+> the codebase uses it. If you see cream or teal anywhere, it is stale.
+
 ## 1. Overview
 
-**Creative North Star: "The Transparent Stack"**
+**Creative North Star: "The Table"**
 
-The design operates on two simultaneous layers. At the surface, it is immediately comprehensible to anyone: clean structure, clear type hierarchy, direct copy â€” nothing gatekept by technical fluency. One level down, developers find the substrate: SQL ghost text at 4.5% opacity, a server startup log that types itself in, monospace section labels styled as code comments, numbered row indices. Neither layer gets in the way of the other.
+The site is a poker table after dark: a black felt canvas, one purple light,
+one green signal, and cards as the only physical objects. It reads two ways
+at once. Anyone gets the surface — big name, clear rows, direct copy. A
+developer gets the substrate — `//` section labels set as code comments, a
+server log that types itself in on load, SQL ghost text in the hero, a fake
+shell for the 404, a splash that deals cards before the page appears.
 
-The visual language is drawn from precision documents rather than marketing surfaces. Structured rows over card grids. Dividing lines over background fills. Type weight and scale over decorative color. The palette is a committed two-color system â€” Field Cream as the permanent canvas, System Teal as the sole structural ink.
+Precision-document structure, not marketing-page structure: rows over card
+grids, hairline dividers over fills, type scale over decoration. The single
+loud gesture is permitted — the hero H1 and the footer wordmark are huge —
+and everything else stays quiet so that gesture lands.
 
-This site does not announce itself. It demonstrates by existing.
+**Key characteristics**
+- Black is the canvas, never a "dark mode" of something lighter.
+- Two hues, each with one job: purple is structure, green is signal.
+- Five type families, one job each (see §3). Mono is data; the sans faces are language.
+- The deck is the brand: favicon, Apple icon, OG card, and splash all use it.
+- Reticent interaction: nothing moves until you act, then it moves briefly.
 
-**Key Characteristics:**
-- Dual-audience: readable without technical context, rewarding with it
-- Flat surfaces at rest â€” depth comes from tonal shift and border color, never shadows
-- System Teal marks structure and meaning, not decoration
-- Geist Mono for machine-facing content; Bricolage Grotesque for human-facing content
-- Precise and reticent interactions: almost nothing happens until you act
+## 2. Colours
 
-## 2. Colors: The Two-Color System
+### The three brand tokens
+Every colour on the site derives from three custom properties at the top of
+`src/app/globals.css`. **Edit colours there and nowhere else.**
 
-A committed palette. Field Cream is the canvas. System Teal is the structural ink. No third hue is introduced.
+| Token | Value | Name |
+|---|---|---|
+| `--brand-black` | `#000000` | Astroblack |
+| `--brand-purple` | `#7c00ff` | Royal Purple |
+| `--brand-green` | `#09ff00` | Joker Green |
 
-### Primary
-- **Royal Purple** (`#7c00ff`): The structural accent. Source of truth: `--brand-purple` in `src/app/globals.css`. All colors derive from the three `--brand-*` tokens there — edit colors in that one block only. Used on: the hero H1, section `// labels`, link hover states, interactive focus indicators, the accent dot in the nav logo. Appears where meaning is being anchored, not where decoration is added.
-- **System Teal Dim** (`#1c4d68`): The depth variant. Hover state for System Teal buttons and text links that shift on interaction.
-- **System Teal Pale** (`#c4d8e8`): The tint surface. Used sparingly as a background wash on the server log panel border and select accent-adjacent elements.
+Each has an `--brand-*-rgb` twin holding raw channels (`124 0 255`) so
+alpha variants can be written as `rgb(var(--brand-purple-rgb) / 0.28)`.
 
-### Neutral
-- **Astroblack** (`#000000`): The page canvas. All content renders on this surface.
-- **Joker Green** (`#09ff00`): The signal voice — section `// labels`, status dots, log module names, the nav live-dot.
-- **Surface** (`#0b0810`): Near-black with a purple cast. Used for the server log panel background and as a secondary surface.
-- **Surface Elevated** (`#120c1c`): The lightest neutral layer, used for elevated or focused surfaces.
-- **Border Warm** (`#e5d9b8`): All horizontal dividers between section rows and any border treatment. Warm-tinted, never harsh.
-- **Ink** (`#1c1916`): Near-black, warm-tinted (not pure black). Primary text: names, titles, headings.
-- **Ink Muted** (`#78705f`): Warm gray. Secondary text: bio copy, metadata, location, dates, taglines.
-- **Code Background** (`#e9f0f5`): Very pale blue-gray. Used behind terminal and code content.
+### Semantic tokens (derived)
+Exposed to Tailwind as `bg`, `surface`, `surface-elevated`, `border`, `ink`,
+`muted`, `accent`, `accent-dim`, `accent-bg`, `code-bg`, `secondary`,
+`secondary-dim`, `secondary-bg`, `danger`, `warn`, `ok`.
 
-### Named Rules
-**The Two-Color Rule.** The palette is System Teal and Field Cream. No other hue is introduced at any point. When tonal variation is needed, step along the existing hues toward white or black. A third color is not a refinement â€” it is a violation.
+- **bg** `#000000` — the page. Everything sits on this.
+- **surface** `#0b0810` / **surface-elevated** `#120c1c` — near-black with a
+  purple cast. Server log, chips, pills, the navbar drawer, legal summary
+  cards.
+- **border** purple at 28% — every divider and hairline.
+- **ink** `#f2eefa` — primary text. **muted** `#9a8fb0` — secondary text,
+  dates, taglines, footer links.
+- **accent** `#7c00ff` — Royal Purple. The hero H1, the navbar dot, borders,
+  the primary button fill, project row indices.
+- **accent-dim** `#a35cff` — purple lifted for legibility as *text* on black:
+  the footer `DEVOM` wordmark, link hover, legal-page links.
+- **secondary** `#09ff00` — Joker Green. The `//` section labels, the live
+  dot in the navbar, the server log's `ready` line, the pip on the front
+  card of the mark. Also doubles as `ok`.
+- **code-bg** `#0e0916` — behind terminal and code blocks.
+- **danger / warn** — the 404's error line and terminal chrome only.
+- `--color-card-*` — the playing cards in the splash and PokerLab. Physical
+  objects, so they keep white faces and true red/black pips.
 
-**The Structural Ink Rule.** System Teal marks structure and state, never decoration. If System Teal appears on a non-interactive element that isn't a section label or heading, it should not be there.
+### Named rules
+**The Two-Hue Rule.** Purple and green are the palette. No third hue. Tonal
+variation steps purple or green toward black, or uses alpha over black.
+
+**Purple is structure, green is signal.** Purple marks what holds the page up
+— headings, borders, the wordmark, actions. Green marks what is *live* or
+*labelled* — status dots, section identifiers, a successful log line, the pip.
+If green appears on a heading or purple on a status dot, it is wrong.
+
+**Alpha lives in the channels, not the Tailwind modifier.** The semantic
+tokens are plain `var()` colours, so Tailwind v3's `/opacity` modifier
+(`text-muted/60`, `bg-danger/70`, `border-accent/25`) **emits no CSS at
+all** — the element silently inherits the parent colour. This bug is live in
+several older components. For dimming use `opacity-*`; for translucent
+colour use `rgb(var(--brand-purple-rgb) / 0.25)` in a style or a token.
 
 ## 3. Typography
 
-**Display / Body Font:** Bricolage Grotesque (geometric grotesque with slightly irregular proportions; loaded self-hosted via `next/font/google`)
-**Label / Mono Font:** Geist Mono (clean, modern monospace; loaded self-hosted via `next/font/google`)
+Five families, one role each, all self-hosted at build time via
+`next/font/google` (no runtime request ever goes to Google). Decided in the
+font lab on 2026-09-03; the lab itself is deleted. Roles are CSS variables
+set in `src/app/layout.tsx` and exposed as Tailwind utilities in
+`tailwind.config.js`:
 
-The pairing has deliberate role division: Bricolage Grotesque handles everything human-facing â€” headings, body copy, names, CTAs; Geist Mono handles everything machine-facing â€” section labels, dates, stack items, code, terminal text, index numbers. The typeface switch is the signal. When you see Geist Mono, you are reading data.
+| Utility | Family | Role |
+|---|---|---|
+| `font-sans` (default) | IBM Plex Sans 400–700 | body copy, row names, taglines, legal prose |
+| `font-display` | Bricolage Grotesque | the hero (name line + H1), the splash, and small UI chrome: nav links, buttons, pills |
+| `font-title` | Space Grotesk 700 | page titles and section headings on project, demo, and legal pages |
+| `font-mono` | Geist Mono | everything machine-facing: `//` labels, dates, all numerals, chips, footer links, navbar wordmark, code, terminals |
+| `font-wordmark` | Anybody, `"wdth" 125` | the footer `DEVOM` only |
+
+**Why the split.** The home page has no large headings — it is a hero and
+then rows — so the body face carries almost everything and needs to be a
+quiet workhorse (Plex Sans). Bricolage is loud and slightly odd, which is
+right for the hero and for buttons but tiring at paragraph length. Space
+Grotesk gives the inner pages a title voice the home page never needs.
+Anybody run wide makes the wordmark the one object on the site with a shape
+nothing else has. Geist Mono is the single monospace so every date, label,
+and code line matches; a sixth family was rejected on exactly this ground.
+
+### Where the type actually lives
+Usage counts in the codebase: `text-fluid-xs` ≈ 69 uses, `text-fluid-sm`
+≈ 24, `text-fluid-4xl` = 5, and **none of the large sizes are on the home
+page**. The home page is a hero followed by rows of 13px semibold names,
+13px taglines, and 11px mono dates. Judge any typeface at 11–13px first.
 
 ### Hierarchy
-- **Display** (900 weight, `clamp(3rem, 5.5vw + 1rem, 6rem)`, leading 0.93, tracking -0.03em): Hero H1 only. "Backend Software Engineer." Rendered in System Teal. The single largest element on any page.
-- **Headline** (700, `clamp(1.625rem, 1.2rem + 1.6vw, 1.875rem)`, tracking -0.02em): Section content headings where present. Color: Ink.
-- **Title** (600, `clamp(0.9375rem, 0.88rem + 0.25vw, 1rem)`, leading 1.4): Job titles, school names, contact category labels, project names within list rows. Color: Ink.
-- **Body** (400, `clamp(0.9375rem, 0.88rem + 0.25vw, 1rem)`, leading 1.65): Bio paragraphs, project descriptions, bullet text. Color: Ink Muted. Max line length: 65ch.
-- **Label / Mono** (Geist Mono, 400, `clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem)`, tracking +0.08em): Section identifiers (`// experience`), span dates, stack lists, terminal output, row index numbers, metadata. Color: System Teal for active labels; Ink Muted for data.
+- **Display** — hero H1 only. Bricolage 900 (`font-display`), `clamp(2.75rem, min(5.5vw +
+  1rem, 13vh), 6rem)`, leading 0.93, tracking `-0.05em`, colour **accent**.
+  The tallest thing on the page; the `13vh` term keeps it inside the fold.
+- **Wordmark** — the footer `DEVOM`. Anybody 800 at 125% width
+  (`font-wordmark`, `font-variation-settings: "wdth" 125`) in **accent-dim**,
+  `clamp(2.1rem, 12.7vw, 15.7rem)`, centred, pulled 5px up into the copyright
+  line. The size was derived by measuring glyph advances so the word spans
+  the same ~58vw it did in Bricolage; retune here if the tracking changes.
+- **Page title** — Space Grotesk (`font-title`), `text-fluid-4xl`, 700,
+  tracking tight, colour ink. Project pages, the poker lab, the legal pages.
+  Section `h2`s on those pages use the same face at `text-fluid-xl`. Not on
+  the home page.
+- **Title** — Plex Sans (`font-sans`), `text-fluid-sm` 600, ink. Row names:
+  job titles, project names.
+- **Body** — Plex Sans, `text-fluid-base` 400, leading 1.65, muted. Measure 62ch
+  (`.prose-readable`). Legal pages are the longest prose on the site.
+- **Label / Mono** — Geist Mono at `text-fluid-xs`. Section identifiers
+  (`// experience`, in **secondary**), dates, chips, footer links, the
+  navbar wordmark and clock, terminal output, row indices. All numerals on
+  the site are mono with `tabular-nums` so columns align.
 
-### Named Rules
-**The Two-Typeface Rule.** No third typeface is introduced under any circumstance. Bricolage Grotesque for human content; Geist Mono for machine content. The distinction is the voice of the site.
+### Named rules
+**Mono = data.** Dates, stack items, code, terminal lines, indices, section
+identifiers, the URL — Geist Mono, and only Geist Mono. Names, titles,
+sentences — a sans, chosen by role: Plex for content, Bricolage for chrome,
+Space Grotesk for inner-page titles.
 
-**The Mono = Data Rule.** If an element represents data â€” a date, a stack item, a code snippet, a terminal line, a row index, a section identifier â€” it uses Geist Mono. If it represents natural language â€” a name, a job title, a bio sentence â€” it uses Bricolage Grotesque.
+**One heading per section.** A section is titled by its `//` label *or* a
+heading, never both saying the same thing. Home sections use the label only.
 
-## 4. Elevation
+## 4. The mark
 
-This system is flat by default. Depth is conveyed through tonal variation between Field Cream surfaces and Border Warm dividers â€” not through shadows.
+**The fan** — two playing cards mid-deal, the back card rotated −18°, the
+front card +7°, the front carrying a `D` and a Joker Green diamond pip.
+Purple strokes on near-black faces.
 
-Two shadow tokens exist in the Tailwind config (`card` and `card-hover`) from a previous card-based layout, but no current component uses them in the main interface. New surfaces must not reach for box-shadow in a resting state.
+- Source of truth: `src/app/icon.svg` (the favicon, 64-unit viewBox).
+- Same geometry as JSX in `src/brand/mark.tsx`, used by
+  `apple-icon.tsx` (180², on a purple-black radial) and
+  `opengraph-image.tsx` / `twitter-image.tsx` (1200×630).
+- The splash deals a full deck; the fan is that deal frozen at its best frame.
 
-Hover interaction on linked rows uses `opacity: 0.7` â€” a signal of interactivity without lifting the surface. The interaction is reticent: the element doesn't come toward you, it acknowledges you.
+Do not redraw it per surface. Change `icon.svg` and `src/brand/mark.tsx` together.
 
-### Named Rules
-**The Flat-by-Default Rule.** Surfaces are flat at rest. Depth is expressed through border color (`#e5d9b8`) and background tonal shift (Field Cream to Warm Surface to Surface Elevated), never through shadows. If a box-shadow is appearing in a non-hover context, the component is wrong.
+## 5. Elevation and interaction
 
-**The Opacity Rule.** On hover, linked rows drop to `opacity: 0.7`. No scale transform, no lift, no background fill. The signal is reticence, not excitement.
+Flat by default on a black canvas, where depth comes cheaply from
+`surface` → `surface-elevated` steps and purple hairlines.
 
-## 5. Components
+- `shadow-card` (black 50% + purple ring 8%) is used on the mobile nav drawer
+  and the 404 terminal; `.card-soft` carries it too. Acceptable on floating or
+  windowed objects. Not on rows, not on sections.
+- Linked rows fade to 70% opacity on hover. No lift, no fill, no scale.
+- Text links shift colour (muted → ink, or accent-dim → accent).
+- Buttons: primary fills accent and hovers to accent-dim; ghost hovers its
+  border to purple at 40% and tints with accent-bg.
+- `::selection` is purple at 40%.
 
-### Buttons
-Two variants. Both are small, unobtrusive, and reticent.
+**Motion.** Framer Motion via `MotionProvider`. Sections fade in once on
+scroll (`viewport: { once: true }`). The loading screen plays once per hard
+load and is skipped on client-side navigation; its skip hint reads
+`CLICK TO SKIP` on pointer devices and `TAP TO SKIP` on touch, via a CSS
+media query. `prefers-reduced-motion` is honoured in `globals.css`. Nothing
+loops.
 
-- **Shape:** Gently curved (0.375rem / 6px radius)
-- **Primary:** System Teal (`#276787`) background, Surface Elevated (`#fdf9ea`) text, `0.5rem 1rem` padding, `0.875rem` font size, 600 weight. Hover: background shifts to System Teal Dim (`#1c4d68`). No shadow, no scale.
-- **Ghost:** Transparent background, Border Warm (`#e5d9b8`) border, Ink Muted (`#78705f`) text. Hover: text color shifts to System Teal, border shifts to System Teal Pale. No fill.
-- Icons inside buttons only when directional (an arrow indicating navigation). Identification icons (GitHub mark) are acceptable. Decorative icons are not.
+## 6. Components
 
-### Section List Items
-The primary content container across all sections. A row pattern with a top divider, a mono index gutter, and content block.
+**Navbar.** Fixed, 3.5rem tall. Transparent at the top; on scroll `bg` at
+90% with `backdrop-blur-xl` and a purple 25% bottom border. Left: the
+wordmark `DEVOMB.COM` in Geist Mono semibold, all caps, the `.` in accent. Centre:
+About / Experience / Projects. Right: a live clock with a green dot
+(`tabular-nums`), and a GitHub pill. Mobile: hamburger opens a drawer on `bg`.
 
-- **Divider:** `1px solid #e5d9b8` (Border Warm), full width
-- **Index gutter:** Geist Mono, `0.65rem`, Ink Muted at 50% opacity, `2ch` minimum width, flush left, vertically aligned to the top of the content
-- **Vertical padding:** `1.75rem` top and bottom (py-7)
-- **Hover (linked rows):** `opacity: 0.7` on the whole row. No background, no lift, no color change on the title.
-- **Badge (optional):** Geist Mono, `0.65rem`, System Teal, flush right, for "live demo â†—" or "site â†—"
+**Hero.** One viewport tall (`.hero-fold`), vertically centred on the
+viewport. Name line in `text-2xl` semibold ink, then the H1 in accent, a
+38ch muted paragraph, primary + ghost buttons. On `lg` a 400px right column
+holds the server log. Behind everything: three soft purple `rounded-full`
+glows and `.sql-ghost` statements in Geist Mono at 14% purple, rotated a
+degree or two, `pointer-events: none`.
 
-### Navbar
-Fixed position. Two states: transparent at the page top, frosted on scroll.
+**Server log.** `rounded-xl`, purple 25% border, `surface` background, Geist
+Mono at `text-fluid-xs`. Chrome strip with three dots and a filename. Lines
+type in on a stagger; the final `ready` line is green.
 
-- **Transparent state:** No background, no border
-- **Scrolled state:** `rgba(#faf5e6, 0.9)` background with `backdrop-filter: blur(16px)`. Border bottom: `1px solid rgba(39, 103, 135, 0.25)` (System Teal at 25%)
-- **Logo:** Geist Mono, medium weight, `devomb.com`. The `.` separator is System Teal. Hover: full logo shifts to System Teal.
-- **Nav links:** Bricolage Grotesque, `0.875rem`, Ink Muted. Hover: `background: #f3ead2` (Warm Surface), `color: #1c1916` (Ink). Rounded `0.375rem`.
-- **Mobile:** Hamburger toggle opens a drawer from the navbar â€” same Astroblack background, same link treatment.
+**Section label.** `// name` in Geist Mono, `text-fluid-xs`, colour
+secondary, `tracking-wide`, `mb-10`. Every home section starts with one.
 
-### Server Log (Signature Component)
-The terminal panel in the hero's right column on large screens. A fake server startup log that animates line-by-line on page load. The developer-layer easter egg that is immediately legible even to non-developers.
+**List row.** The home page's primary container. Hairline top divider, a
+mono gutter (index or year, `tabular-nums`), a `text-fluid-sm` semibold
+title, a muted tagline, optional chips. `py-5` to `py-7`. Linked rows fade
+on hover. Never a card.
 
-- **Container:** `border: 1px solid rgba(39, 103, 135, 0.25)`, `background: #f3ead2` (Warm Surface), `border-radius: 0.75rem`
-- **Window chrome:** Three colored dots (red-400 at 60%, yellow-400 at 60%, System Teal at 50%). File label `server.log` in Geist Mono at tiny size, muted. Bottom border: `1px solid rgba(39, 103, 135, 0.2)`.
-- **Log lines:** Geist Mono, `0.75rem`, Ink Muted. Final "ready âœ“" line: System Teal.
-- **Animation:** Lines appear sequentially on a staggered timer, simulating actual server startup. Cursor blink after all lines appear.
+**Chips.** `.chip-soft` (surface, border, ink) for stack items; `.chip-accent`
+(accent-bg, accent-dim) for status like `live`. Mono, `text-fluid-xs`.
 
-### SQL Ghost Text (Signature Texture)
-Full SQL statements (`SELECT`, `EXPLAIN ANALYZE`, `CREATE INDEX`, `INSERT INTO`) rendered in the hero background at 4.5% opacity in System Teal. Rotated slightly. They are legible on close inspection, invisible at a glance.
+**Footer.** Top hairline in purple 22%. A centred row of mono links —
+GitHub · LinkedIn · NPM · Crates · Privacy · Terms — with 2.5rem gaps, then
+`© 2026 Devom Brahmbhatt` at 60% opacity, then the `DEVOM` wordmark. No
+status widgets, no timestamp.
 
-- **Font:** Geist Mono, `0.55rem`
-- **Color:** System Teal at `opacity: 0.045`
-- **Positioning:** Absolute, edges of the hero viewport, slight rotation (Â±1.5deg). `user-select: none`, `pointer-events: none`.
-- **Content:** Real, valid SQL that relates to the portfolio's content (projects, sessions, events). Not fake or decorative lorem-ipsum SQL.
+**Legal pages.** `/privacy` and `/terms` share `LegalPage.tsx`: back link,
+page title, lede, "last updated", a `.card-soft` short-version box, then
+hairline-separated sections at 62ch. Links underline in accent.
 
-## 6. Do's and Don'ts
+**404.** A terminal window: chrome strip, then `> GET <path>` with the real
+missed path read in the browser, the error line in danger, and a
+`Did you mean: <route> ?` computed by `src/lib/suggestRoute.ts` against the
+live route list (falls back to `/` when nothing is close). One button: Go home.
 
-### Do:
-- **Do** use System Teal structurally: section labels, the hero H1, link hover states, the nav logo dot. Its rarity in the resting state makes its presence mean something.
-- **Do** let whitespace carry the design. The flat layout depends on generous vertical rhythm doing the work that shadows and cards would otherwise do.
-- **Do** use Geist Mono for all data-facing content: dates, stack lists, index numbers, section labels, terminal lines, code. The typeface switch is the signal.
-- **Do** put content in rows with dividers, not in cards. The section list item pattern is the system's primary container.
-- **Do** keep hover states reticent: opacity drop to 0.7 for linked rows, color shift for text links. The interface does not come toward the user.
-- **Do** let the SQL ghost text and server log be the developer-layer easter eggs. They are intentionally subtle â€” 4.5% opacity on the ghost text is not a bug.
-- **Do** maintain the two-typeface rule across every new component: Bricolage for human content, Geist Mono for machine content.
+**Splash.** Full-screen deal animation on hard load, cards on the black
+felt, `CLICK/TAP TO SKIP` bottom-centre in mono at 0.58rem, 0.16em tracking.
 
-### Don't:
-- **Don't** hardcode hex values in components. Every color derives from the three `--brand-*` tokens in `src/app/globals.css`; use `var(--color-*)` or the Tailwind names (`bg`, `surface`, `accent`, `secondary`, `danger`, …).
-- **Don't** add animations that run without user interaction: scroll-jacking, looping entrance choreography, things moving continuously. Motion is reserved for page-load (once, on the loading screen) and state response (hover, focus).
-- **Don't** build any section as an identical card grid with icons: icon + heading + text repeated in a grid is explicitly prohibited. Use the section list item pattern.
-- **Don't** use a side-stripe border (`border-left` or `border-right` greater than 1px) as a colored accent on list items or cards.
-- **Don't** use gradient text (`background-clip: text` combined with a gradient). Color emphasis is achieved through a single solid hue, never a gradient.
-- **Don't** introduce a third typeface. Bricolage Grotesque and Geist Mono are the complete typographic palette.
-- **Don't** introduce a third color. The palette is System Teal and Field Cream. No secondary accent, no illustrative color, no additional hue.
-- **Don't** use shadows in the resting state. Flat by default.
-- **Don't** build a section with both a `// label` and a bold h2 repeating the same concept. One heading per section. The duplication was an explicit design problem that has been corrected.
-- **Don't** use SaaS landing-page patterns: hero metrics, feature grids, testimonial carousels, gradient blobs. From PRODUCT.md: "generic SaaS landing page" is an explicit anti-reference.
+## 7. Do's and don'ts
+
+### Do
+- **Do** edit colours only in the three `--brand-*` tokens. Everything else
+  is derived.
+- **Do** use `opacity-*` to dim and `rgb(var(--brand-*-rgb) / a)` for
+  translucent colour. Never the Tailwind `/opacity` modifier on a token.
+- **Do** keep purple for structure and green for signal.
+- **Do** put content in rows with hairlines, not in cards.
+- **Do** set every number in mono with `tabular-nums`.
+- **Do** use the fan mark from its two sources; never a per-surface redraw.
+- **Do** keep the loud gestures to two: the hero H1 and the footer wordmark.
+- **Do** judge type decisions at 11–13px, where the site actually lives.
+
+### Don't
+- **Don't** hardcode hex values in components. Use `var(--color-*)` or the
+  Tailwind token names. (The `next/og` image files are the one exception —
+  the renderer cannot read CSS variables — and they mirror the tokens in a
+  comment.)
+- **Don't** introduce a third hue, a sixth type family, a second monospace,
+  or a shadow on a resting row.
+- **Don't** add motion that runs without the user: no loops, no
+  scroll-jacking, no continuous movement. Load once, respond to hover/focus.
+- **Don't** build icon + heading + text card grids, side-stripe accents,
+  gradient text, hero metrics, testimonial carousels, or gradient blobs.
+- **Don't** give a section both a `//` label and a heading saying the same
+  thing.
+- **Don't** describe the site as "dark mode". There is no light mode. Black
+  is the canvas.

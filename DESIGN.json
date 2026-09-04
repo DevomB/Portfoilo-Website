@@ -1,171 +1,265 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-05-18T00:00:00Z",
+  "generatedAt": "2026-09-03T00:00:00Z",
   "title": "Design System: Devom Brahmbhatt Portfolio",
   "extensions": {
     "colorMeta": {
-      "system-teal": {
+      "royal-purple": {
         "role": "primary",
-        "displayName": "System Teal",
-        "canonical": "oklch(46% 0.082 221)",
+        "displayName": "Royal Purple",
+        "hex": "#7c00ff",
+        "token": "--brand-purple / --color-accent",
+        "canonical": "oklch(53% 0.29 295)",
         "tonalRamp": [
-          "oklch(15% 0.04 221)",
-          "oklch(25% 0.06 221)",
-          "oklch(35% 0.07 221)",
-          "oklch(46% 0.082 221)",
-          "oklch(58% 0.07 221)",
-          "oklch(70% 0.05 221)",
-          "oklch(82% 0.03 221)",
-          "oklch(93% 0.015 221)"
+          "oklch(12% 0.06 295)",
+          "oklch(22% 0.12 295)",
+          "oklch(32% 0.18 295)",
+          "oklch(42% 0.24 295)",
+          "oklch(53% 0.29 295)",
+          "oklch(65% 0.23 297)",
+          "oklch(78% 0.14 297)",
+          "oklch(90% 0.06 297)"
         ]
       },
-      "system-teal-dim": {
-        "role": "primary-deep",
-        "displayName": "System Teal Dim",
-        "canonical": "oklch(36% 0.073 225)",
+      "royal-purple-lift": {
+        "role": "primary-text",
+        "displayName": "Royal Purple Lift",
+        "hex": "#a35cff",
+        "token": "--color-accent-dim",
+        "canonical": "oklch(65% 0.23 297)",
         "tonalRamp": [
-          "oklch(12% 0.03 225)",
-          "oklch(20% 0.05 225)",
-          "oklch(28% 0.065 225)",
-          "oklch(36% 0.073 225)",
-          "oklch(48% 0.065 225)",
-          "oklch(60% 0.05 225)",
-          "oklch(74% 0.03 225)",
-          "oklch(88% 0.015 225)"
+          "oklch(20% 0.08 297)",
+          "oklch(32% 0.13 297)",
+          "oklch(44% 0.18 297)",
+          "oklch(55% 0.22 297)",
+          "oklch(65% 0.23 297)",
+          "oklch(75% 0.17 297)",
+          "oklch(85% 0.10 297)",
+          "oklch(94% 0.04 297)"
         ]
       },
-      "system-teal-pale": {
-        "role": "primary-tint",
-        "displayName": "System Teal Pale",
-        "canonical": "oklch(87% 0.034 223)",
+      "joker-green": {
+        "role": "signal",
+        "displayName": "Joker Green",
+        "hex": "#09ff00",
+        "token": "--brand-green / --color-secondary / --color-ok",
+        "canonical": "oklch(87% 0.30 142)",
         "tonalRamp": [
-          "oklch(40% 0.04 223)",
-          "oklch(52% 0.042 223)",
-          "oklch(62% 0.04 223)",
-          "oklch(72% 0.038 223)",
-          "oklch(80% 0.036 223)",
-          "oklch(87% 0.034 223)",
-          "oklch(92% 0.022 223)",
-          "oklch(97% 0.01 223)"
+          "oklch(18% 0.07 142)",
+          "oklch(30% 0.12 142)",
+          "oklch(44% 0.18 142)",
+          "oklch(58% 0.23 142)",
+          "oklch(72% 0.27 142)",
+          "oklch(87% 0.30 142)",
+          "oklch(92% 0.22 142)",
+          "oklch(97% 0.08 142)"
         ]
       },
-      "field-cream": {
+      "astroblack": {
         "role": "neutral-bg",
-        "displayName": "Field Cream",
-        "canonical": "oklch(97% 0.012 87)",
+        "displayName": "Astroblack",
+        "hex": "#000000",
+        "token": "--brand-black / --color-bg",
+        "canonical": "oklch(0% 0 0)",
         "tonalRamp": [
-          "oklch(20% 0.004 87)",
-          "oklch(35% 0.006 87)",
-          "oklch(50% 0.009 87)",
-          "oklch(65% 0.011 87)",
-          "oklch(78% 0.012 87)",
-          "oklch(88% 0.014 87)",
-          "oklch(94% 0.013 87)",
-          "oklch(97% 0.012 87)"
+          "oklch(0% 0 0)",
+          "oklch(12% 0.012 310)",
+          "oklch(15% 0.03 305)",
+          "oklch(22% 0.03 305)",
+          "oklch(35% 0.03 305)",
+          "oklch(50% 0.03 305)",
+          "oklch(70% 0.02 305)",
+          "oklch(95% 0.012 300)"
         ]
       },
       "surface": {
         "role": "neutral-surface",
-        "displayName": "Warm Surface",
-        "canonical": "oklch(94% 0.023 85)",
+        "displayName": "Surface",
+        "hex": "#0b0810",
+        "token": "--color-surface",
+        "canonical": "oklch(12% 0.012 310)",
         "tonalRamp": [
-          "oklch(22% 0.006 85)",
-          "oklch(36% 0.01 85)",
-          "oklch(52% 0.014 85)",
-          "oklch(66% 0.018 85)",
-          "oklch(78% 0.021 85)",
-          "oklch(87% 0.023 85)",
-          "oklch(94% 0.023 85)",
-          "oklch(98% 0.015 85)"
+          "oklch(6% 0.008 310)",
+          "oklch(12% 0.012 310)",
+          "oklch(15% 0.03 305)",
+          "oklch(20% 0.03 305)",
+          "oklch(28% 0.03 305)",
+          "oklch(40% 0.03 305)",
+          "oklch(60% 0.025 305)",
+          "oklch(80% 0.015 305)"
+        ]
+      },
+      "surface-elevated": {
+        "role": "neutral-surface-raised",
+        "displayName": "Surface Elevated",
+        "hex": "#120c1c",
+        "token": "--color-surface-elevated",
+        "canonical": "oklch(15% 0.03 305)",
+        "tonalRamp": [
+          "oklch(8% 0.015 305)",
+          "oklch(12% 0.025 305)",
+          "oklch(15% 0.03 305)",
+          "oklch(22% 0.035 305)",
+          "oklch(32% 0.035 305)",
+          "oklch(45% 0.03 305)",
+          "oklch(65% 0.025 305)",
+          "oklch(85% 0.012 305)"
         ]
       },
       "ink": {
         "role": "neutral-text",
         "displayName": "Ink",
-        "canonical": "oklch(14% 0.01 55)",
+        "hex": "#f2eefa",
+        "token": "--color-ink",
+        "canonical": "oklch(95% 0.012 300)",
         "tonalRamp": [
-          "oklch(10% 0.006 55)",
-          "oklch(18% 0.009 55)",
-          "oklch(28% 0.011 55)",
-          "oklch(40% 0.013 55)",
-          "oklch(52% 0.015 55)",
-          "oklch(65% 0.014 55)",
-          "oklch(78% 0.01 55)",
-          "oklch(90% 0.006 55)"
+          "oklch(20% 0.01 300)",
+          "oklch(35% 0.012 300)",
+          "oklch(50% 0.014 300)",
+          "oklch(65% 0.04 300)",
+          "oklch(78% 0.02 300)",
+          "oklch(88% 0.015 300)",
+          "oklch(95% 0.012 300)",
+          "oklch(99% 0.004 300)"
         ]
       },
-      "ink-muted": {
+      "muted": {
         "role": "neutral-text-secondary",
-        "displayName": "Ink Muted",
-        "canonical": "oklch(52% 0.022 68)",
+        "displayName": "Muted",
+        "hex": "#9a8fb0",
+        "token": "--color-muted",
+        "canonical": "oklch(65% 0.04 300)",
         "tonalRamp": [
-          "oklch(18% 0.008 68)",
-          "oklch(28% 0.012 68)",
-          "oklch(38% 0.016 68)",
-          "oklch(48% 0.02 68)",
-          "oklch(52% 0.022 68)",
-          "oklch(64% 0.018 68)",
-          "oklch(78% 0.012 68)",
-          "oklch(90% 0.007 68)"
+          "oklch(18% 0.02 300)",
+          "oklch(30% 0.03 300)",
+          "oklch(42% 0.035 300)",
+          "oklch(54% 0.04 300)",
+          "oklch(65% 0.04 300)",
+          "oklch(76% 0.03 300)",
+          "oklch(87% 0.02 300)",
+          "oklch(95% 0.012 300)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Hero H1 only — the single largest element on any page. Rendered in System Teal."
+        "family": "Bricolage Grotesque",
+        "utility": "font-display",
+        "purpose": "Hero name line and H1, the splash wordmark, and small UI chrome (nav links, buttons, pills). H1 is 900 in Royal Purple."
       },
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Section content headings where present. Color: Ink."
+      "wordmark": {
+        "displayName": "Wordmark",
+        "family": "Anybody",
+        "utility": "font-wordmark",
+        "purpose": "The footer DEVOM only. Weight 800, font-variation-settings \"wdth\" 125, Royal Purple Lift, clamp(2.1rem, 12.7vw, 15.7rem) — sized by glyph measurement to span ~58vw."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "family": "Space Grotesk",
+        "utility": "font-title",
+        "purpose": "H1 and section h2 on project, demo, and legal pages. Never on the home page, which has no large headings."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Job titles, school names, contact category labels, project names within list rows."
+        "family": "IBM Plex Sans",
+        "utility": "font-sans",
+        "purpose": "Row names — job titles, project names, school names. 13px semibold; where most of the home page's sans text lives."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Bio paragraphs, project descriptions, bullet text. Max 65ch line length. Color: Ink Muted."
+        "family": "IBM Plex Sans",
+        "utility": "font-sans",
+        "purpose": "Bio paragraphs, taglines, project descriptions, legal prose. Muted colour, 62ch measure. The default on <body>."
       },
       "label": {
         "displayName": "Label / Mono",
-        "purpose": "Section identifiers (// experience), span dates, stack lists, terminal output, row index numbers, metadata."
+        "family": "Geist Mono",
+        "utility": "font-mono",
+        "purpose": "Section identifiers (// experience) in Joker Green; dates, chips, footer links, navbar wordmark and clock, terminal output, row indices in Muted. Every numeral on the site is mono with tabular-nums. The only monospace."
       }
     },
-    "shadows": [],
+    "typographyStatus": "Decided 2026-09-03 in the font lab (since deleted). Five families, one per role, declared in src/app/layout.tsx and mapped in tailwind.config.js. A sixth family (IBM Plex Mono for the // labels) was rejected: one monospace for everything.",
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 1px 3px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(124 0 255 / 0.08)",
+        "purpose": "Floating or windowed objects only — the mobile nav drawer, the 404 terminal, .card-soft. Never on rows or sections."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 6px 20px rgb(124 0 255 / 0.25), 0 0 0 1px rgb(124 0 255 / 0.35)",
+        "purpose": "Defined in tailwind.config.js; not used by any current component."
+      },
+      {
+        "name": "glow",
+        "value": "0 0 0 3px rgb(9 255 0 / 0.35)",
+        "purpose": "Green focus ring token. Reserved for interactive focus states."
+      }
+    ],
     "motion": [
       {
         "name": "ease-snappy",
         "value": "cubic-bezier(0.21, 0.47, 0.32, 0.98)",
-        "purpose": "Default easing for all opacity fades and state transitions."
-      },
-      {
-        "name": "ease-iris",
-        "value": "cubic-bezier(0.76, 0, 0.24, 1)",
-        "purpose": "Loading screen iris-close clip-path exit."
+        "purpose": "Default easing for section fade-ins and state transitions."
       },
       {
         "name": "duration-fast",
         "value": "150ms",
-        "purpose": "Quick state acknowledgements — button hover, link color shift."
+        "purpose": "Button hover, link colour shift."
       },
       {
         "name": "duration-standard",
         "value": "500ms",
-        "purpose": "Standard fade-in for section items on scroll."
+        "purpose": "Section fade-in on scroll, once per element (viewport once: true)."
       },
       {
-        "name": "duration-hero",
-        "value": "600ms",
-        "purpose": "Hero element entrance animations on page load."
+        "name": "splash",
+        "value": "once per hard load",
+        "purpose": "The card-deal loading screen. Skipped on client-side navigation. Skip hint reads CLICK TO SKIP on pointer devices and TAP TO SKIP on touch via a (hover: none) and (pointer: coarse) media query."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "Honoured in globals.css."
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" },
-      { "name": "xl", "value": "1280px" },
-      { "name": "2xl", "value": "1536px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ],
+    "brandMark": {
+      "name": "The fan",
+      "description": "Two playing cards mid-deal — back card rotated -18deg, front card +7deg, front carrying a D and a Joker Green diamond pip. Purple strokes on near-black faces.",
+      "sources": [
+        "src/app/icon.svg (favicon; 64-unit viewBox; source of truth)",
+        "src/brand/mark.tsx (same geometry as JSX for next/og — apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx)"
+      ],
+      "rule": "Change icon.svg and src/brand/mark.tsx together. Never redraw per surface."
+    },
+    "knownPitfalls": [
+      {
+        "name": "Tailwind alpha modifier on token colours emits nothing",
+        "body": "Semantic colours are plain var() values, so Tailwind v3 cannot apply /opacity to them. Classes like text-muted/60, bg-danger/70, border-accent/25 produce no CSS rule and the element inherits its parent colour. Use opacity-* to dim, or rgb(var(--brand-purple-rgb) / a) for translucent colour. Several older components still carry the broken form."
+      }
     ]
   },
   "components": [
@@ -173,116 +267,127 @@
       "name": "Button Primary",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Teal-filled action button. Primary CTAs — View Projects, Download CV.",
-      "html": "<button class=\"ds-btn-primary\">View Projects</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.375rem; background: #276787; color: #fdf9ea; border: none; border-radius: 0.375rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 600; font-family: 'Bricolage Grotesque', system-ui, sans-serif; letter-spacing: -0.01em; cursor: pointer; transition: background 0.15s cubic-bezier(0.21,0.47,0.32,0.98); } .ds-btn-primary:hover { background: #1c4d68; } .ds-btn-primary:focus-visible { outline: 2px solid #276787; outline-offset: 2px; }"
+      "description": "Purple-filled action button. Primary CTAs — Go home, the hero's first action.",
+      "html": "<button class=\"ds-btn-primary\">Go home</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: #7c00ff; color: #f2eefa; border: none; border-radius: 0.5rem; padding: 0.625rem 1.25rem; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); font-weight: 600; font-family: 'Bricolage Grotesque', system-ui, sans-serif; cursor: pointer; transition: background 0.15s cubic-bezier(0.21,0.47,0.32,0.98); } .ds-btn-primary:hover { background: #a35cff; } .ds-btn-primary:focus-visible { outline: 2px solid #09ff00; outline-offset: 2px; }"
     },
     {
       "name": "Button Ghost",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Transparent ghost button with warm border. Secondary CTAs — GitHub, external links.",
-      "html": "<button class=\"ds-btn-ghost\">GitHub ↗</button>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 0.375rem; background: transparent; color: #78705f; border: 1px solid #e5d9b8; border-radius: 0.375rem; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 400; font-family: 'Bricolage Grotesque', system-ui, sans-serif; cursor: pointer; transition: color 0.15s cubic-bezier(0.21,0.47,0.32,0.98), border-color 0.15s cubic-bezier(0.21,0.47,0.32,0.98); } .ds-btn-ghost:hover { color: #276787; border-color: #c4d8e8; } .ds-btn-ghost:focus-visible { outline: 2px solid #276787; outline-offset: 2px; }"
+      "description": "Surface-filled button with a purple hairline. Secondary actions — View source, Live site, the navbar GitHub pill (as a 999px pill).",
+      "html": "<button class=\"ds-btn-ghost\">View source</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; background: #0b0810; color: #f2eefa; border: 1px solid rgb(124 0 255 / 0.28); border-radius: 0.5rem; padding: 0.5rem 1rem; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); font-weight: 500; font-family: 'Bricolage Grotesque', system-ui, sans-serif; cursor: pointer; transition: color 0.15s, border-color 0.15s, background 0.15s; } .ds-btn-ghost:hover { border-color: rgb(124 0 255 / 0.4); background: rgb(124 0 255 / 0.16); color: #a35cff; }"
     },
     {
       "name": "Section List Item",
       "kind": "custom",
-      "description": "The primary content container across all sections. Numbered editorial rows with index gutter, Border Warm dividers, and opacity-70 hover. Never a card.",
-      "html": "<div class=\"ds-list-item\">\n  <span class=\"ds-list-index\" aria-hidden=\"true\">01</span>\n  <div class=\"ds-list-content\">\n    <div class=\"ds-list-header\">\n      <span class=\"ds-list-title\">Senior Backend Engineer</span>\n      <span class=\"ds-list-meta\">Jan 2023 – Present</span>\n    </div>\n    <p class=\"ds-list-sub\">Company Name · Remote</p>\n    <p class=\"ds-list-body\">Built distributed event pipelines handling 4M daily events with sub-50ms p99 latency.</p>\n  </div>\n</div>",
-      "css": ".ds-list-item { display: flex; gap: 1.25rem; padding: 1.75rem 0; border-top: 1px solid #e5d9b8; transition: opacity 0.15s ease; } .ds-list-item:hover { opacity: 0.7; } .ds-list-index { flex-shrink: 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 0.65rem; color: #78705f; opacity: 0.5; min-width: 2ch; padding-top: 2px; user-select: none; } .ds-list-content { flex: 1; min-width: 0; } .ds-list-header { display: flex; flex-direction: column; gap: 0.125rem; } @media (min-width: 640px) { .ds-list-header { flex-direction: row; align-items: baseline; justify-content: space-between; } } .ds-list-title { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(0.9375rem, 0.88rem + 0.25vw, 1rem); font-weight: 600; color: #1c1916; } .ds-list-meta { font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #78705f; opacity: 0.6; flex-shrink: 0; } .ds-list-sub { margin-top: 0.125rem; font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #78705f; } .ds-list-body { margin-top: 0.5rem; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(0.9375rem, 0.88rem + 0.25vw, 1rem); color: #78705f; line-height: 1.65; max-width: 62ch; }"
+      "description": "The primary content container on the home page. Hairline-divided rows with a mono gutter (index or year, tabular-nums), a 13px semibold title, a muted tagline, and an opacity-70 hover. Never a card.",
+      "html": "<div class=\"ds-list-item\">\n  <span class=\"ds-list-index\" aria-hidden=\"true\">01</span>\n  <div class=\"ds-list-content\">\n    <div class=\"ds-list-header\">\n      <span class=\"ds-list-title\">Full-Stack Developer</span>\n      <span class=\"ds-list-meta\">Jul 2024 – Present</span>\n    </div>\n    <p class=\"ds-list-sub\">Roosevelt Connect · Eastvale · Hybrid</p>\n    <p class=\"ds-list-body\">Platform for resources, messaging, and academics.</p>\n  </div>\n</div>",
+      "css": ".ds-list-item { display: flex; gap: 1.25rem; padding: 1.25rem 0; border-top: 1px solid rgb(124 0 255 / 0.28); transition: opacity 0.15s ease; } .ds-list-item:hover { opacity: 0.7; } .ds-list-index { flex-shrink: 0; font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #7c00ff; min-width: 2ch; padding-top: 1px; user-select: none; } .ds-list-content { flex: 1; min-width: 0; } .ds-list-header { display: flex; flex-direction: column; gap: 0.125rem; } @media (min-width: 640px) { .ds-list-header { flex-direction: row; align-items: baseline; justify-content: space-between; } } .ds-list-title { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); font-weight: 600; color: #f2eefa; } .ds-list-meta { font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; flex-shrink: 0; } .ds-list-sub { margin-top: 0.125rem; font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; opacity: 0.5; } .ds-list-body { margin-top: 0.25rem; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); color: #9a8fb0; line-height: 1.65; max-width: 62ch; }"
     },
     {
       "name": "Section Label",
       "kind": "custom",
-      "description": "Geist Mono comment-style section identifier. Rendered in System Teal. Precedes every content block — the structural ink signal.",
+      "description": "Geist Mono comment-style section identifier in Joker Green. Precedes every home-page section — the signal voice. Home sections have no other heading.",
       "html": "<p class=\"ds-section-label\">// experience</p>",
-      "css": ".ds-section-label { font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); letter-spacing: 0.08em; color: #276787; margin-bottom: 2.5rem; user-select: none; }"
+      "css": ".ds-section-label { font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); letter-spacing: 0.025em; color: #09ff00; margin-bottom: 2.5rem; }"
     },
     {
       "name": "Navbar",
       "kind": "nav",
-      "description": "Fixed navigation bar. Transparent at page top, frosted cream on scroll. Logo dot is System Teal; full logo shifts to System Teal on hover.",
-      "html": "<nav class=\"ds-navbar ds-navbar--scrolled\">\n  <a class=\"ds-navbar-logo\" href=\"/\">devomb<span class=\"ds-navbar-dot\">.</span>com</a>\n  <div class=\"ds-navbar-links\">\n    <a class=\"ds-navbar-link\" href=\"#experience\">experience</a>\n    <a class=\"ds-navbar-link\" href=\"#projects\">projects</a>\n    <a class=\"ds-navbar-link\" href=\"#contact\">contact</a>\n  </div>\n</nav>",
-      "css": ".ds-navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1rem, 3vw + 0.5rem, 2rem); height: 3.5rem; transition: background 0.2s ease, border-color 0.2s ease; } .ds-navbar--transparent { background: transparent; border-bottom: none; } .ds-navbar--scrolled { background: rgba(250, 245, 230, 0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid rgba(39, 103, 135, 0.25); } .ds-navbar-logo { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 0.875rem; font-weight: 500; color: #1c1916; text-decoration: none; letter-spacing: -0.01em; transition: color 0.15s ease; } .ds-navbar-logo:hover { color: #276787; } .ds-navbar-dot { color: #276787; } .ds-navbar-links { display: flex; gap: 0.25rem; } .ds-navbar-link { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 0.875rem; color: #78705f; text-decoration: none; padding: 0.375rem 0.625rem; border-radius: 0.375rem; transition: background 0.12s ease, color 0.12s ease; } .ds-navbar-link:hover { background: #f3ead2; color: #1c1916; }"
+      "description": "Fixed, 3.5rem. Transparent at the top; on scroll the canvas at 90% with a 24px backdrop blur and a purple 25% bottom border. All-caps mono wordmark DEVOMB.COM with a purple dot; About / Experience / Projects centred; live clock with a green dot and a GitHub pill on the right.",
+      "html": "<nav class=\"ds-navbar ds-navbar--scrolled\">\n  <a class=\"ds-navbar-logo\" href=\"/\">DEVOMB<span class=\"ds-navbar-dot\">.</span>COM</a>\n  <div class=\"ds-navbar-links\">\n    <a class=\"ds-navbar-link\" href=\"#about\">About</a>\n    <a class=\"ds-navbar-link\" href=\"#experience\">Experience</a>\n    <a class=\"ds-navbar-link\" href=\"#projects\">Projects</a>\n  </div>\n  <span class=\"ds-navbar-clock\"><span class=\"ds-live-dot\"></span>14:07:52 · PDT</span>\n</nav>",
+      "css": ".ds-navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(1rem, 3vw + 0.5rem, 2rem); height: 3.5rem; transition: background 0.2s ease, border-color 0.2s ease; } .ds-navbar--transparent { background: transparent; border-bottom: none; } .ds-navbar--scrolled { background: rgb(0 0 0 / 0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgb(124 0 255 / 0.25); } .ds-navbar-logo { font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); font-weight: 600; letter-spacing: -0.025em; color: #f2eefa; text-decoration: none; transition: color 0.15s ease; } .ds-navbar-logo:hover { color: #7c00ff; } .ds-navbar-dot { color: #7c00ff; } .ds-navbar-links { display: flex; gap: 0.125rem; } .ds-navbar-link { font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: clamp(0.8125rem, 0.78rem + 0.2vw, 0.875rem); color: #9a8fb0; text-decoration: none; padding: 0.375rem 0.875rem; border-radius: 0.375rem; transition: background 0.12s ease, color 0.12s ease; } .ds-navbar-link:hover { background: #0b0810; color: #f2eefa; } .ds-navbar-clock { display: inline-flex; align-items: center; gap: 0.375rem; font-family: 'Geist Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; } .ds-live-dot { width: 0.375rem; height: 0.375rem; border-radius: 50%; background: #09ff00; box-shadow: 0 0 6px rgb(9 255 0 / 0.6); }"
     },
     {
       "name": "Server Log",
       "kind": "custom",
-      "description": "Terminal panel in the hero right column. Animates line-by-line on page load. The developer-layer signature component — a fake server startup log that is legible even to non-developers.",
-      "html": "<div class=\"ds-server-log\">\n  <div class=\"ds-server-log-chrome\">\n    <span class=\"ds-chrome-dot ds-chrome-dot--red\"></span>\n    <span class=\"ds-chrome-dot ds-chrome-dot--yellow\"></span>\n    <span class=\"ds-chrome-dot ds-chrome-dot--teal\"></span>\n    <span class=\"ds-chrome-label\">server.log</span>\n  </div>\n  <div class=\"ds-server-log-body\">\n    <p class=\"ds-log-line\">→ initializing server...</p>\n    <p class=\"ds-log-line\">→ loading modules</p>\n    <p class=\"ds-log-line\">→ connecting to database</p>\n    <p class=\"ds-log-line\">→ running migrations</p>\n    <p class=\"ds-log-line ds-log-line--ready\">→ ready ✓</p>\n  </div>\n</div>",
-      "css": ".ds-server-log { border: 1px solid rgba(39, 103, 135, 0.25); background: #f3ead2; border-radius: 0.75rem; overflow: hidden; font-family: 'Geist Mono', ui-monospace, monospace; } .ds-server-log-chrome { display: flex; align-items: center; gap: 0.375rem; padding: 0.625rem 0.875rem; border-bottom: 1px solid rgba(39, 103, 135, 0.2); } .ds-chrome-dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; flex-shrink: 0; } .ds-chrome-dot--red { background: rgba(248, 113, 113, 0.6); } .ds-chrome-dot--yellow { background: rgba(250, 204, 21, 0.6); } .ds-chrome-dot--teal { background: rgba(39, 103, 135, 0.5); } .ds-chrome-label { font-size: 0.625rem; color: #78705f; opacity: 0.6; margin-left: auto; letter-spacing: 0.06em; } .ds-server-log-body { padding: 0.875rem; display: flex; flex-direction: column; gap: 0.375rem; } .ds-log-line { font-size: 0.75rem; color: #78705f; line-height: 1.5; } .ds-log-line--ready { color: #276787; }"
+      "description": "Terminal panel in the hero's right column on lg screens. A fake server startup log that types in line-by-line on load; the final ready line is green. The developer-layer signature component.",
+      "html": "<div class=\"ds-server-log\">\n  <div class=\"ds-server-log-chrome\">\n    <span class=\"ds-chrome-dot ds-chrome-dot--red\"></span>\n    <span class=\"ds-chrome-dot ds-chrome-dot--yellow\"></span>\n    <span class=\"ds-chrome-dot ds-chrome-dot--purple\"></span>\n    <span class=\"ds-chrome-label\">server.log</span>\n  </div>\n  <div class=\"ds-server-log-body\">\n    <p class=\"ds-log-line\">→ initializing server...</p>\n    <p class=\"ds-log-line\">→ connecting to database</p>\n    <p class=\"ds-log-line ds-log-line--ready\">→ ready ✓</p>\n  </div>\n</div>",
+      "css": ".ds-server-log { border: 1px solid rgb(124 0 255 / 0.25); background: #0b0810; border-radius: 0.75rem; overflow: hidden; font-family: 'Geist Mono', ui-monospace, monospace; } .ds-server-log-chrome { display: flex; align-items: center; gap: 0.375rem; padding: 0.625rem 1rem; border-bottom: 1px solid rgb(124 0 255 / 0.2); } .ds-chrome-dot { width: 0.625rem; height: 0.625rem; border-radius: 50%; flex-shrink: 0; } .ds-chrome-dot--red { background: rgb(255 77 94 / 0.7); } .ds-chrome-dot--yellow { background: rgb(254 188 46 / 0.7); } .ds-chrome-dot--purple { background: rgb(124 0 255 / 0.5); } .ds-chrome-label { font-size: 0.6rem; color: #9a8fb0; opacity: 0.6; margin-left: auto; letter-spacing: 0.06em; } .ds-server-log-body { padding: 0.875rem 1rem; display: flex; flex-direction: column; gap: 0.375rem; } .ds-log-line { font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; line-height: 1.6; } .ds-log-line--ready { color: #09ff00; }"
     },
     {
       "name": "SQL Ghost Text",
       "kind": "custom",
-      "description": "Full SQL statements rendered at 4.5% opacity in the hero background. Real, valid SQL that relates to portfolio content. Legible on close inspection, invisible at a glance — the backend personality layer.",
+      "description": "Real SQL statements rendered in the hero background in Royal Purple at 14% opacity, rotated a degree or two. Legible on inspection, texture at a glance.",
       "html": "<p class=\"ds-sql-ghost\" style=\"transform: rotate(-1.5deg); position: absolute; top: 12%; left: -0.5rem;\">SELECT e.title, e.company, e.start_date FROM experience e WHERE e.user_id = 1 ORDER BY e.start_date DESC;</p>",
-      "css": ".ds-sql-ghost { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 0.55rem; color: #276787; opacity: 0.045; white-space: nowrap; user-select: none; pointer-events: none; line-height: 1.8; }"
+      "css": ".ds-sql-ghost { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 0.55rem; color: #7c00ff; opacity: 0.14; white-space: nowrap; user-select: none; pointer-events: none; line-height: 1.8; }"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "description": "Purple hairline top; a centred row of mono links with 2.5rem gaps; the copyright line at 60% opacity; then the DEVOM wordmark in Anybody at 125% width, Royal Purple Lift, spanning ~58vw.",
+      "html": "<footer class=\"ds-footer\">\n  <nav class=\"ds-footer-links\"><a>GitHub</a><a>LinkedIn</a><a>NPM</a><a>Crates</a><a>Privacy</a><a>Terms</a></nav>\n  <p class=\"ds-footer-copy\">© 2026 Devom Brahmbhatt</p>\n  <p class=\"ds-footer-wordmark\" aria-hidden=\"true\">DEVOM</p>\n</footer>",
+      "css": ".ds-footer { border-top: 1px solid rgb(124 0 255 / 0.22); background: #000000; overflow: hidden; } .ds-footer-links { display: flex; flex-wrap: wrap; justify-content: center; column-gap: 2.5rem; row-gap: 0.75rem; padding: 2rem clamp(1rem, 3vw + 0.5rem, 2rem) 0; font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; } .ds-footer-links a:hover { color: #f2eefa; } .ds-footer-copy { margin-top: 1.25rem; padding-bottom: 0.25rem; text-align: center; font-family: 'Geist Mono', ui-monospace, monospace; font-size: clamp(0.6875rem, 0.65rem + 0.15vw, 0.75rem); color: #9a8fb0; opacity: 0.6; } .ds-footer-wordmark { margin-top: -5px; text-align: center; font-family: 'Anybody', system-ui, sans-serif; font-variation-settings: 'wdth' 125; font-weight: 800; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; font-size: clamp(2.1rem, 12.7vw, 15.7rem); color: #a35cff; user-select: none; }"
     }
   ],
   "narrative": {
-    "northStar": "The Transparent Stack",
-    "overview": "The design operates on two simultaneous layers. At the surface, it is immediately comprehensible to anyone: clean structure, clear type hierarchy, direct copy — nothing gatekept by technical fluency. One level down, developers find the substrate: SQL ghost text at 4.5% opacity, a server startup log that types itself in, monospace section labels styled as code comments, numbered row indices. Neither layer gets in the way of the other.\n\nThe visual language is drawn from precision documents rather than marketing surfaces. Structured rows over card grids. Dividing lines over background fills. Type weight and scale over decorative color. The palette is a committed two-color system — Field Cream as the permanent canvas, System Teal as the sole structural ink.\n\nThis site does not announce itself. It demonstrates by existing.",
+    "northStar": "The Table",
+    "overview": "The site is a poker table after dark: a black felt canvas, one purple light, one green signal, and cards as the only physical objects. It reads two ways at once. Anyone gets the surface — big name, clear rows, direct copy. A developer gets the substrate: // section labels set as code comments, a server log that types itself in on load, SQL ghost text in the hero, a fake shell for the 404, a splash that deals cards before the page appears.\n\nPrecision-document structure, not marketing-page structure: rows over card grids, hairline dividers over fills, type scale over decoration. The single loud gesture is permitted — the hero H1 and the footer wordmark are huge — and everything else stays quiet so that gesture lands.",
     "keyCharacteristics": [
-      "Dual-audience: readable without technical context, rewarding with it",
-      "Flat surfaces at rest — depth comes from tonal shift and border color, never shadows",
-      "System Teal marks structure and meaning, not decoration",
-      "Geist Mono for machine-facing content; Bricolage Grotesque for human-facing content",
-      "Precise and reticent interactions: almost nothing happens until you act"
+      "Black is the canvas, never a dark mode of something lighter",
+      "Two hues, each with one job: purple is structure, green is signal",
+      "Five type families, one job each: Plex Sans for content, Bricolage for the hero and chrome, Space Grotesk for inner-page titles, Geist Mono for all data, Anybody for the wordmark",
+      "The deck is the brand: favicon, Apple icon, OG card, and splash all use the fan mark",
+      "Reticent interaction: nothing moves until you act, then it moves briefly"
     ],
     "rules": [
       {
-        "name": "The Two-Color Rule",
-        "body": "The palette is System Teal and Field Cream. No other hue is introduced at any point. When tonal variation is needed, step along the existing hues toward white or black. A third color is not a refinement — it is a violation.",
+        "name": "The Two-Hue Rule",
+        "body": "Royal Purple and Joker Green are the palette. No third hue. Tonal variation steps a hue toward black or uses alpha over black.",
         "section": "colors"
       },
       {
-        "name": "The Structural Ink Rule",
-        "body": "System Teal marks structure and state, never decoration. If System Teal appears on a non-interactive element that isn't a section label or heading, it should not be there.",
+        "name": "Purple is structure, green is signal",
+        "body": "Purple marks what holds the page up — headings, borders, the wordmark, actions. Green marks what is live or labelled — status dots, section identifiers, a successful log line, the pip on the mark. Green on a heading or purple on a status dot is wrong.",
         "section": "colors"
       },
       {
-        "name": "The Two-Typeface Rule",
-        "body": "No third typeface is introduced under any circumstance. Bricolage Grotesque for human content; Geist Mono for machine content. The distinction is the voice of the site.",
+        "name": "Alpha lives in the channels, not the Tailwind modifier",
+        "body": "Semantic tokens are plain var() colours, so Tailwind's /opacity modifier emits no CSS for them. Dim with opacity-*; for translucent colour use rgb(var(--brand-purple-rgb) / a).",
+        "section": "colors"
+      },
+      {
+        "name": "Mono = data",
+        "body": "Dates, stack items, code, terminal lines, indices, section identifiers, the URL — Geist Mono, and only Geist Mono; numerals tabular. Names, titles, sentences — a sans chosen by role: Plex Sans for content, Bricolage for chrome, Space Grotesk for inner-page titles.",
         "section": "typography"
       },
       {
-        "name": "The Mono = Data Rule",
-        "body": "If an element represents data — a date, a stack item, a code snippet, a terminal line, a row index, a section identifier — it uses Geist Mono. If it represents natural language — a name, a job title, a bio sentence — it uses Bricolage Grotesque.",
+        "name": "One heading per section",
+        "body": "A section is titled by its // label or a heading, never both saying the same thing. Home sections use the label only and have no large headings at all.",
         "section": "typography"
       },
       {
-        "name": "The Flat-by-Default Rule",
-        "body": "Surfaces are flat at rest. Depth is expressed through border color (#e5d9b8) and background tonal shift (Field Cream to Warm Surface to Surface Elevated), never through shadows. If a box-shadow is appearing in a non-hover context, the component is wrong.",
+        "name": "Flat by default",
+        "body": "Depth comes from surface → surface-elevated steps and purple hairlines. shadow-card is permitted on floating or windowed objects (the nav drawer, the 404 terminal), never on rows or sections.",
         "section": "elevation"
       },
       {
         "name": "The Opacity Rule",
-        "body": "On hover, linked rows drop to opacity: 0.7. No scale transform, no lift, no background fill. The signal is reticence, not excitement.",
+        "body": "Linked rows fade to opacity 0.7 on hover. No scale, no lift, no fill. Text links shift colour.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do use System Teal structurally: section labels, the hero H1, link hover states, the nav logo dot. Its rarity in the resting state makes its presence mean something.",
-      "Do let whitespace carry the design. The flat layout depends on generous vertical rhythm doing the work that shadows and cards would otherwise do.",
-      "Do use Geist Mono for all data-facing content: dates, stack lists, index numbers, section labels, terminal lines, code. The typeface switch is the signal.",
-      "Do put content in rows with dividers, not in cards. The section list item pattern is the system's primary container.",
-      "Do keep hover states reticent: opacity drop to 0.7 for linked rows, color shift for text links. The interface does not come toward the user.",
-      "Do let the SQL ghost text and server log be the developer-layer easter eggs. They are intentionally subtle — 4.5% opacity on the ghost text is not a bug.",
-      "Do maintain the two-typeface rule across every new component: Bricolage for human content, Geist Mono for machine content."
+      "Do edit colours only in the three --brand-* tokens in src/app/globals.css; everything else derives from them.",
+      "Do use opacity-* to dim and rgb(var(--brand-*-rgb) / a) for translucent colour — never the Tailwind /opacity modifier on a token.",
+      "Do keep purple for structure and green for signal.",
+      "Do put content in rows with hairlines, not in cards.",
+      "Do set every number in mono with tabular-nums so columns align.",
+      "Do use the fan mark from its two sources (src/app/icon.svg, src/brand/mark.tsx); never a per-surface redraw.",
+      "Do keep the loud gestures to two: the hero H1 and the footer wordmark.",
+      "Do judge type decisions at 11–13px, where the site actually lives.",
+      "Do pick the sans by role, not by taste: content in font-sans (Plex), chrome in font-display (Bricolage), inner-page titles in font-title (Space Grotesk)."
     ],
     "donts": [
-      "Don't use dark mode, neon accents, glow effects, Matrix aesthetics, or particle backgrounds. The site is light-on-cream by design, always.",
-      "Don't add animations that run without user interaction: scroll-jacking, looping entrance choreography, things moving continuously. Motion is reserved for page-load (once) and state response (hover, focus).",
-      "Don't build any section as an identical card grid with icons: icon + heading + text repeated in a grid is explicitly prohibited. Use the section list item pattern.",
-      "Don't use a side-stripe border (border-left or border-right greater than 1px) as a colored accent on list items or cards.",
-      "Don't use gradient text (background-clip: text combined with a gradient). Color emphasis is achieved through a single solid hue, never a gradient.",
-      "Don't introduce a third typeface. Bricolage Grotesque and Geist Mono are the complete typographic palette.",
-      "Don't introduce a third color. The palette is System Teal and Field Cream. No secondary accent, no illustrative color, no additional hue.",
-      "Don't use shadows in the resting state. Flat by default.",
-      "Don't build a section with both a // label and a bold h2 repeating the same concept. One heading per section.",
-      "Don't use SaaS landing-page patterns: hero metrics, feature grids, testimonial carousels, gradient blobs."
+      "Don't describe the site as dark mode. There is no light mode; black is the canvas.",
+      "Don't hardcode hex in components. Use var(--color-*) or the Tailwind token names. The next/og image files are the one exception and mirror the tokens in a comment.",
+      "Don't introduce a third hue, a sixth type family or a second monospace, or a shadow on a resting row.",
+      "Don't add motion that runs without the user: no loops, no scroll-jacking, no continuous movement. Load once, respond to hover and focus.",
+      "Don't build icon + heading + text card grids, side-stripe accents, gradient text, hero metrics, testimonial carousels, or gradient blobs.",
+      "Don't give a section both a // label and a heading saying the same thing.",
+      "Don't reintroduce the retired contact section, the server-online widget, or the footer timestamp; the footer is links, copyright, wordmark."
     ]
   }
 }
