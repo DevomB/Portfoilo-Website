@@ -37,8 +37,8 @@ export const sideQuests: SideQuest[] = [
 export type AlsoBuilt = { name: string; url: string };
 
 export const alsoBuilt: AlsoBuilt[] = [
-  { name: "SMC Consulting", url: "https://smc-consulting.vercel.app" },
-  /* docs.spinai.dev is offline; the repo is the durable link */
-  { name: "Spin-AI", url: "https://github.com/DevomB/Spin-AI" },
+  /* NOTE — demo candidate. Gaussian Solver takes a matrix and reduces it to
+     reduced row echelon form; that is a natural in-site interactive (type a
+     matrix, watch the row operations). Until it is built it stays a link. */
   { name: "Gaussian Solver", url: "https://github.com/DevomB/Gaussian-Solver" },
 ];

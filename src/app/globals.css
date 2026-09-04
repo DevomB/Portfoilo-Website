@@ -12,25 +12,42 @@
   --brand-green-rgb: 9 255 0;
   --brand-black-rgb: 0 0 0;
 
-  /* ===== SEMANTIC TOKENS (derived from brand) ===== */
-  --color-bg: var(--brand-black);
-  --color-surface: #0b0810;
-  --color-surface-elevated: #120c1c;
+  /* ===== SEMANTIC TOKENS (derived from brand) =====
+     Every solid colour is defined by its RGB channels (the *-rgb line) and
+     the usable colour is derived from them. Tailwind's alpha modifier —
+     text-muted/60, bg-bg/90, border-accent/25 — needs the channels to work
+     (see tailwind.config.js). To change a colour, edit its *-rgb line. */
+  --color-bg-rgb: var(--brand-black-rgb);
+  --color-bg: rgb(var(--color-bg-rgb));
+  --color-surface-rgb: 11 8 16;                    /* #0b0810 */
+  --color-surface: rgb(var(--color-surface-rgb));
+  --color-surface-elevated-rgb: 18 12 28;          /* #120c1c */
+  --color-surface-elevated: rgb(var(--color-surface-elevated-rgb));
   --color-border: rgb(var(--brand-purple-rgb) / 0.28);
-  --color-ink: #f2eefa;
-  --color-muted: #9a8fb0;
-  --color-accent: var(--brand-purple);
-  --color-accent-dim: #a35cff;               /* lighter for text on black */
+  --color-ink-rgb: 242 238 250;                    /* #f2eefa */
+  --color-ink: rgb(var(--color-ink-rgb));
+  --color-muted-rgb: 154 143 176;                  /* #9a8fb0 */
+  --color-muted: rgb(var(--color-muted-rgb));
+  --color-accent-rgb: var(--brand-purple-rgb);
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-accent-dim-rgb: 163 92 255;              /* #a35cff — lighter for text on black */
+  --color-accent-dim: rgb(var(--color-accent-dim-rgb));
   --color-accent-bg: rgb(var(--brand-purple-rgb) / 0.16);
-  --color-code-bg: #0e0916;
+  --color-code-bg-rgb: 14 9 22;                    /* #0e0916 */
+  --color-code-bg: rgb(var(--color-code-bg-rgb));
   /* secondary voice — Joker Green */
-  --color-secondary: var(--brand-green);
-  --color-secondary-dim: #5cff55;
+  --color-secondary-rgb: var(--brand-green-rgb);
+  --color-secondary: rgb(var(--color-secondary-rgb));
+  --color-secondary-dim-rgb: 92 255 85;            /* #5cff55 */
+  --color-secondary-dim: rgb(var(--color-secondary-dim-rgb));
   --color-secondary-bg: rgb(var(--brand-green-rgb) / 0.12);
   /* status */
-  --color-danger: #ff4d5e;
-  --color-warn: #febc2e;
-  --color-ok: var(--brand-green);
+  --color-danger-rgb: 255 77 94;                   /* #ff4d5e */
+  --color-danger: rgb(var(--color-danger-rgb));
+  --color-warn-rgb: 254 188 46;                    /* #febc2e */
+  --color-warn: rgb(var(--color-warn-rgb));
+  --color-ok-rgb: var(--brand-green-rgb);
+  --color-ok: rgb(var(--color-ok-rgb));
   /* physical objects (playing cards) */
   --color-card-face: #ffffff;
   --color-card-face-2: #f3f0f8;

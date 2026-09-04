@@ -12,23 +12,27 @@ module.exports = {
       screens: { "2xl": "72rem" },
     },
     extend: {
+      // Solid tokens take Tailwind's <alpha-value> so the /opacity modifier
+      // works (text-muted/60 -> rgb(154 143 176 / 0.6)). The three tokens
+      // that are already translucent (border, accent-bg, secondary-bg) are
+      // plain values and must not be given a modifier.
       colors: {
-        bg: "var(--color-bg)",
-        surface: "var(--color-surface)",
-        "surface-elevated": "var(--color-surface-elevated)",
+        bg: "rgb(var(--color-bg-rgb) / <alpha-value>)",
+        surface: "rgb(var(--color-surface-rgb) / <alpha-value>)",
+        "surface-elevated": "rgb(var(--color-surface-elevated-rgb) / <alpha-value>)",
         border: "var(--color-border)",
-        ink: "var(--color-ink)",
-        accent: "var(--color-accent)",
-        "accent-dim": "var(--color-accent-dim)",
+        ink: "rgb(var(--color-ink-rgb) / <alpha-value>)",
+        accent: "rgb(var(--color-accent-rgb) / <alpha-value>)",
+        "accent-dim": "rgb(var(--color-accent-dim-rgb) / <alpha-value>)",
         "accent-bg": "var(--color-accent-bg)",
-        "code-bg": "var(--color-code-bg)",
-        muted: "var(--color-muted)",
-        secondary: "var(--color-secondary)",
-        "secondary-dim": "var(--color-secondary-dim)",
+        "code-bg": "rgb(var(--color-code-bg-rgb) / <alpha-value>)",
+        muted: "rgb(var(--color-muted-rgb) / <alpha-value>)",
+        secondary: "rgb(var(--color-secondary-rgb) / <alpha-value>)",
+        "secondary-dim": "rgb(var(--color-secondary-dim-rgb) / <alpha-value>)",
         "secondary-bg": "var(--color-secondary-bg)",
-        danger: "var(--color-danger)",
-        warn: "var(--color-warn)",
-        ok: "var(--color-ok)",
+        danger: "rgb(var(--color-danger-rgb) / <alpha-value>)",
+        warn: "rgb(var(--color-warn-rgb) / <alpha-value>)",
+        ok: "rgb(var(--color-ok-rgb) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],          // IBM Plex Sans — body

@@ -257,8 +257,8 @@
     },
     "knownPitfalls": [
       {
-        "name": "Tailwind alpha modifier on token colours emits nothing",
-        "body": "Semantic colours are plain var() values, so Tailwind v3 cannot apply /opacity to them. Classes like text-muted/60, bg-danger/70, border-accent/25 produce no CSS rule and the element inherits its parent colour. Use opacity-* to dim, or rgb(var(--brand-purple-rgb) / a) for translucent colour. Several older components still carry the broken form."
+        "name": "Translucent tokens take no alpha modifier",
+        "body": "border, accent-bg and secondary-bg are already rgb(... / a) values, so border-border/50 or bg-accent-bg/40 would not resolve. Every other token is channel-based and accepts /opacity. Fixed 2026-09-04; before that the modifier emitted no CSS on any token."
       }
     ]
   },
@@ -344,8 +344,8 @@
         "section": "colors"
       },
       {
-        "name": "Alpha lives in the channels, not the Tailwind modifier",
-        "body": "Semantic tokens are plain var() colours, so Tailwind's /opacity modifier emits no CSS for them. Dim with opacity-*; for translucent colour use rgb(var(--brand-purple-rgb) / a).",
+        "name": "Alpha is a modifier",
+        "body": "Solid tokens are defined by RGB channels and mapped with <alpha-value>, so text-muted/60 and bg-bg/90 emit real CSS. border, accent-bg and secondary-bg are already translucent and take no modifier. Change a colour by editing its *-rgb line in globals.css.",
         "section": "colors"
       },
       {
@@ -371,7 +371,7 @@
     ],
     "dos": [
       "Do edit colours only in the three --brand-* tokens in src/app/globals.css; everything else derives from them.",
-      "Do use opacity-* to dim and rgb(var(--brand-*-rgb) / a) for translucent colour — never the Tailwind /opacity modifier on a token.",
+      "Do use the /opacity modifier on solid tokens (text-muted/60, bg-bg/90); reach for opacity-* only when the whole element should fade.",
       "Do keep purple for structure and green for signal.",
       "Do put content in rows with hairlines, not in cards.",
       "Do set every number in mono with tabular-nums so columns align.",

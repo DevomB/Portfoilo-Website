@@ -129,8 +129,9 @@ Every colour on the site derives from three custom properties at the top of
 | `--brand-purple` | `#7c00ff` | Royal Purple |
 | `--brand-green` | `#09ff00` | Joker Green |
 
-Each has an `--brand-*-rgb` twin holding raw channels (`124 0 255`) so
-alpha variants can be written as `rgb(var(--brand-purple-rgb) / 0.28)`.
+Each has an `--brand-*-rgb` twin holding raw channels (`124 0 255`); the
+semantic tokens below are built from channels the same way, which is what
+lets Tailwind's `/opacity` modifier work on them.
 
 ### Semantic tokens (derived)
 Exposed to Tailwind as `bg`, `surface`, `surface-elevated`, `border`, `ink`,
@@ -165,12 +166,15 @@ variation steps purple or green toward black, or uses alpha over black.
 *labelled* — status dots, section identifiers, a successful log line, the pip.
 If green appears on a heading or purple on a status dot, it is wrong.
 
-**Alpha lives in the channels, not the Tailwind modifier.** The semantic
-tokens are plain `var()` colours, so Tailwind v3's `/opacity` modifier
-(`text-muted/60`, `bg-danger/70`, `border-accent/25`) **emits no CSS at
-all** — the element silently inherits the parent colour. This bug is live in
-several older components. For dimming use `opacity-*`; for translucent
-colour use `rgb(var(--brand-purple-rgb) / 0.25)` in a style or a token.
+**Alpha is a modifier.** Every solid token is defined by its RGB channels
+(`--color-muted-rgb: 154 143 176`) and mapped in Tailwind with
+`<alpha-value>`, so `text-muted/60`, `bg-bg/90`, and `border-accent/25`
+emit real CSS. The three tokens that are already translucent — `border`,
+`accent-bg`, `secondary-bg` — are plain values and take no modifier. To
+change a colour, edit its `*-rgb` line in `globals.css`; the hex in the
+comment is documentation only. (Before 2026-09-04 the modifier silently
+emitted nothing; if an old screenshot looks brighter than the site, that
+is why.)
 
 ## 3. Typography
 
@@ -328,8 +332,8 @@ felt, `CLICK/TAP TO SKIP` bottom-centre in mono at 0.58rem, 0.16em tracking.
 ### Do
 - **Do** edit colours only in the three `--brand-*` tokens. Everything else
   is derived.
-- **Do** use `opacity-*` to dim and `rgb(var(--brand-*-rgb) / a)` for
-  translucent colour. Never the Tailwind `/opacity` modifier on a token.
+- **Do** use the `/opacity` modifier on solid tokens (`text-muted/60`,
+  `bg-bg/90`) and `opacity-*` only when the whole element should fade.
 - **Do** keep purple for structure and green for signal.
 - **Do** put content in rows with hairlines, not in cards.
 - **Do** set every number in mono with `tabular-nums`.
