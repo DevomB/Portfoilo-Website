@@ -11,6 +11,7 @@ const ROUTES: readonly string[] = [
   "/",
   "/#about",
   "/#projects",
+  "/#side-quests",
   "/privacy",
   "/terms",
   ...projects.map((p) => `/projects/${p.slug}`),

@@ -296,6 +296,13 @@ mono gutter (index or year, `tabular-nums`), a `text-fluid-sm` semibold
 title, a muted tagline, optional chips. `py-5` to `py-7`. Linked rows fade
 on hover. Never a card.
 
+**Side quests.** The one place cards are allowed, because these are
+objects, not rows: two `.card-soft` cards after Projects, each a 16:9
+screenshot over a name, a one-line blurb in the repo's own voice, and a
+`site ↗` link out. Below them, `also built —` in mono: names and links
+only. Data in `src/data/sideQuests.ts`. Nothing here is a demo or gets a
+project page.
+
 **Chips.** `.chip-soft` (surface, border, ink) for stack items; `.chip-accent`
 (accent-bg, accent-dim) for status like `live`. Mono, `text-fluid-xs`.
 
