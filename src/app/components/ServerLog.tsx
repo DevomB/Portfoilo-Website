@@ -69,9 +69,9 @@ export default function ServerLog() {
       <div className="flex items-center border-b border-accent/20 bg-surface px-4 py-2.5">
         <span className="text-[0.6rem] text-muted/60">server.log</span>
         <span className="ml-auto flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-warn/70" />
-          <span className="h-2.5 w-2.5 rounded-full bg-accent/50" />
+          <span className="h-2.5 w-2.5 rounded-full bg-danger" />
+          <span className="h-2.5 w-2.5 rounded-full bg-warn" />
+          <span className="h-2.5 w-2.5 rounded-full bg-ok" />
         </span>
       </div>
       <div className="p-4 space-y-1 min-h-[9rem]">

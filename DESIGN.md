@@ -153,7 +153,8 @@ Exposed to Tailwind as `bg`, `surface`, `surface-elevated`, `border`, `ink`,
   dot in the navbar, the server log's `ready` line, the pip on the front
   card of the mark. Also doubles as `ok`.
 - **code-bg** `#0e0916` — behind terminal and code blocks.
-- **danger / warn** — the 404's error line and terminal chrome only.
+- **danger / warn** — the 404's error line, and the first two window
+  lights in a terminal chrome strip (the third is `ok` green).
 - `--color-card-*` — the playing cards in the splash and PokerLab. Physical
   objects, so they keep white faces and true red/black pips.
 
@@ -293,7 +294,9 @@ glows and `.sql-ghost` statements in Geist Mono at 14% purple, rotated a
 degree or two, `pointer-events: none`.
 
 **Server log.** `rounded-xl`, purple 25% border, `surface` background, Geist
-Mono at `text-fluid-xs`. Chrome strip with three dots and a filename. Lines
+Mono at `text-fluid-xs`. Chrome strip with the filename left and three
+window lights right — `danger`, `warn`, `ok` at full strength, the macOS
+order, no dimming. Lines
 type in on a stagger; the final `ready` line is green.
 
 **Section label.** `// name` in Geist Mono, `text-fluid-xs`, colour

@@ -14,9 +14,9 @@ export default function NotFound() {
         <div className="rounded-xl border border-border overflow-hidden shadow-card">
           {/* chrome */}
           <div className="flex items-center gap-1.5 border-b border-border bg-surface px-4 py-3">
-            <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-warn/70" />
-            <span className="h-2.5 w-2.5 rounded-full bg-accent/50" />
+            <span className="h-2.5 w-2.5 rounded-full bg-danger" />
+            <span className="h-2.5 w-2.5 rounded-full bg-warn" />
+            <span className="h-2.5 w-2.5 rounded-full bg-ok" />
             <span className="ml-3 font-mono text-[0.6rem] text-muted/60">bash — 80×24</span>
           </div>
           {/* terminal body — reads the missed path in the browser */}
