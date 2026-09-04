@@ -1,13 +1,11 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 import Splash from "./Splash";
 import { LoadedContext } from "../contexts/LoadedContext";
 
 type Stage = "checking" | "intro" | "ready";
-
-const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];
 
 // Module scope is the exact signal for "was this a real page load": a refresh
 // or fresh visit re-evaluates the module (flag resets, splash plays); client-
@@ -64,15 +62,13 @@ export default function PageWrapper({ children }: { children: ReactNode }) {
           />
         )}
       </AnimatePresence>
-      {/* inert while hidden: no focus, no pointer, out of the a11y tree */}
-      <m.div
-        initial={false}
-        animate={{ opacity: ready ? 1 : 0 }}
-        transition={{ duration: 0.45, ease, delay: 0.1 }}
-        inert={!ready}
-      >
-        {children}
-      </m.div>
+      {/* inert while hidden: no focus, no pointer, out of the a11y tree.
+          Deliberately NOT animated. The splash above is opaque and fades
+          itself out, which already reveals this; fading the page in as well
+          composited the whole document a second time for no visual gain, and
+          the two crossfading translucent layers dipped the brightness in the
+          middle of the hand-off. */}
+      <div inert={!ready}>{children}</div>
     </LoadedContext.Provider>
   );
 }
