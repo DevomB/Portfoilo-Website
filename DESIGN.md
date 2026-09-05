@@ -334,7 +334,39 @@ live route list (falls back to `/` when nothing is close). One button: Go home.
 **Splash.** Full-screen deal animation on hard load, cards on the black
 felt, `CLICK/TAP TO SKIP` bottom-centre in mono at 0.58rem, 0.16em tracking.
 
-## 7. Do's and don'ts
+## 7. Loading policy
+
+Nothing loads unless it is on screen, about to be, or the visitor has shown
+intent. Ranked by how likely the next click is:
+
+- **Primary paths prefetch on viewport** (Next's default): the project rows
+  on the home page, and the home link from inner pages. These are what people
+  click, so their route payload is fetched as soon as the row scrolls in.
+- **Secondary and heavy paths prefetch on intent** via
+  src/app/components/IntentLink.tsx: the footer's Privacy and Terms, and the
+  "Open live demo" link to the card desk. Pointer-enter, keyboard focus, or
+  touch warms the route once; nothing is fetched for a visitor who only
+  scrolls past. (In the App Router, prefetch={false} also disables hover
+  prefetch, which is why intent is wired by hand.)
+- **Heavy interactives load on intent, not with their page.** PokerLab is a
+  dynamic import inside PokerLabModal, warmed when the trigger is hovered or
+  focused and rendered only when the modal opens. The project page no longer
+  ships the lab or framer-motion's domMax features to readers who never open
+  it. The card desk is its own route and loads only when visited.
+- **Fonts preload only where they paint.** Space Grotesk (inner-page titles)
+  is preload: false — it self-hosts and loads on first use with a
+  metric-matched fallback, instead of costing every home visitor ~22KB for a
+  face the home page never uses. The other four are visible above the fold
+  and stay preloaded.
+- **Assets are first-party.** The stack icons are checked into public/icons
+  (CC0, coloured in the live palette) and lazy-loaded; no page makes a request
+  to a third-party CDN. Screenshots in the side quests go through next/image
+  and load lazily.
+
+The measuring scripts (netlog, metrics, cpu-profile) live outside the repo;
+the numbers that justified each rule are in the commit messages.
+
+## 8. Do's and don'ts
 
 ### Do
 - **Do** edit colours only in the three `--brand-*` tokens. Everything else

@@ -30,11 +30,15 @@ const bricolage = Bricolage_Grotesque({
   display: "swap",
 });
 
-/* page titles on project, demo, and legal pages */
+/* page titles on project, demo, and legal pages — never on the home page,
+   so it is not preloaded: with preload on, every home visitor downloaded
+   ~22KB of a face no element there uses. It still self-hosts and loads on
+   first use; the metric-matched fallback keeps the swap from shifting layout. */
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-title",
   display: "swap",
+  preload: false,
 });
 
 /* everything machine-facing: // labels, dates, numerals, code, terminals */

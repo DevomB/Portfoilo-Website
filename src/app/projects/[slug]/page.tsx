@@ -6,6 +6,7 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import CopyButton from "@/app/components/CopyButton";
 import PokerLabModal from "@/app/components/PokerLabModal";
+import IntentLink from "@/app/components/IntentLink";
 
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
@@ -118,7 +119,8 @@ export default async function ProjectPage({
             {project.demoPath === "/poker-lab" ? (
               <PokerLabModal />
             ) : project.demoPath ? (
-              <Link
+              /* a whole interactive desk behind this — fetch it on intent, not for every reader */
+              <IntentLink
                 href={project.demoPath}
                 className="inline-flex items-center gap-2 rounded-lg bg-accent px-4 py-2 font-display text-fluid-sm font-semibold text-white transition-all hover:bg-accent-dim"
               >
@@ -126,7 +128,7 @@ export default async function ProjectPage({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 3l14 9-14 9V3z" />
                 </svg>
                 Open live demo
-              </Link>
+              </IntentLink>
             ) : null}
           </div>
 

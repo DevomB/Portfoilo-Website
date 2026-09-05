@@ -48,12 +48,18 @@ export default function AboutSection() {
           <div className="flex flex-wrap gap-x-5 gap-y-4">
             {stack.map((s) => (
               <div key={s.slug} className="flex flex-col items-center gap-1.5">
+                {/* self-hosted (public/icons, CC0 from simpleicons) — no third-party
+                    request per visitor, and coloured in the live palette; the CDN URL
+                    still carried the retired cream-palette ink, near-black on black.
+                    Plain <img>: these are 22px inline SVGs, nothing for next/image to do. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`https://cdn.simpleicons.org/${s.slug}/1c1916`}
+                  src={`/icons/${s.slug}.svg`}
                   alt={s.label}
                   width={22}
                   height={22}
+                  loading="lazy"
+                  decoding="async"
                   style={{ opacity: 0.7 }}
                 />
                 <span className="font-mono text-[0.58rem] text-muted/60">{s.label}</span>

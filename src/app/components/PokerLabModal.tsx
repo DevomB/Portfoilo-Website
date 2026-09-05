@@ -2,7 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import PokerLab from "./PokerLab";
+import dynamic from "next/dynamic";
+
+/* The lab (and the framer-motion domMax features it needs for layout
+   animations) used to ship with the project page whether or not anyone opened
+   the modal. It is now a separate chunk: warmed the moment the trigger shows
+   intent, rendered only once the modal is open. */
+const PokerLab = dynamic(() => import("./PokerLab"), {
+  ssr: false,
+  loading: () => (
+    <p className="font-mono text-fluid-xs text-muted">{"> loading the lab…"}</p>
+  ),
+});
+const warmLab = () => { void import("./PokerLab"); };
 
 /* The in-page PokerLab demo, opened from the Poker-Bot project page.
    The full-page version lives at /poker-lab. */
@@ -24,6 +36,9 @@ export default function PokerLabModal() {
     <>
       <button
         onClick={() => setOpen(true)}
+        onPointerEnter={warmLab}
+        onFocus={warmLab}
+        onTouchStart={warmLab}
         className="inline-flex items-center gap-2 rounded-lg border border-border bg-surface px-4 py-2 font-display text-fluid-sm font-medium text-ink transition-all hover:border-accent/40 hover:bg-accent-bg hover:text-accent-dim"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden>

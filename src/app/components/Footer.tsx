@@ -1,4 +1,5 @@
 import Link from "next/link";
+import IntentLink from "./IntentLink";
 
 const links = [
   { label: "GitHub", href: "https://github.com/DevomB", external: true },
@@ -17,16 +18,28 @@ export default function Footer() {
       {/* centered link row, copyright on its own line beneath */}
       <div className="mx-auto w-[min(100%-2*var(--shell-inline),76rem)] px-[var(--shell-inline)] pt-8 pb-1">
         <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              {...(l.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-              className="font-mono text-fluid-xs text-muted transition-colors hover:text-ink"
-            >
-              {l.label}
-            </Link>
-          ))}
+          {links.map((l) =>
+            l.external ? (
+              <Link
+                key={l.href}
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-fluid-xs text-muted transition-colors hover:text-ink"
+              >
+                {l.label}
+              </Link>
+            ) : (
+              /* privacy and terms are rarely the next click: warm on hover, not on scroll */
+              <IntentLink
+                key={l.href}
+                href={l.href}
+                className="font-mono text-fluid-xs text-muted transition-colors hover:text-ink"
+              >
+                {l.label}
+              </IntentLink>
+            ),
+          )}
         </div>
         <p className="mt-5 text-center font-mono text-fluid-xs text-muted opacity-60">
           © {year} Devom Brahmbhatt

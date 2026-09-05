@@ -82,8 +82,9 @@ export default function PrivacyPage() {
       <LegalSection heading="Fonts and assets">
         <p>
           Fonts are downloaded at build time and served from this domain, so loading
-          a page makes no request to Google Fonts or any other font CDN. Your IP
-          address is not handed to a third party to render text.
+          a page makes no request to Google Fonts or any other font CDN, and the
+          icons and screenshots are served from here too. Your IP address is not
+          handed to a third party to render the page.
         </p>
       </LegalSection>
 
