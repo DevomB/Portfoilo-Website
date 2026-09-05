@@ -8,7 +8,8 @@
     "dev:desk": ".venv/Scripts/python scripts/carddesk_dev.py",
     "build": "next build",
     "start": "next start",
-    "lint": "cross-env ESLINT_USE_FLAT_CONFIG=true eslint ."
+    "lint": "cross-env ESLINT_USE_FLAT_CONFIG=true eslint .",
+    "tectonix:history": "python scripts/tectonix_history.py"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
