@@ -40,12 +40,31 @@ const PAD = { top: 18, right: 22, bottom: 34, left: 52 };
 const PLOT_W = W - PAD.left - PAD.right;
 const PLOT_H = H - PAD.top - PAD.bottom;
 
-const fmtDate = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+// UTC on purpose: the server renders this in UTC and the browser in local
+// time; without pinning the zone a commit near midnight formats to a
+// different day on each side, and React reports a hydration mismatch.
+const dateFmt = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+const numFmt = new Intl.NumberFormat("en-US");
+const fmtDate = (iso: string) => dateFmt.format(new Date(iso));
+
+// The history is static JSON, so everything derivable from it is computed
+// once here rather than per render. Before this, `points` was rebuilt on every
+// render (so the memos keyed on it never hit) and every row re-ran three Intl
+// formats on each pointer-move.
+const points = (history.points as Point[]).filter((p) => p.signal !== null);
+const rows = points.map((p) => ({
+  ...p,
+  dateLabel: fmtDate(p.date),
+  signalLabel: numFmt.format(p.signal as number),
+  linesLabel: p.lines != null ? numFmt.format(p.lines) : "—",
+  subjectLabel: p.subject.length > 56 ? p.subject.slice(0, 55) + "…" : p.subject,
+}));
+const rowsNewestFirst = [...rows].reverse();
 
 export default function TectonixSection() {
-  const points = (history.points as Point[]).filter((p) => p.signal !== null);
   const [hover, setHover] = useState<number | null>(null);
+  // the table is ~400 elements; it exists in the DOM only once someone opens it
+  const [tableOpen, setTableOpen] = useState(false);
   const plotRef = useRef<SVGRectElement>(null);
 
   // y domain: a padded, rounded window around the data — a fixed 0–10000 axis
@@ -63,7 +82,7 @@ export default function TectonixSection() {
     // keep ~4-5 gridlines
     const every = Math.max(1, Math.ceil(ticks.length / 5));
     return { yMin, yMax, ticks: ticks.filter((_, i) => i % every === 0) };
-  }, [points]);
+  }, []);
 
   const x = (i: number) => PAD.left + (points.length > 1 ? (i / (points.length - 1)) * PLOT_W : PLOT_W / 2);
   const y = (v: number) => PAD.top + PLOT_H - ((v - yMin) / (yMax - yMin)) * PLOT_H;
@@ -71,7 +90,7 @@ export default function TectonixSection() {
   const path = useMemo(
     () => points.map((p, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(1)} ${y(p.signal as number).toFixed(1)}`).join(" "),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [points, yMin, yMax],
+    [yMin, yMax],
   );
 
   const latest = points.at(-1) ?? null;
@@ -158,7 +177,7 @@ export default function TectonixSection() {
                   <text key={i} x={x(i)} y={H - 10} fontSize={10.5}
                         textAnchor={i === 0 ? "start" : i === points.length - 1 ? "end" : "middle"}
                         fontFamily="var(--font-mono), monospace" fill="var(--color-muted)">
-                    {fmtDate(points[i]!.date)}
+                    {rows[i]!.dateLabel}
                   </text>
                 ))}
 
@@ -213,7 +232,7 @@ export default function TectonixSection() {
                   </p>
                   <p className="mt-1.5 text-fluid-xs text-ink leading-snug">{active.subject}</p>
                   <p className="mt-1 font-mono text-[0.6rem] text-muted">
-                    {active.short} · {fmtDate(active.date)}
+                    {active.short} · {rows[hover ?? rows.length - 1]!.dateLabel}
                     {active.bottleneck ? ` · bottleneck ${active.bottleneck}` : ""}
                   </p>
                 </div>
@@ -223,10 +242,11 @@ export default function TectonixSection() {
 
           {/* table view — every value reachable without hovering */}
           {points.length > 0 && (
-            <details className="mt-4 group">
+            <details className="mt-4 group" onToggle={(e) => setTableOpen(e.currentTarget.open)}>
               <summary className="cursor-pointer font-mono text-fluid-xs text-muted hover:text-ink transition-colors">
                 table view · {points.length} commits
               </summary>
+              {tableOpen && (
               <div className="mt-3 overflow-x-auto rounded-lg border border-border">
                 <table className="w-full font-mono text-[0.68rem]">
                   <thead>
@@ -240,22 +260,23 @@ export default function TectonixSection() {
                     </tr>
                   </thead>
                   <tbody>
-                    {[...points].reverse().map((p) => (
+                    {rowsNewestFirst.map((p) => (
                       <tr key={p.sha} className="border-t border-border/60 text-ink">
                         <td className="px-3 py-1.5 whitespace-nowrap">
                           <span className="text-muted">{p.short}</span>{" "}
-                          <span className="text-ink">{p.subject.length > 56 ? p.subject.slice(0, 55) + "…" : p.subject}</span>
+                          <span className="text-ink">{p.subjectLabel}</span>
                         </td>
-                        <td className="px-3 py-1.5 text-muted whitespace-nowrap">{fmtDate(p.date)}</td>
-                        <td className="px-3 py-1.5 text-right tabular-nums">{(p.signal as number).toLocaleString()}</td>
+                        <td className="px-3 py-1.5 text-muted whitespace-nowrap">{p.dateLabel}</td>
+                        <td className="px-3 py-1.5 text-right tabular-nums">{p.signalLabel}</td>
                         <td className="px-3 py-1.5 text-muted">{p.bottleneck ?? "—"}</td>
                         <td className="px-3 py-1.5 text-right tabular-nums text-muted">{p.files ?? "—"}</td>
-                        <td className="px-3 py-1.5 text-right tabular-nums text-muted">{p.lines?.toLocaleString() ?? "—"}</td>
+                        <td className="px-3 py-1.5 text-right tabular-nums text-muted">{p.linesLabel}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              )}
             </details>
           )}
         </div>
