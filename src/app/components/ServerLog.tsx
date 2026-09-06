@@ -24,35 +24,42 @@ const lineColor: Record<string, string> = {
   ready:  "var(--color-secondary)",
 };
 
-export default function ServerLog() {
+/** The live values the log prints: real host, real path, real measured response. */
+function readLiveValues() {
+  const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  const ms = nav ? Math.round(nav.responseEnd - nav.requestStart) : 0;
+  return {
+    host: window.location.host || "localhost",
+    path: window.location.pathname || "/",
+    ms: ms > 0 ? ms : 18,
+  };
+}
+
+/** Reveal the log lines on their timers once the page is actually on screen. */
+function useLogTimeline(loaded: boolean) {
   const [visible, setVisible] = useState<number[]>([]);
   const [live, setLive] = useState({ host: "localhost", path: "/", ms: 0 });
-  // The page is mounted beneath the splash from the first render; the log
-  // waits for the reveal so its lines are not all spent before anyone sees it.
-  const loaded = useLoaded();
 
   useEffect(() => {
     if (!loaded) return;
     const timers = LOG_LINES.map((line, i) =>
       setTimeout(() => {
-        if (i === 0) {
-          // read the real values as the first line lands — well before the
-          // lines that print them
-          const nav = performance.getEntriesByType("navigation")[0] as
-            | PerformanceNavigationTiming
-            | undefined;
-          const ms = nav ? Math.round(nav.responseEnd - nav.requestStart) : 0;
-          setLive({
-            host: window.location.host || "localhost",
-            path: window.location.pathname || "/",
-            ms: ms > 0 ? ms : 18,
-          });
-        }
+        // read the real values as the first line lands — well before the
+        // lines that print them
+        if (i === 0) setLive(readLiveValues());
         setVisible((v) => [...v, i]);
       }, line.delay)
     );
     return () => timers.forEach(clearTimeout);
   }, [loaded]);
+
+  return { visible, live };
+}
+
+export default function ServerLog() {
+  // The page is mounted beneath the splash from the first render; the log
+  // waits for the reveal so its lines are not all spent before anyone sees it.
+  const { visible, live } = useLogTimeline(useLoaded());
 
   const render = (text: string) =>
     text

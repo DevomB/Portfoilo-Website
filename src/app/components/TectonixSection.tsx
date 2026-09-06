@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { m } from "framer-motion";
+import { fade } from "./fade";
 import history from "@/data/tectonixHistory.json";
 
 /* Tectonix vs this site.
@@ -25,13 +26,6 @@ type Point = {
   longFunctions?: number | null;
   deadFunctions?: number | null;
 };
-
-const fade = (delay = 0) => ({
-  initial: { opacity: 0 },
-  whileInView: { opacity: 1 },
-  viewport: { once: true, margin: "-80px" as const },
-  transition: { duration: 0.5, delay, ease: [0.21, 0.47, 0.32, 0.98] as [number, number, number, number] },
-});
 
 // plot geometry in viewBox units; the SVG scales uniformly to its container
 const W = 800;
@@ -120,6 +114,8 @@ export default function TectonixSection() {
   const dPrev = delta(latest, prev);
   const dFirst = delta(latest, first);
   const signed = (d: number) => (d > 0 ? `+${d.toLocaleString()}` : d.toLocaleString());
+  const prevLabel = dPrev !== null ? signed(dPrev) : null;
+  const firstLabel = dFirst !== null ? signed(dFirst) : null;
 
   return (
     <section id="architecture" className="scroll-mt-28 section-y">
@@ -294,13 +290,13 @@ export default function TectonixSection() {
               {dPrev !== null && (
                 <div className="flex items-baseline justify-between gap-4">
                   <dt className="text-muted">vs previous commit</dt>
-                  <dd className={dPrev >= 0 ? "text-secondary-dim" : "text-danger"}>{signed(dPrev)}</dd>
+                  <dd className={dPrev >= 0 ? "text-secondary-dim" : "text-danger"}>{prevLabel}</dd>
                 </div>
               )}
               {dFirst !== null && (
                 <div className="flex items-baseline justify-between gap-4">
                   <dt className="text-muted">vs first commit</dt>
-                  <dd className={dFirst >= 0 ? "text-secondary-dim" : "text-danger"}>{signed(dFirst)}</dd>
+                  <dd className={dFirst >= 0 ? "text-secondary-dim" : "text-danger"}>{firstLabel}</dd>
                 </div>
               )}
               {latest.bottleneck && (

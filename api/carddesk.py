@@ -65,18 +65,17 @@ def _int_list(raw: str | None, *, default: tuple[int, ...]) -> tuple[int, ...]:
     return tuple(out)
 
 
-def parse_query(query: str) -> tuple[int, tuple[int, ...], tuple[int, ...], bool]:
-    q = {k: v[0] for k, v in parse_qs(query, keep_blank_values=True).items()}
-
+def _parse_n(q: dict[str, str]) -> int:
     try:
         n = int(q.get("n", DEFAULT_N))
     except ValueError as exc:
         raise BadRequest("n must be an integer") from exc
     if not 1 <= n <= MAX_N:
         raise BadRequest(f"n must be between 1 and {MAX_N}")
+    return n
 
-    replacement = q.get("replacement", "0") in ("1", "true", "yes")
 
+def _parse_seen(q: dict[str, str], n: int, replacement: bool) -> tuple[int, ...]:
     seen = _int_list(q.get("seen"), default=())
     if len(seen) > n:
         raise BadRequest("more seen cards than n")
@@ -84,19 +83,30 @@ def parse_query(query: str) -> tuple[int, tuple[int, ...], tuple[int, ...], bool
         if c not in RANKS:
             raise BadRequest(f"card rank out of range: {c}")
     if not replacement:
-        for r in RANKS:
-            if seen.count(r) > 4:
-                raise BadRequest(f"more than four of rank {r}")
+        over = next((r for r in RANKS if seen.count(r) > 4), None)
+        if over is not None:
+            raise BadRequest(f"more than four of rank {over}")
+    return seen
 
+
+def _parse_strikes(q: dict[str, str]) -> tuple[int, ...]:
     strikes = tuple(sorted(set(_int_list(q.get("strikes"), default=DEFAULT_STRIKES))))
     if not strikes:
         raise BadRequest("at least one strike")
     if len(strikes) > MAX_STRIKES:
         raise BadRequest(f"at most {MAX_STRIKES} strikes")
-    for k in strikes:
-        if not 0 <= k <= MAX_STRIKE:
-            raise BadRequest(f"strike out of range: {k}")
+    bad = next((k for k in strikes if not 0 <= k <= MAX_STRIKE), None)
+    if bad is not None:
+        raise BadRequest(f"strike out of range: {bad}")
+    return strikes
 
+
+def parse_query(query: str) -> tuple[int, tuple[int, ...], tuple[int, ...], bool]:
+    q = {k: v[0] for k, v in parse_qs(query, keep_blank_values=True).items()}
+    n = _parse_n(q)
+    replacement = q.get("replacement", "0") in ("1", "true", "yes")
+    seen = _parse_seen(q, n, replacement)
+    strikes = _parse_strikes(q)
     return n, seen, strikes, replacement
 
 

@@ -5,7 +5,7 @@ export type Card = { rank: number; suit: number };
 /** Mulberry32 — deterministic PRNG for reproducible UI random hero */
 export function mulberry32(seed: number) {
   let t = seed >>> 0;
-  return function next() {
+  return () => {
     t += 0x6d2b79f5;
     let x = Math.imul(t ^ (t >>> 15), 1 | t);
     x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
@@ -75,4 +75,9 @@ export function canonicalizeHand(codes: string[]): string[] {
     out.push(formatCard(c));
   }
   return out;
+}
+
+/** Split a line of card codes on whitespace or commas, dropping blanks. */
+export function parseCodes(line: string): string[] {
+  return line.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean);
 }

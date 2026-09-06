@@ -113,6 +113,63 @@ const FORCE_TIER: Record<string, number> = {
   royal: 9, royalflush: 9,
 };
 
+// One small builder per hand tier. buildForcedHand used to be a single
+// 80-line if/else ladder with a cognitive complexity of 89; the ladder is now
+// a table, and each entry reads as the hand it makes.
+type Deal = { pick: (n: number) => number; drawRanks: (n: number, excl: number[]) => number[] };
+
+const isStraightSet = (ranks: number[]) => {
+  const s = [...ranks].sort((a, b) => a - b);
+  return (
+    (s[4]! - s[0]! === 4 && new Set(s).size === 5) ||
+    (s[0] === 2 && s[1] === 3 && s[2] === 4 && s[3] === 5 && s[4] === 14)
+  );
+};
+
+/** five ranks from `high` downward, with the wheel (A-2-3-4-5) when high is 5 */
+const runDown = (high: number) => (high === 5 ? [14, 2, 3, 4, 5] : [0, 1, 2, 3, 4].map((k) => high - k));
+
+/** five random ranks that do NOT form a straight */
+const nonStraightRanks = (d: Deal) => {
+  let ranks: number[];
+  do { ranks = d.drawRanks(5, []); } while (isStraightSet(ranks));
+  return ranks;
+};
+
+/** one random suit per rank, nudged so they are never all the same */
+const mixedSuits = (d: Deal, ranks: number[]) => {
+  const suits = ranks.map(() => d.pick(4));
+  if (new Set(suits).size === 1) suits[4] = (suits[4]! + 1) % 4;
+  return ranks.map((rank, k) => ({ rank, suit: suits[k]! }));
+};
+
+/** a pair of `rank` in two distinct suits */
+const pairOf = (d: Deal, rank: number): Card[] => {
+  const s1 = d.pick(4);
+  return [{ rank, suit: s1 }, { rank, suit: (s1 + 1 + d.pick(3)) % 4 }];
+};
+
+/** three of `rank`, omitting one random suit */
+const tripsOf = (d: Deal, rank: number): Card[] => {
+  const omit = d.pick(4);
+  return [0, 1, 2, 3].filter((s) => s !== omit).map((suit) => ({ rank, suit }));
+};
+
+const kicker = (d: Deal, rank: number): Card => ({ rank, suit: d.pick(4) });
+
+const HAND_BUILDERS: Record<number, (d: Deal, suit: number) => Card[]> = {
+  9: (_d, suit) => [14, 13, 12, 11, 10].map((rank) => ({ rank, suit })),
+  8: (d, suit) => runDown(5 + d.pick(9)).map((rank) => ({ rank, suit })), // 5..13 — ace-high would be the royal
+  7: (d) => { const [quad, k] = d.drawRanks(2, []); return [...[0, 1, 2, 3].map((suit) => ({ rank: quad!, suit })), kicker(d, k!)]; },
+  6: (d) => { const [trip, pair] = d.drawRanks(2, []); return [...tripsOf(d, trip!), ...pairOf(d, pair!)]; },
+  5: (d, suit) => nonStraightRanks(d).map((rank) => ({ rank, suit })),
+  4: (d) => mixedSuits(d, runDown(5 + d.pick(10))), // 5..14, wheel through broadway
+  3: (d) => { const [trip, k1, k2] = d.drawRanks(3, []); return [...tripsOf(d, trip!), kicker(d, k1!), kicker(d, k2!)]; },
+  2: (d) => { const [r1, r2, k] = d.drawRanks(3, []); return [...pairOf(d, r1!), ...pairOf(d, r2!), kicker(d, k!)]; },
+  1: (d) => { const [p, k1, k2, k3] = d.drawRanks(4, []); return [...pairOf(d, p!), kicker(d, k1!), kicker(d, k2!), kicker(d, k3!)]; },
+  0: (d) => mixedSuits(d, nonStraightRanks(d)),
+};
+
 function buildForcedHand(kind: string, rng: () => number): Card[] | null {
   const key = kind.toLowerCase().replace(/[^a-z]/g, "");
   const tier = FORCE_TIER[key];
@@ -127,72 +184,8 @@ function buildForcedHand(kind: string, rng: () => number): Card[] | null {
     }
     return out;
   };
-  const isStraightSet = (ranks: number[]) => {
-    const s = [...ranks].sort((a, b) => a - b);
-    return (
-      (s[4]! - s[0]! === 4 && new Set(s).size === 5) ||
-      (s[0] === 2 && s[1] === 3 && s[2] === 4 && s[3] === 5 && s[4] === 14)
-    );
-  };
 
-  const suit = pick(4);
-  let hand: Card[];
-
-  if (tier === 9) {
-    hand = [14, 13, 12, 11, 10].map((rank) => ({ rank, suit }));
-  } else if (tier === 8) {
-    const high = 5 + pick(9); // 5..13 — never ace-high, that would be the royal
-    const ranks = high === 5 ? [14, 2, 3, 4, 5] : [0, 1, 2, 3, 4].map((k) => high - k);
-    hand = ranks.map((rank) => ({ rank, suit }));
-  } else if (tier === 7) {
-    const [quad, kicker] = drawRanks(2, []);
-    hand = [0, 1, 2, 3].map((s) => ({ rank: quad!, suit: s }));
-    hand.push({ rank: kicker!, suit: pick(4) });
-  } else if (tier === 6) {
-    const [trip, pair] = drawRanks(2, []);
-    const omit = pick(4);
-    hand = [0, 1, 2, 3].filter((s) => s !== omit).map((s) => ({ rank: trip!, suit: s }));
-    const p1 = pick(4);
-    hand.push({ rank: pair!, suit: p1 }, { rank: pair!, suit: (p1 + 1 + pick(3)) % 4 });
-  } else if (tier === 5) {
-    let ranks: number[];
-    do { ranks = drawRanks(5, []); } while (isStraightSet(ranks));
-    hand = ranks.map((rank) => ({ rank, suit }));
-  } else if (tier === 4) {
-    const high = 5 + pick(10); // 5..14, wheel through broadway
-    const ranks = high === 5 ? [14, 2, 3, 4, 5] : [0, 1, 2, 3, 4].map((k) => high - k);
-    const suits = ranks.map(() => pick(4));
-    if (new Set(suits).size === 1) suits[4] = (suits[4]! + 1) % 4;
-    hand = ranks.map((rank, k) => ({ rank, suit: suits[k]! }));
-  } else if (tier === 3) {
-    const [trip, k1, k2] = drawRanks(3, []);
-    const omit = pick(4);
-    hand = [0, 1, 2, 3].filter((s) => s !== omit).map((s) => ({ rank: trip!, suit: s }));
-    hand.push({ rank: k1!, suit: pick(4) }, { rank: k2!, suit: pick(4) });
-  } else if (tier === 2) {
-    const [r1, r2, kick] = drawRanks(3, []);
-    const s1 = pick(4);
-    const s2 = pick(4);
-    hand = [
-      { rank: r1!, suit: s1 }, { rank: r1!, suit: (s1 + 1 + pick(3)) % 4 },
-      { rank: r2!, suit: s2 }, { rank: r2!, suit: (s2 + 1 + pick(3)) % 4 },
-      { rank: kick!, suit: pick(4) },
-    ];
-  } else if (tier === 1) {
-    const [p, k1, k2, k3] = drawRanks(4, []);
-    const s1 = pick(4);
-    hand = [
-      { rank: p!, suit: s1 }, { rank: p!, suit: (s1 + 1 + pick(3)) % 4 },
-      { rank: k1!, suit: pick(4) }, { rank: k2!, suit: pick(4) }, { rank: k3!, suit: pick(4) },
-    ];
-  } else {
-    let ranks: number[];
-    do { ranks = drawRanks(5, []); } while (isStraightSet(ranks));
-    const suits = ranks.map(() => pick(4));
-    if (new Set(suits).size === 1) suits[4] = (suits[4]! + 1) % 4;
-    hand = ranks.map((rank, k) => ({ rank, suit: suits[k]! }));
-  }
-
+  const hand = HAND_BUILDERS[tier]!({ pick, drawRanks }, pick(4));
   // A construction bug must degrade to an honest deal, never a wrong label.
   return classifyFive(hand).tier === tier ? hand : null;
 }
@@ -438,14 +431,13 @@ export default function Splash({ onComplete }: { onComplete: () => void }) {
 
   // Any deliberate input cuts the intro short.
   useEffect(() => {
-    const skip = () => finish();
-    window.addEventListener("pointerdown", skip);
-    window.addEventListener("keydown", skip);
-    window.addEventListener("wheel", skip, { passive: true });
+    window.addEventListener("pointerdown", finish);
+    window.addEventListener("keydown", finish);
+    window.addEventListener("wheel", finish, { passive: true });
     return () => {
-      window.removeEventListener("pointerdown", skip);
-      window.removeEventListener("keydown", skip);
-      window.removeEventListener("wheel", skip);
+      window.removeEventListener("pointerdown", finish);
+      window.removeEventListener("keydown", finish);
+      window.removeEventListener("wheel", finish);
     };
   }, [finish]);
 
@@ -523,6 +515,7 @@ export default function Splash({ onComplete }: { onComplete: () => void }) {
         >
           {deck.map((card, i) => {
             const angle = seatAngle(i);
+            const upright = uprightRotate(angle); // computed here, not inside the JSX
             const rank = revealRank.get(i);
             const isRevealed = rank !== undefined;
             const revealAt = REVEAL_START + (rank ?? 0) * REVEAL_STEP;
@@ -621,7 +614,7 @@ export default function Splash({ onComplete }: { onComplete: () => void }) {
                       initial={reduce ? false : { y: 0, rotate: 0, scale: 1 }}
                       animate={
                         go
-                          ? { y: -LIFT, rotate: uprightRotate(angle), scale: 1.12 }
+                          ? { y: -LIFT, rotate: upright, scale: 1.12 }
                           : { y: 0, rotate: 0, scale: 1 }
                       }
                       transition={{

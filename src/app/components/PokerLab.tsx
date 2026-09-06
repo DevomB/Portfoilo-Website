@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { m, AnimatePresence, LazyMotion, domMax } from "framer-motion";
-import { dealRandomHoleCards } from "@/lib/pokerCards";
+import { dealRandomHoleCards, parseCodes } from "@/lib/pokerCards";
 import { findSampleWin, type SampleWin } from "@/lib/pokerEquityJs";
 
 const RANKS = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"];
@@ -25,10 +25,6 @@ function parseCards(line: string): CardData[] {
     if (!suit || !rank) return null;
     return { rank, suitLabel: suit.label, red: suit.red, code };
   }).filter((x): x is CardData => x !== null);
-}
-
-function parseCodes(line: string): string[] {
-  return line.split(/[\s,]+/).map((s) => s.trim()).filter(Boolean);
 }
 
 const ease = [0.21, 0.47, 0.32, 0.98] as [number, number, number, number];

@@ -8,69 +8,44 @@ import {
   shuffleInPlace,
 } from "./pokerCards";
 
+/** Highest card of any 5-long run among the distinct ranks, the wheel counting as 5; 0 if none. */
+function straightHigh(uniqAsc: number[]): number {
+  let high = 0;
+  for (let i = 0; i + 4 < uniqAsc.length; i++) {
+    if (uniqAsc[i + 4]! - uniqAsc[i]! === 4) high = uniqAsc[i + 4]!;
+  }
+  const wheel = [14, 5, 4, 3, 2].every((r) => uniqAsc.includes(r));
+  return wheel ? Math.max(high, 5) : high;
+}
+
+/** Ranks grouped by multiplicity, most frequent first, ties broken by higher rank. */
+function rankGroups(ranks: number[]): [rank: number, count: number][] {
+  const counts = new Map<number, number>();
+  for (const r of ranks) counts.set(r, (counts.get(r) ?? 0) + 1);
+  return [...counts.entries()].sort((a, b) => (a[1] !== b[1] ? b[1] - a[1] : b[0] - a[0]));
+}
+
 /** Best 5-card strength as lexicographically comparable tuple (higher wins). */
 export function evaluateFive(cards: Card[]): number[] {
   const ranks = cards.map((c) => c.rank).sort((a, b) => b - a);
-  const suits = cards.map((c) => c.suit);
-  const flush = new Set(suits).size === 1;
-  const counts = new Map<number, number>();
-  for (const r of ranks) counts.set(r, (counts.get(r) ?? 0) + 1);
-  const byFreq = [...counts.entries()].sort((a, b) =>
-    a[1] !== b[1] ? b[1] - a[1] : b[0] - a[0],
-  );
+  const flush = new Set(cards.map((c) => c.suit)).size === 1;
+  const straight = straightHigh([...new Set(ranks)].sort((a, b) => a - b));
+  const [top, second] = rankGroups(ranks);
+  const [topRank, topCount] = top!;
+  const secondCount = second?.[1] ?? 0;
+  const others = (...keep: number[]) => ranks.filter((r) => !keep.includes(r));
 
-  const uniqAsc = [...new Set(ranks)].sort((a, b) => a - b);
-  let straightHigh = 0;
-  if (uniqAsc.length >= 5) {
-    for (let i = 0; i <= uniqAsc.length - 5; i++) {
-      const slice = uniqAsc.slice(i, i + 5);
-      if (slice[4]! - slice[0]! === 4) straightHigh = slice[4]!;
-    }
+  if (flush && straight > 0) return [8, straight];
+  if (topCount === 4) return [7, topRank, second![0]];
+  if (topCount === 3 && secondCount === 2) return [6, topRank, second![0]];
+  if (flush) return [5, ...ranks];
+  if (straight > 0) return [4, straight];
+  if (topCount === 3) return [3, topRank, ...others(topRank)];
+  if (topCount === 2 && secondCount === 2) {
+    const hi = Math.max(topRank, second![0]), lo = Math.min(topRank, second![0]);
+    return [2, hi, lo, ...others(hi, lo)];
   }
-  if (
-    uniqAsc.includes(14) &&
-    uniqAsc.includes(5) &&
-    uniqAsc.includes(4) &&
-    uniqAsc.includes(3) &&
-    uniqAsc.includes(2)
-  ) {
-    straightHigh = Math.max(straightHigh, 5);
-  }
-
-  if (flush && straightHigh > 0) {
-    return [8, straightHigh];
-  }
-
-  if (byFreq[0]![1] === 4) {
-    const quad = byFreq[0]![0];
-    const kicker = byFreq[1]![0];
-    return [7, quad, kicker];
-  }
-  if (byFreq[0]![1] === 3 && byFreq[1]![1] === 2) {
-    return [6, byFreq[0]![0], byFreq[1]![0]];
-  }
-  if (flush) {
-    return [5, ...ranks];
-  }
-  if (straightHigh > 0) {
-    return [4, straightHigh];
-  }
-  if (byFreq[0]![1] === 3) {
-    const t = byFreq[0]![0];
-    const kickers = ranks.filter((r) => r !== t);
-    return [3, t, ...kickers];
-  }
-  if (byFreq[0]![1] === 2 && byFreq[1]![1] === 2) {
-    const hi = Math.max(byFreq[0]![0], byFreq[1]![0]);
-    const lo = Math.min(byFreq[0]![0], byFreq[1]![0]);
-    const kicker = ranks.find((r) => r !== hi && r !== lo)!;
-    return [2, hi, lo, kicker];
-  }
-  if (byFreq[0]![1] === 2) {
-    const p = byFreq[0]![0];
-    const kickers = ranks.filter((r) => r !== p);
-    return [1, p, ...kickers];
-  }
+  if (topCount === 2) return [1, topRank, ...others(topRank)];
   return [0, ...ranks];
 }
 
@@ -103,15 +78,25 @@ export function classifyFive(cards: Card[]): HandClass {
   return { tier, name: HAND_NAMES[tier]! };
 }
 
+/** Every 5-subset of indices 0..n-1, in lexicographic order. */
+function* fiveSubsets(n: number): Generator<number[]> {
+  const idx = [0, 1, 2, 3, 4];
+  if (n < 5) return;
+  while (true) {
+    yield [...idx];
+    // advance the rightmost index that can still move
+    let i = 4;
+    while (i >= 0 && idx[i] === n - 5 + i) i--;
+    if (i < 0) return;
+    idx[i]!++;
+    for (let j = i + 1; j < 5; j++) idx[j] = idx[j - 1]! + 1;
+  }
+}
+
 function bestFiveIndices(cards: Card[]): number[] {
   let bestVal: number[] = [];
   let bestIdx: number[] = [0, 1, 2, 3, 4];
-  for (let a = 0; a < cards.length - 4; a++)
-  for (let b = a + 1; b < cards.length - 3; b++)
-  for (let c = b + 1; c < cards.length - 2; c++)
-  for (let d = c + 1; d < cards.length - 1; d++)
-  for (let e = d + 1; e < cards.length; e++) {
-    const idx = [a, b, c, d, e];
+  for (const idx of fiveSubsets(cards.length)) {
     const v = evaluateFive(idx.map((i) => cards[i]!));
     if (bestVal.length === 0 || compareStrength(v, bestVal) > 0) {
       bestVal = v;
