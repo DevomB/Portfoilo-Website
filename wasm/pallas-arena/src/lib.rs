@@ -140,7 +140,7 @@ impl Strategy for SmaCross {
     fn on_event(&mut self, ctx: &StrategyContext<'_>, event: &Event, out: &mut Vec<OrderIntent>) {
         if !self.core.sample(ctx, event) { return; }
         let c = &self.core.closes;
-        if c.len() < self.slow { return; }
+        if c.len() < self.slow.max(self.fast) { return; }
         let fast = mean(&c[c.len() - self.fast..]);
         let slow = mean(&c[c.len() - self.slow..]);
         self.core.act(ctx, fast > slow, out);

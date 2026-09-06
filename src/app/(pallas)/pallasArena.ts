@@ -35,6 +35,7 @@ type Exports = {
 export class PallasArena {
   private constructor(
     private readonly ex: Exports,
+    private readonly wasi: WASI,
     private readonly tape: File,
     public readonly stderr: string[],
   ) {}
@@ -52,14 +53,20 @@ export class PallasArena {
     const wasi = new WASI([], [], fds);
     const { instance } = await WebAssembly.instantiate(bytes, { wasi_snapshot_preview1: wasi.wasiImport });
     const ex = instance.exports as unknown as Exports;
-    // a WASI "reactor": run its initialisers once, then call exports at will
-    if (typeof ex._initialize === "function") wasi.initialize(instance as never);
-    return new PallasArena(ex, tape, stderr);
+    // a WASI "reactor": hand the shim its instance (it needs the memory for
+    // random_get, which std's HashMap calls) and run the initialisers if the
+    // module exports any — this build has none
+    wasi.initialize(instance as never);
+    return new PallasArena(ex, wasi, tape, stderr);
   }
 
   /** Run one backtest on `csv` with the engine. Throws on an engine error. */
   run(csv: string, strategy: ArenaStrategy, params: ArenaParams = {}, initialBalance = 10_000): ArenaReport {
     this.tape.data = new TextEncoder().encode(csv);
+    // a fresh directory every run: the engine's loader writes a parsed-bar
+    // cache (tape.pbar + tape.manifest.json) beside the CSV and reads that
+    // back on the next open — which would score every run on the first tape
+    this.wasi.fds[3] = new PreopenDirectory("/", new Map([["tape.csv", this.tape]]));
     const req = new TextEncoder().encode(JSON.stringify({ strategy, params, initial_balance: initialBalance, data_path: "/tape.csv" }));
     const inPtr = this.ex.alloc(req.length);
     new Uint8Array(this.ex.memory.buffer, inPtr, req.length).set(req);
