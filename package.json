@@ -9,9 +9,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=true eslint .",
-    "tectonix:history": "python scripts/tectonix_history.py"
+    "tectonix:history": "python scripts/tectonix_history.py",
+    "wasm:pallas": "python scripts/build_pallas_arena.py"
   },
   "dependencies": {
+    "@bjorn3/browser_wasi_shim": "^0.4.2",
     "@heroicons/react": "^2.0.18",
     "@vercel/analytics": "^2.0.1",
     "autoprefixer": "^10.4.19",

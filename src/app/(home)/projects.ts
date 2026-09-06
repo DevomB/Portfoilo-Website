@@ -73,6 +73,30 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    slug: "athenas-pallas",
+    name: "Athena's Pallas",
+    tagline: "Event-driven backtesting engine in Rust — deterministic replay, honest fills, on crates.io.",
+    description:
+      "An event-driven algorithmic backtesting framework: a replay engine over bars or tick data, paper execution with queue-aware fills, order types with real time-in-force semantics, a risk engine, options analytics, and a report that records everything from fees and turnover to rejections. Strategies plug in through a Rust trait or run as external Python/C++ processes over a JSON protocol. Published as athenas-pallas on crates.io. The Adversarial Tape on this site is the published crate compiled for the browser: the same code, a different CPU.",
+    techStack: ["Rust", "Event-driven", "Backtesting", "WASI", "crates.io"],
+    githubUrl: "https://github.com/DevomB/Athenas-Pallas",
+    demoPath: "/adversarial",
+    readmeSections: [
+      {
+        title: "Why attack a backtest",
+        body: "A backtest is one path through history. A strategy that only works on that path was never a strategy; it was a coincidence. The Adversarial Tape turns the engine on its own users: it searches for the price path that makes a given strategy lose the most, with the first and last close pinned so the attacker can only reorder time, never crash the market. What survives that is a strategy. What doesn't was path risk.",
+      },
+      {
+        title: "What the engine does per bar",
+        body: "Each bar becomes a market event; strategies see read-only state (last price, positions, equity) and emit order intents. Paper execution fills them with fees, slippage, half-spread, participation limits and optional latency, then the risk engine checks position limits, daily loss and margin. Equity is marked to market every bar and the report carries P&L, drawdown, Sharpe, Sortino, fill counts, win rate, turnover, and every rejection with its reason.",
+      },
+      {
+        title: "Running it in a browser",
+        body: "The engine reads its tape from a file, so in the browser it gets one: a WASI build with an in-memory filesystem holding /tape.csv. The site writes a candidate tape, the engine's own CSV loader parses it, its own runner replays it, and its own report comes back as JSON. Three textbook strategies (SMA crossover, momentum, mean reversion) are written against the engine's Strategy trait — its documented extension point. Around 340 full backtests per second on a laptop, in one tab.",
+      },
+    ],
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {
