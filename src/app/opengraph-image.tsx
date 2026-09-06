@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { FanMark } from "@/brand/mark";
+import { FanMark } from "@/app/mark";
 
 export const alt = "Devom Brahmbhatt — Trader · Engineer · Researcher";
 export const size = { width: 1200, height: 630 };

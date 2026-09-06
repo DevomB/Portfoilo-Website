@@ -248,12 +248,12 @@ front card +7°, the front carrying a `D` and a Joker Green diamond pip.
 Purple strokes on near-black faces.
 
 - Source of truth: `src/app/icon.svg` (the favicon, 64-unit viewBox).
-- Same geometry as JSX in `src/brand/mark.tsx`, used by
+- Same geometry as JSX in `src/app/mark.tsx`, used by
   `apple-icon.tsx` (180², on a purple-black radial) and
   `opengraph-image.tsx` / `twitter-image.tsx` (1200×630).
 - The splash deals a full deck; the fan is that deal frozen at its best frame.
 
-Do not redraw it per surface. Change `icon.svg` and `src/brand/mark.tsx` together.
+Do not redraw it per surface. Change `icon.svg` and `src/app/mark.tsx` together.
 
 ## 5. Elevation and interaction
 
@@ -277,6 +277,18 @@ media query. `prefers-reduced-motion` is honoured in `globals.css`. Nothing
 loops.
 
 ## 6. Components
+
+**Layout: colocated by feature.** `src/app` is organised in route groups, so a
+directory is a dependency cluster, not a file kind: `(home)` holds the page,
+its sections, the splash, its data and hooks, and the project detail pages;
+`(poker)` holds the poker lab, the landscape, both API routes, and the engine
+(`poker.ts`); `(legal)` holds both policies and their shell; `(chrome)` holds
+what every route shares (Navbar, Footer, IntentLink, MotionProvider); the 404,
+the brand mark, and the metadata images sit at the app root. Route groups add
+no URL segment, so nothing public moved. Tectonix scores modularity on the
+first three path segments, and this layout is why its cross-module edge count
+fell from 39 of 49 to 15 of 55.
+
 
 **Navbar.** Fixed, 3.5rem tall. Transparent at the top; on scroll `bg` at
 90% with `backdrop-blur-xl` and a purple 25% bottom border. Left: the
@@ -311,7 +323,7 @@ on hover. Never a card.
 objects, not rows: two `.card-soft` cards after Projects, each a 16:9
 screenshot over a name, a one-line blurb in the repo's own voice, and a
 `site ↗` link out. Below them, `also built —` in mono: names and links
-only. Data in `src/data/sideQuests.ts`. Nothing here is a demo or gets a
+only. Data in `src/app/(home)/sideQuests.ts`. Nothing here is a demo or gets a
 project page.
 
 **Chips.** `.chip-soft` (surface, border, ink) for stack items; `.chip-accent`
@@ -322,13 +334,13 @@ GitHub · LinkedIn · NPM · Crates · Privacy · Terms — with 2.5rem gaps, th
 `© 2026 Devom Brahmbhatt` at 60% opacity, then the `DEVOM` wordmark. No
 status widgets, no timestamp.
 
-**Legal pages.** `/privacy` and `/terms` share `LegalPage.tsx`: back link,
+**Legal pages.** `/privacy` and `/terms` share `src/app/(legal)/LegalPage.tsx`: back link,
 page title, lede, "last updated", a `.card-soft` short-version box, then
 hairline-separated sections at 62ch. Links underline in accent.
 
 **404.** A terminal window: chrome strip, then `> GET <path>` with the real
 missed path read in the browser, the error line in danger, and a
-`Did you mean: <route> ?` computed by `src/lib/suggestRoute.ts` against the
+`Did you mean: <route> ?` computed by `src/app/suggestRoute.ts` against the
 live route list (falls back to `/` when nothing is close). One button: Go home.
 
 **Splash.** Full-screen deal animation on hard load, cards on the black
@@ -343,7 +355,7 @@ intent. Ranked by how likely the next click is:
   on the home page, and the home link from inner pages. These are what people
   click, so their route payload is fetched as soon as the row scrolls in.
 - **Secondary and heavy paths prefetch on intent** via
-  src/app/components/IntentLink.tsx: the footer's Privacy and Terms, and the
+  src/app/(chrome)/IntentLink.tsx: the footer's Privacy and Terms, and the
   "Open live demo" link to the card desk. Pointer-enter, keyboard focus, or
   touch warms the route once; nothing is fetched for a visitor who only
   scrolls past. (In the App Router, prefetch={false} also disables hover

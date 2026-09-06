@@ -9,7 +9,7 @@ import {
   IBM_Plex_Sans,
   Space_Grotesk,
 } from "next/font/google";
-import MotionProvider from "./components/MotionProvider";
+import MotionProvider from "@/app/(chrome)/MotionProvider";
 
 /* The type system, one family per role. Decided in the font lab, 2026-09-03.
    Roles are exposed to Tailwind as font-sans / font-display / font-title /

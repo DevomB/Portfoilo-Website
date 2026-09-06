@@ -4,7 +4,7 @@ commit of this repository and record the quality signal per commit.
     pnpm tectonix:history            # incremental — only commits not yet recorded
     pnpm tectonix:history -- --all   # rebuild from scratch
 
-Writes src/data/tectonixHistory.json, which the home page charts. Each commit is
+Writes src/app/(home)/tectonixHistory.json, which the home page charts. Each commit is
 checked out into a temporary git worktree (tectonix scans via `git ls-files`, so
 a plain export would not do), scanned, and health-checked; nothing is written
 into this repository by tectonix itself.
@@ -34,7 +34,7 @@ for stream in (sys.stdout, sys.stderr):
         pass
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "src" / "data" / "tectonixHistory.json"
+OUT = ROOT / "src" / "app" / "(home)" / "tectonixHistory.json"
 TECTONIX = shutil.which("tectonix") or str(Path.home() / ".cargo" / "bin" / "tectonix.exe")
 
 

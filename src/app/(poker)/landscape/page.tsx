@@ -1,22 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Navbar from "@/app/(chrome)/Navbar";
-import CardDesk from "@/app/card-desk/CardDesk";
+import Landscape from "@/app/(poker)/Landscape";
 
 export const metadata: Metadata = {
-  title: "Card Sum Options Desk",
+  title: "The Landscape",
   description:
-    "Options on the sum of drawn cards — theo and Greeks re-priced live by the cardquant Python package.",
+    "All 169 starting hands as a terrain — height is equity, computed live by the poker-calculations engine. Deal a flop and watch it deform.",
 };
 
-export default function CardDeskPage() {
+export default function LandscapePage() {
   return (
     <>
       <Navbar />
       <main className="min-h-screen">
         <div className="page-shell">
           <Link
-            href="/projects/cardquant"
+            href="/projects/poker-bot"
             className="inline-flex items-center gap-1.5 font-mono text-fluid-xs text-muted transition-colors hover:text-ink mb-8"
           >
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden>
@@ -26,28 +26,25 @@ export default function CardDeskPage() {
           </Link>
 
           <div className="mb-8">
-            <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-2">
-              {"// card-desk"}
-            </p>
-            <h1 className="font-title text-fluid-4xl font-bold tracking-tight text-ink">
-              Card Sum Options Desk
-            </h1>
+            <p className="font-mono text-fluid-xs text-secondary tracking-wide mb-2">{"// landscape"}</p>
+            <h1 className="font-title text-fluid-4xl font-bold tracking-tight text-ink">The Landscape</h1>
             <p className="mt-2 text-fluid-base text-muted max-w-xl">
-              IMC&apos;s mock trading game as a desk. Draw cards one at a time and watch theo and
-              the Greeks re-price across every strike — computed exactly by the{" "}
+              Every one of the 169 starting hands as terrain. Height is equity, computed live by
+              the C++ engine behind{" "}
               <a
-                href="https://pypi.org/project/cardquant/"
+                href="https://www.npmjs.com/package/poker-calculations"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent hover:text-accent-dim transition-colors"
               >
-                cardquant
-              </a>{" "}
-              Python package, running unmodified on CPython.
+                poker-calculations
+              </a>
+              . Deal a flop and watch the mountains move. Paint your range to see its shape on
+              the board.
             </p>
           </div>
 
-          <CardDesk />
+          <Landscape />
         </div>
       </main>
     </>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import NotFoundTerminal from "./components/NotFoundTerminal";
+import NotFoundTerminal from "@/app/NotFoundTerminal";
 
 export const metadata: Metadata = {
   title: "404 — Not Found",

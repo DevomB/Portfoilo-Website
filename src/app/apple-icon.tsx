@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { FanMark } from "@/brand/mark";
+import { FanMark } from "@/app/mark";
 
 /* iOS home-screen icon. Apple masks its own corners, so this is a full-bleed
    square; the mark sits on the site's raised-surface colour so it reads as an

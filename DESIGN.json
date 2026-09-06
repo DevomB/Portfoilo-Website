@@ -251,9 +251,9 @@
       "description": "Two playing cards mid-deal — back card rotated -18deg, front card +7deg, front carrying a D and a Joker Green diamond pip. Purple strokes on near-black faces.",
       "sources": [
         "src/app/icon.svg (favicon; 64-unit viewBox; source of truth)",
-        "src/brand/mark.tsx (same geometry as JSX for next/og — apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx)"
+        "src/app/mark.tsx (same geometry as JSX for next/og — apple-icon.tsx, opengraph-image.tsx, twitter-image.tsx)"
       ],
-      "rule": "Change icon.svg and src/brand/mark.tsx together. Never redraw per surface."
+      "rule": "Change icon.svg and src/app/mark.tsx together. Never redraw per surface."
     },
     "knownPitfalls": [
       {
@@ -375,7 +375,7 @@
       "Do keep purple for structure and green for signal.",
       "Do put content in rows with hairlines, not in cards.",
       "Do set every number in mono with tabular-nums so columns align.",
-      "Do use the fan mark from its two sources (src/app/icon.svg, src/brand/mark.tsx); never a per-surface redraw.",
+      "Do use the fan mark from its two sources (src/app/icon.svg, src/app/mark.tsx); never a per-surface redraw.",
       "Do keep the loud gestures to two: the hero H1 and the footer wordmark.",
       "Do judge type decisions at 11–13px, where the site actually lives.",
       "Do pick the sans by role, not by taste: content in font-sans (Plex), chrome in font-display (Bricolage), inner-page titles in font-title (Space Grotesk)."
