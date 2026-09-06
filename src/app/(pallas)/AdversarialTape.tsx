@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import LineChart from "./LineChart";
 import { makeTape, TAPE_LEN } from "./tape";
 import type { ArenaParams, ArenaStrategy } from "./pallasArena";
 import type { SearchMessage, SearchStart } from "./adversarial.worker";
@@ -33,92 +34,6 @@ type World = {
 
 const LB_KEY = "pallas-arena-worlds";
 const money = (v: number) => (v < 0 ? "−" : v > 0 ? "+" : "") + "$" + Math.abs(v).toLocaleString("en-US", { maximumFractionDigits: 0 });
-const ORIGINAL = "#a35cff";   // validated pair on the dark surface
-const ADVERSARIAL = "#1fb14a";
-
-/* ── a small two-series line chart, dataviz-spec: 2px lines, hairline grid,
-      legend with line keys, crosshair tooltip on the nearest index ─────────── */
-function LineChart({
-  series, labels, height = 220, hover, onHover, format, id,
-}: {
-  series: (number[] | null)[];
-  labels: string[];
-  height?: number;
-  hover: number | null;
-  onHover: (i: number | null) => void;
-  format: (v: number) => string;
-  id: string;
-}) {
-  const W = 760, H = height, PAD = { t: 14, r: 16, b: 26, l: 56 };
-  const pw = W - PAD.l - PAD.r, ph = H - PAD.t - PAD.b;
-  const all = series.flatMap((s) => s ?? []);
-  const n = Math.max(...series.map((s) => s?.length ?? 0), 2);
-  const lo = Math.min(...all), hi = Math.max(...all);
-  const span = Math.max(hi - lo, 1e-6);
-  const y = (v: number) => PAD.t + ph - ((v - lo) / span) * ph;
-  const x = (i: number) => PAD.l + (i / (n - 1)) * pw;
-  const ticks = useMemo(() => {
-    const raw = span / 4;
-    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
-    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) ?? raw;
-    const out: number[] = [];
-    for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) out.push(v);
-    return out;
-  }, [lo, hi, span]);
-  const ref = useRef<SVGSVGElement>(null);
-  const colors = [ORIGINAL, ADVERSARIAL];
-  const move = (e: React.PointerEvent<SVGSVGElement>) => {
-    const r = ref.current?.getBoundingClientRect(); if (!r) return;
-    const px = ((e.clientX - r.left) / r.width) * W;
-    onHover(Math.round(Math.min(1, Math.max(0, (px - PAD.l) / pw)) * (n - 1)));
-  };
-  return (
-    <div className="relative">
-      <div className="flex items-center gap-4 px-1 pb-1 font-mono text-[0.62rem] text-muted">
-        {labels.map((l, i) => series[i] ? (
-          <span key={l} className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-[2px] w-4 rounded" style={{ background: colors[i] }} />{l}
-          </span>
-        ) : null)}
-      </div>
-      <svg ref={ref} viewBox={`0 0 ${W} ${H}`} className="w-full h-auto select-none touch-none" role="img" aria-labelledby={id}
-           onPointerMove={move} onPointerLeave={() => onHover(null)}>
-        <title id={id}>{labels.filter((_, i) => series[i]).join(" vs ")}</title>
-        {ticks.map((t) => (
-          <g key={t}>
-            <line x1={PAD.l} x2={W - PAD.r} y1={y(t)} y2={y(t)} stroke="rgb(var(--brand-purple-rgb) / 0.14)" strokeWidth={1} />
-            <text x={PAD.l - 8} y={y(t) + 3.5} textAnchor="end" fontSize={10} fontFamily="var(--font-mono), monospace" fill="var(--color-muted)">{format(t)}</text>
-          </g>
-        ))}
-        {series.map((s, si) => s ? (
-          <path key={si} d={s.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ")}
-                fill="none" stroke={colors[si]} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-        ) : null)}
-        {hover !== null && (
-          <g>
-            <line x1={x(hover)} x2={x(hover)} y1={PAD.t} y2={PAD.t + ph} stroke="rgb(var(--brand-purple-rgb) / 0.35)" strokeWidth={1} />
-            {series.map((s, si) => s && s[hover] !== undefined ? (
-              <circle key={si} cx={x(hover)} cy={y(s[hover]!)} r={4} fill={colors[si]} stroke="var(--color-bg)" strokeWidth={2} />
-            ) : null)}
-          </g>
-        )}
-      </svg>
-      {hover !== null && (
-        <div className="pointer-events-none absolute top-6 rounded-md border border-accent/25 bg-surface px-3 py-2 shadow-card font-mono text-[0.66rem]"
-             style={{ left: `${(x(hover) / W) * 100}%`, transform: `translateX(${hover > n / 2 ? "-105%" : "5%"})` }}>
-          <p className="text-muted mb-1">bar {hover + 1} of {n}</p>
-          {series.map((s, si) => s && s[hover] !== undefined ? (
-            <p key={si} className="flex items-center gap-2 text-ink">
-              <span className="inline-block h-[2px] w-3 rounded" style={{ background: colors[si] }} />
-              <span className="font-semibold">{format(s[hover]!)}</span>
-              <span className="text-muted">{labels[si]}</span>
-            </p>
-          ) : null)}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default function AdversarialTape() {
   const [strategy, setStrategy] = useState<ArenaStrategy>("sma_cross");

@@ -81,11 +81,16 @@ export const projects: Project[] = [
     name: "Athena's Pallas",
     tagline: "Event-driven backtesting engine in Rust — deterministic replay, honest fills, on crates.io.",
     description:
-      "An event-driven algorithmic backtesting framework: a replay engine over bars or tick data, paper execution with queue-aware fills, order types with real time-in-force semantics, a risk engine, options analytics, and a report that records everything from fees and turnover to rejections. Strategies plug in through a Rust trait or run as external Python/C++ processes over a JSON protocol. Published as athenas-pallas on crates.io. The Adversarial Tape on this site is the published crate compiled for the browser: the same code, a different CPU.",
+      "An event-driven algorithmic backtesting framework: a replay engine over bars or tick data, paper execution with queue-aware fills, order types with real time-in-force semantics, a risk engine, options analytics, and a report that records everything from fees and turnover to rejections. Strategies plug in through a Rust trait or run as external Python/C++ processes over a JSON protocol. Published as athenas-pallas on crates.io. The Mirage and the Adversarial Tape on this site are the published crate compiled for the browser: the same code, a different CPU.",
     techStack: ["Rust", "Event-driven", "Backtesting", "WASI", "crates.io"],
     githubUrl: "https://github.com/DevomB/Athenas-Pallas",
-    demoPath: "/adversarial",
+    demoPath: "/mirage",
+    extraDemos: [{ label: "Adversarial Tape", path: "/adversarial" }],
     readmeSections: [
+      {
+        title: "Why a backtest lies",
+        body: "Sweep a parameter grid over a year of prices and something always looks good — the best of sixty-four tries is not a strategy, it is an order statistic. The Mirage runs the experiment honestly: the engine backtests every cell in-sample, three procedures pick a strategy (the in-sample peak, the plateau around it, a walk-forward that re-picks each quarter), and a held-out year grades them. Then the in-sample returns are shuffled and the whole sweep re-run, so the peak can be compared with what luck alone produces. Plant a signal in the world or leave it as noise, and watch which procedure is fooled.",
+      },
       {
         title: "Why attack a backtest",
         body: "A backtest is one path through history. A strategy that only works on that path was never a strategy; it was a coincidence. The Adversarial Tape turns the engine on its own users: it searches for the price path that makes a given strategy lose the most, with the first and last close pinned so the attacker can only reorder time, never crash the market. What survives that is a strategy. What doesn't was path risk.",
