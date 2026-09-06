@@ -105,6 +105,34 @@ export const projects: Project[] = [
       },
     ],
   },
+  {
+    slug: "ananke",
+    name: "Ananke",
+    tagline: "Typed deterministic event runtime in OCaml — replay, snapshots, structural diffs, invariant checks.",
+    description:
+      "A laboratory for stateful systems. A domain declares its state, commands, events, a pure transition function and named invariants; the runtime records every command, emitted event and invariant outcome in a replayable trace, snapshots state on demand, diffs states structurally, verifies that a replay is identical, shrinks a failing command sequence to a minimal reproduction and forks alternate futures from a checkpoint. Randomness is explicit — domains draw from an RNG the runtime threads through, never an ambient generator. The Counterexample on this site is Ananke compiled from OCaml to JavaScript and run unmodified in the browser.",
+    techStack: ["OCaml 5", "dune", "Base", "js_of_ocaml", "property testing"],
+    githubUrl: "https://github.com/DevomB/Ananke",
+    demoPath: "/counterexample",
+    readmeSections: [
+      {
+        title: "What a trace is",
+        body: "Every run is a sequence of events: the command as submitted, each event the domain emitted, the outcome of every named invariant, the clock advancing, and, when asked, a snapshot of the whole state. The trace is data. It can be replayed on a fresh runtime and compared event by event, and the first divergence is reported with a structural diff of the states.",
+      },
+      {
+        title: "Shrinking a failure",
+        body: "Given a command sequence that fails and a predicate for what failing means, the minimizer drops commands — half the list at a time, then one at a time — replaying the runtime on each candidate, until nothing more can go. The Counterexample uses it on a forty-command payment scenario and comes back with the handful that reproduce the bug.",
+      },
+      {
+        title: "Branching",
+        body: "Run a prefix, snapshot, then apply two different suffixes from the same checkpoint and diff the two final states. It answers the question a bug report never can: what would have happened if the next command had been different.",
+      },
+      {
+        title: "Why it runs as OCaml",
+        body: "The runtime is not ported. js_of_ocaml compiles the same OCaml bytecode to JavaScript; the payments domain on this site is written against Ananke's Domain.S signature — its documented extension point — and a thin bridge calls Runtime, Replay, Minimize and Branch exactly as the CLI does, answering in JSON.",
+      },
+    ],
+  },
 ];
 
 export function getProject(slug: string): Project | undefined {

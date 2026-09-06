@@ -1,0 +1,24 @@
+; Counterexample: Ananke (the published OCaml runtime, pinned from GitHub)
+; driving a payments domain, compiled to JavaScript by js_of_ocaml so it runs
+; in a browser worker. Nothing here re-implements the runtime: the domain is
+; written against Domain.S, its documented extension point, and the bridge
+; calls Runtime / Replay / Minimize / Branch exactly as the CLI does.
+
+(executable
+ (name counterexample)
+ (modes js)
+ (libraries
+  ananke.kernel
+  ananke.runtime
+  ananke.replay
+  ananke.trace
+  ananke.snapshot
+  ananke.diff
+  ananke.invariant
+  base
+  sexplib
+  js_of_ocaml)
+ (preprocess
+  (pps ppx_sexp_conv ppx_compare js_of_ocaml-ppx))
+ (js_of_ocaml
+  (flags (:standard --opt 3 --target-env=browser))))

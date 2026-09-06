@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "cross-env ESLINT_USE_FLAT_CONFIG=true eslint .",
     "tectonix:history": "python scripts/tectonix_history.py",
-    "wasm:pallas": "python scripts/build_pallas_arena.py"
+    "wasm:pallas": "python scripts/build_pallas_arena.py",
+    "js:ananke": "python scripts/build_ananke_counterexample.py"
   },
   "dependencies": {
     "@bjorn3/browser_wasi_shim": "^0.4.2",
