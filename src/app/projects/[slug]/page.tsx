@@ -130,6 +130,15 @@ export default async function ProjectPage({
                 Open live demo
               </IntentLink>
             ) : null}
+            {project.extraDemos?.map((d) => (
+              <IntentLink
+                key={d.path}
+                href={d.path}
+                className="inline-flex items-center gap-2 rounded-lg border border-accent/40 bg-accent-bg px-4 py-2 font-display text-fluid-sm font-medium text-accent-dim transition-all hover:border-accent hover:text-ink"
+              >
+                {d.label} ↗
+              </IntentLink>
+            ))}
           </div>
 
           {/* npm snippet */}

@@ -16,6 +16,7 @@ const ROUTES: readonly string[] = [
   "/terms",
   ...projects.map((p) => `/projects/${p.slug}`),
   ...projects.flatMap((p) => (p.demoPath ? [p.demoPath] : [])),
+  ...projects.flatMap((p) => (p.extraDemos ?? []).map((d) => d.path)),
 ];
 
 /* The 404 page is prerendered once at build time, so the request path is

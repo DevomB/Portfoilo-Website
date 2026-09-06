@@ -15,6 +15,8 @@ export type Project = {
   pypiPackage?: string;
   /** Route of the live, in-site demo for this project, e.g. "/poker-lab". */
   demoPath?: string;
+  /** Further in-site demos for the same project, shown beside the main one. */
+  extraDemos?: { label: string; path: string }[];
   liveUrl?: string;
   readmeSections?: ReadmeSection[];
 };
@@ -30,6 +32,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/DevomB/Poker-Calculations",
     npmPackage: "poker-calculations",
     demoPath: "/poker-lab",
+    extraDemos: [{ label: "The Landscape", path: "/landscape" }],
     readmeSections: [
       {
         title: "Architecture",
