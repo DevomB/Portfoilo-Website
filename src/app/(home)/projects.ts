@@ -32,7 +32,10 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/DevomB/Poker-Calculations",
     npmPackage: "poker-calculations",
     demoPath: "/poker-lab",
-    extraDemos: [{ label: "The Landscape", path: "/landscape" }],
+    extraDemos: [
+      { label: "The Landscape", path: "/landscape" },
+      { label: "Geometry of Decisions", path: "/decisions" },
+    ],
     readmeSections: [
       {
         title: "Architecture",
