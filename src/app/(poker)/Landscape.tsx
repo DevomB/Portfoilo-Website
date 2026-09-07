@@ -3,23 +3,28 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Terrain, { type TriFill } from "@/app/(poker)/Terrain";
 import BoardPicker from "@/app/(poker)/BoardPicker";
-import RangePainter from "@/app/(poker)/RangePainter";
+import RangePainter, { paintPreset } from "@/app/(poker)/RangePainter";
 import { cellOf, classLabel } from "@/app/(poker)/handMatrix";
 
 /* The Landscape.
-   169 starting hands as an isometric terrain: height is equity against N
-   random opponents on the current board, computed by the poker-calculations
-   engine through /api/poker/landscape. A new board tweens the surface from
-   the old heights to the new ones — every deformation is a real change in
-   equity, never sampling noise (the API is seeded per request shape). */
+   169 starting hands as an isometric terrain: height is equity on the
+   current board against the opponent you choose — the range you paint
+   (heads-up, exact on the river) or N random hands — computed by the
+   poker-calculations engine through /api/poker/landscape. A new board or a
+   new brush stroke tweens the surface from the old heights to the new ones;
+   every deformation is a real change in equity, never sampling noise (the
+   API is seeded per request shape). */
 
+type Opponent = 1 | 2 | 3 | "range";
 type Quote = {
   equities: (number | null)[];
   board: string[];
-  villains: number;
+  villains: Opponent;
   iters: number;
   engine: "native" | "js";
+  method: "mc-random" | "mc-range" | "exact-range";
   threads: number;
+  rangeCombos: number | null;
   ms: number;
   cached: boolean;
 };
@@ -39,61 +44,78 @@ export default function Landscape() {
   // the API prices 0, 3, 4 or 5 cards; while a flop is being picked one card at
   // a time, the terrain stays on the last complete board
   const boardForApi = useMemo(() => (board.length < 3 ? [] : board), [board]);
-  const [villains, setVillains] = useState<1 | 2 | 3>(1);
-  const [range, setRange] = useState<boolean[]>(() => new Array(169).fill(true));
-  const [quote, setQuote] = useState<Quote | null>(null);
+  const [opponent, setOpponent] = useState<Opponent>("range");
+  const [range, setRange] = useState<boolean[]>(() => paintPreset("top25"));
+  const [quote, setQuote] = useState<{ key: string; data: Quote } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState<number | null>(null);
 
-  const reqKey = useMemo(() => `${[...boardForApi].sort().join(",")}|${villains}`, [boardForApi, villains]);
-  const pending = !quote || `${[...quote.board].sort().join(",")}|${quote.villains}` !== reqKey;
+  const rangeW = useMemo(() => range.map((b) => (b ? 1 : 0)), [range]);
+  const request = useMemo(
+    () => ({ board: boardForApi, villains: opponent, ...(opponent === "range" ? { range: rangeW } : {}) }),
+    [boardForApi, opponent, rangeW],
+  );
+  const requestKey = useMemo(() => JSON.stringify(request), [request]);
+  const ready = opponent !== "range" || rangeW.some((w) => w > 0);
+  const pending = !quote || quote.key !== requestKey;
 
-  // fetch equities for the current board / villain count
+  // fetch equities for the current board / opponent / brush — debounced so a
+  // drag across the painter prices once it settles
   useEffect(() => {
+    if (!ready) return;
     const ac = new AbortController();
-    fetch("/api/poker/landscape", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ board: boardForApi, villains }),
-      signal: ac.signal,
-    })
-      .then(async (r) => {
-        const data = await r.json();
-        if (!r.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
-        setError(null);
-        setQuote(data as Quote);
+    const key = requestKey;
+    const t = setTimeout(() => {
+      fetch("/api/poker/landscape", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(request),
+        signal: ac.signal,
       })
-      .catch((e: unknown) => {
-        if ((e as Error).name === "AbortError") return;
-        setError((e as Error).message);
-      });
-    return () => ac.abort();
-  }, [boardForApi, villains]);
+        .then(async (r) => {
+          const data = await r.json();
+          if (!r.ok) throw new Error(data.error ?? `HTTP ${r.status}`);
+          setError(null);
+          setQuote({ key, data: data as Quote });
+        })
+        .catch((e: unknown) => {
+          if ((e as Error).name === "AbortError") return;
+          setError((e as Error).message);
+        });
+    }, 150);
+    return () => { clearTimeout(t); ac.abort(); };
+  }, [request, requestKey, ready]);
 
-  const target = useMemo(() => Float32Array.from({ length: 169 }, (_, k) => quote?.equities[k] ?? 0), [quote]);
+  const data = quote?.data ?? null;
+  const target = useMemo(() => Float32Array.from({ length: 169 }, (_, k) => data?.equities[k] ?? 0), [data]);
 
   const triFill = useCallback<TriFill>(
     (p, q, r, mean, shade) => {
-      const dead = quote ? quote.equities[p] === null || quote.equities[q] === null || quote.equities[r] === null : false;
-      if (dead) return "rgb(var(--brand-purple-rgb) / 0.08)";
-      const inRange = range[p] && range[q] && range[r];
-      return inRange ? ramp(mean, shade) : `oklch(${(22 + 18 * mean).toFixed(1)}% 0.02 300)`; // outside the painted range: muted
+      const dead = data ? data.equities[p] === null || data.equities[q] === null || data.equities[r] === null : false;
+      return dead ? "rgb(var(--brand-purple-rgb) / 0.08)" : ramp(mean, shade);
     },
-    [quote, range],
+    [data],
   );
 
   // ranked list for the tooltip
   const ranks = useMemo(() => {
-    if (!quote) return null;
-    const order = quote.equities.map((e, k) => ({ e: e ?? -1, k })).sort((a, b) => b.e - a.e);
+    if (!data) return null;
+    const order = data.equities.map((e, k) => ({ e: e ?? -1, k })).sort((a, b) => b.e - a.e);
     const r = new Array<number>(169);
     order.forEach((o, idx) => { r[o.k] = idx + 1; });
     return r;
-  }, [quote]);
+  }, [data]);
 
   const hoverCell = hover !== null ? cellOf(hover) : null;
-  const hoverEq = hover !== null && quote ? quote.equities[hover] : null;
-  const shade = useCallback((k: number) => quote?.equities[k] ?? 0.5, [quote]);
+  const hoverEq = hover !== null && data ? data.equities[hover] : null;
+  const versus = opponent === "range" ? "the painted range" : `${opponent} random hand${opponent > 1 ? "s" : ""}`;
+  const methodLabel = data
+    ? data.method === "exact-range"
+      ? `exact vs ${data.rangeCombos} combos`
+      : data.method === "mc-range"
+        ? `${data.iters} sampled showdowns per hand vs ${data.rangeCombos} combos`
+        : `${data.iters} iters/hand · ${data.threads} threads`
+    : "";
 
   return (
     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px]">
@@ -103,22 +125,22 @@ export default function Landscape() {
           <p className="font-mono text-fluid-xs text-muted">
             equity vs{" "}
             <span className="inline-flex gap-1">
-              {([1, 2, 3] as const).map((n) => (
+              {(["range", 1, 2, 3] as const).map((o) => (
                 <button
-                  key={n}
+                  key={o}
                   type="button"
-                  onClick={() => setVillains(n)}
-                  className={`rounded px-1.5 py-0.5 transition-colors ${villains === n ? "bg-accent-bg text-accent-dim" : "text-muted hover:text-ink"}`}
+                  onClick={() => setOpponent(o)}
+                  className={`rounded px-1.5 py-0.5 transition-colors ${opponent === o ? "bg-accent-bg text-accent-dim" : "text-muted hover:text-ink"}`}
                 >
-                  {n}
+                  {o === "range" ? "the painted range" : o}
                 </button>
               ))}
             </span>{" "}
-            random opponent{villains > 1 ? "s" : ""} · drag to rotate
+            {opponent === "range" ? "" : `random opponent${opponent > 1 ? "s" : ""}`} · drag to rotate
           </p>
           <p className="font-mono text-[0.6rem] text-muted/70">
-            {quote
-              ? `${quote.engine === "native" ? "C++ engine" : "js fallback"} · ${quote.iters} iters/hand · ${quote.threads} threads · ${quote.cached ? "cached" : `${quote.ms} ms`}`
+            {data
+              ? `${data.engine === "native" ? "C++ engine" : "js fallback"} · ${methodLabel} · ${data.cached ? "cached" : `${data.ms} ms`}`
               : "pricing…"}
           </p>
         </div>
@@ -129,7 +151,7 @@ export default function Landscape() {
           hover={hover}
           onHover={setHover}
           pending={pending}
-          ariaLabel={`Equity terrain over 169 starting hands${boardForApi.length ? ` on board ${boardForApi.join(" ")}` : " preflop"}`}
+          ariaLabel={`Equity terrain over 169 starting hands vs ${versus}${boardForApi.length ? ` on board ${boardForApi.join(" ")}` : " preflop"}`}
         >
           {hoverCell && hoverEq !== null && hoverEq !== undefined && (
             <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-accent/25 bg-surface px-3 py-2 shadow-card">
@@ -138,17 +160,20 @@ export default function Landscape() {
                 <span className="ml-2 font-mono text-fluid-xs font-normal text-muted">{classLabel(hoverCell.i, hoverCell.j)}</span>
               </p>
               <p className="mt-1 font-mono text-[0.6rem] text-muted">
-                #{ranks?.[hover!]} of 169 · {range[hover!] ? "in your range" : "outside your range"}
+                #{ranks?.[hover!]} of 169 · vs {versus}{opponent === "range" && range[hover!] ? " · also in it" : ""}
               </p>
             </div>
           )}
           {hoverCell && hoverEq === null && (
             <div className="pointer-events-none absolute left-3 top-3 rounded-md border border-border bg-surface px-3 py-2">
-              <p className="font-mono text-fluid-xs text-muted">{classLabel(hoverCell.i, hoverCell.j)} · no live combo on this board</p>
+              <p className="font-mono text-fluid-xs text-muted">{classLabel(hoverCell.i, hoverCell.j)} · {opponent === "range" && data ? "no live combo, or the range is all blocked" : "no live combo on this board"}</p>
             </div>
           )}
           {error && (
             <p className="absolute right-3 top-3 font-mono text-[0.62rem] text-danger">{error}</p>
+          )}
+          {!ready && (
+            <p className="absolute right-3 top-3 font-mono text-[0.62rem] text-warn">paint at least one hand into the range</p>
           )}
         </Terrain>
       </div>
@@ -156,16 +181,19 @@ export default function Landscape() {
       {/* ── controls ── */}
       <div className="space-y-6">
         <BoardPicker board={board} onChange={setBoard} variant="streets" />
-        <RangePainter
-          title="your range"
-          range={range}
-          setRange={setRange}
-          board={boardForApi}
-          hover={hover}
-          onHover={setHover}
-          shade={shade}
-          caption="click or drag to paint · cells shade by equity"
-        />
+        <div className={opponent === "range" ? "" : "opacity-60"}>
+          <RangePainter
+            title={opponent === "range" ? "villain's range" : "villain's range · unused vs random"}
+            range={range}
+            setRange={setRange}
+            board={boardForApi}
+            hover={hover}
+            onHover={setHover}
+            caption={opponent === "range"
+              ? "click or drag to paint · the terrain re-prices against what you paint · exact on the river, sampled before it"
+              : "click or drag to paint · switch the opponent to the painted range to use it"}
+          />
+        </div>
       </div>
     </div>
   );

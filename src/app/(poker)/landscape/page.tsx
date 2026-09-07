@@ -6,7 +6,7 @@ import Landscape from "@/app/(poker)/Landscape";
 export const metadata: Metadata = {
   title: "The Landscape",
   description:
-    "All 169 starting hands as a terrain — height is equity, computed live by the poker-calculations engine. Deal a flop and watch it deform.",
+    "All 169 starting hands as a terrain — height is equity against the range you paint, computed live by the poker-calculations engine, exact on the river. Deal a board and watch it deform.",
 };
 
 export default function LandscapePage() {
@@ -39,8 +39,9 @@ export default function LandscapePage() {
               >
                 poker-calculations
               </a>
-              . Deal a flop and watch the mountains move. Paint your range to see its shape on
-              the board.
+              . Paint the range you put your opponent on and every height re-prices against it —
+              sampled showdowns before the river, exact on it. Deal a board and watch the
+              mountains move; switch to random opponents to see the map without a read.
             </p>
           </div>
 

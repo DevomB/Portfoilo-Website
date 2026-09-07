@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
-import type { PokerCalculationsNative } from "poker-calculations";
+import type { PokerCalculations } from "poker-calculations";
 import { canonicalizeHand, parseCodes } from "@/app/(poker)/poker";
 import { simulateEquityMonteCarloJs } from "@/app/(poker)/poker";
 
 export const runtime = "nodejs";
 
-let nativePoker: PokerCalculationsNative | "unavailable" | undefined;
+let nativePoker: PokerCalculations | "unavailable" | undefined;
 
-async function loadNativePoker(): Promise<PokerCalculationsNative | null> {
+async function loadNativePoker(): Promise<PokerCalculations | null> {
   if (nativePoker === "unavailable") return null;
   if (nativePoker !== undefined) return nativePoker;
   try {
     const mod = await import("poker-calculations");
-    nativePoker = mod.default as PokerCalculationsNative;
+    nativePoker = mod.default as PokerCalculations;
     return nativePoker;
   } catch {
     nativePoker = "unavailable";

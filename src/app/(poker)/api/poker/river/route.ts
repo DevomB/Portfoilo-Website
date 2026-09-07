@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { PokerCalculationsNative } from "poker-calculations";
+import type { PokerCalculations } from "poker-calculations";
 import { canonicalizeHand } from "@/app/(poker)/poker";
 import { cellOf, classCombos, classLabel } from "@/app/(poker)/handMatrix";
 import { actionEvs, nearestFlips, robustChoice, type Policy, type Sizes, type VillainCombo } from "@/app/(poker)/riverModel";
@@ -27,12 +27,12 @@ const RANKS = "23456789TJQKA";
 const SUITS = "cdhs";
 const CATEGORY = ["highCard", "onePair", "twoPair", "threeOfAKind", "straight", "flush", "fullHouse", "fourOfAKind", "straightFlush", "royalFlush"];
 
-let native: PokerCalculationsNative | "unavailable" | undefined;
-async function loadNative(): Promise<PokerCalculationsNative | null> {
+let native: PokerCalculations | "unavailable" | undefined;
+async function loadNative(): Promise<PokerCalculations | null> {
   if (native === "unavailable") return null;
   if (native !== undefined) return native;
   try {
-    native = (await import("poker-calculations")).default as PokerCalculationsNative;
+    native = (await import("poker-calculations")).default as PokerCalculations;
     return native;
   } catch {
     native = "unavailable";
@@ -56,7 +56,7 @@ type Universe = {
 
 const universes = new Map<string, Universe>();
 
-function universeFor(board: string[], engine: PokerCalculationsNative): Universe {
+function universeFor(board: string[], engine: PokerCalculations): Universe {
   const key = [...board].sort().join(",");
   const hit = universes.get(key);
   if (hit) return hit;
